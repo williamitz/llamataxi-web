@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-admin-layout',
@@ -6,10 +7,12 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./admin-layout.component.css']
 })
 export class AdminLayoutComponent implements OnInit {
-
-  constructor() { }
+  title = '';
+  constructor( private router: ActivatedRoute ) { }
 
   ngOnInit() {
+    // this.title = this.router.data;
+    console.log(this.router.snapshot.data);
   }
 
 }

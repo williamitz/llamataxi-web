@@ -6,6 +6,8 @@ import { LoginComponent } from '../../pages/authPages/login/login.component';
 export const AUTH_ROUTES: Routes = [
   { path: '', component: LoginComponent },
 
+  { path: '**', component: LoginComponent },
+
   //{ path: 'path/:routeParam', component: MyComponent },
   //{ path: 'staticPath', component: ... },
   //{ path: '**', component: ... },

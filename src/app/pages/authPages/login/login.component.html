@@ -1,32 +1,66 @@
-<form class="form-horizontal form-material" id="loginform" action="index.html">
-    <a href="javascript:void(0)" class="text-center db"><img src="../assets/images/logo-icon.png" alt="Home" /><br/><img src="../assets/images/logo-text.png" alt="Home" /></a>
-    <div class="form-group m-t-40">
-        <div class="col-xs-12">
-            <input class="form-control" type="text" required="" placeholder="Username">
-        </div>
-    </div>
-    <div class="form-group">
-        <div class="col-xs-12">
-            <input class="form-control" type="password" required="" placeholder="Password">
-        </div>
-    </div>
-    <div class="form-group row">
-        <div class="col-md-12">
-            <div class="checkbox checkbox-primary pull-left p-t-0">
-                <input id="checkbox-signup" type="checkbox" class="filled-in chk-col-light-blue">
-                <label for="checkbox-signup"> Remember me </label>
-            </div>
-            <a href="javascript:void(0)" id="to-recover" class="text-dark pull-right"><i class="fa fa-lock m-r-5"></i> Forgot pwd?</a> </div>
-    </div>
-    <div class="form-group text-center m-t-20">
-        <div class="col-xs-12">
-            <button class="btn btn-info btn-lg btn-block text-uppercase btn-rounded" type="submit">Log In</button>
-        </div>
-    </div>
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+        <div class="card bg-secondary border-0 mb-0">
 
-    <div class="form-group m-b-0">
-        <div class="col-sm-12 text-center">
-            Olvidaste tu contrase&ntilde;a? <a href="pages-register2.html" class="text-primary m-l-5"><b>Recuperar</b></a>
+            <div class="card-body px-lg-5 py-lg-5">
+
+                <div class="text-center text-muted mb-4">
+                    <small>Sign in with credentials</small>
+                </div>
+
+                <form role="form" #frmLogin="ngForm">
+                    <div class="form-group mb-3">
+                        <div class="input-group input-group-merge input-group-alternative">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                            </div>
+                            <input class="form-control" placeholder="Usuario" name="userName" #userName="ngModel" [(ngModel)]="bodyLogin.userName" required [ngClass]="{'is-invalid': userName.errors?.required && userName.touched,
+                        'is-valid': !userName.errors?.required && userName.touched}">
+                        </div>
+                        <span *ngIf="userName.errors?.required && userName.touched">
+                          <small class="text-danger">
+                            *Requerido
+                          </small>
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="input-group input-group-merge input-group-alternative">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text"><i class="ni ni-lock-circle-open"></i></span>
+                            </div>
+                            <input class="form-control" type="password" placeholder="Contrase&ntilde;a" required name="userPassword" #userPss="ngModel" [(ngModel)]="bodyLogin.userPassword" required [ngClass]="{'is-invalid': userPss.errors?.required && userPss.touched,
+                        'is-valid': !userPss.errors?.required && userPss.touched}">
+                        </div>
+                        <span *ngIf="userPss.errors?.required && userPss.touched">
+                          <small class="text-danger">
+                            *Requerido
+                          </small>
+                        </span>
+                    </div>
+
+                    <div class="custom-control custom-control-alternative custom-checkbox">
+                        <input class="custom-control-input" id=" customCheckLogin" type="checkbox">
+                        <label class="custom-control-label" for=" customCheckLogin">
+                          <span class="text-muted">Remember me</span>
+                        </label>
+                    </div>
+
+                    <div class="text-center">
+                        <button type="button" class="btn btn-primary my-4" [disabled]="frmLogin.invalid" (click)="onLoginSubmit(frmLogin)">
+                          Sign in
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-6">
+                <a href="#" class="text-light"><small>Forgot password?</small></a>
+            </div>
+            <div class="col-6 text-right">
+                <a href="#" class="text-light"><small>Create new account</small></a>
+            </div>
         </div>
     </div>
-</form>
+</div>

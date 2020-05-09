@@ -1,1 +1,19 @@
-<p>admin-layout works!</p>
+<nav class="sidenav navbar navbar-vertical  fixed-left  navbar-expand-xs navbar-light bg-white" id="sidenav-main">
+    <div class="scrollbar-inner">
+        <app-sidebar></app-sidebar>
+
+    </div>
+</nav>
+<div class="main-content" id="panel">
+    {{ title }}
+    <app-navbar></app-navbar>
+    <br>
+    <br>
+
+
+    <div class="container-fluid mt--6">
+        <router-outlet></router-outlet>
+        <!-- Footer -->
+    </div>
+
+</div>
