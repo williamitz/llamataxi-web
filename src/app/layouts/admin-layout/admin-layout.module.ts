@@ -11,6 +11,7 @@ import { ApplicationComponent } from '../../pages/adminPages/application/applica
 import { PipesModule } from '../../pipes/pipes.module';
 import { FormsModule } from '@angular/forms';
 import { AccountUserComponent } from '../../pages/adminPages/account-user/account-user.component';
+import { ProfileDriverComponent } from '../../pages/adminPages/profile-driver/profile-driver.component';
 
 
 @NgModule({
@@ -19,7 +20,8 @@ import { AccountUserComponent } from '../../pages/adminPages/account-user/accoun
     NavPatherComponent,
     NavChildrenComponent,
     ApplicationComponent,
-    AccountUserComponent
+    AccountUserComponent,
+    ProfileDriverComponent
   ],
   imports: [
     CommonModule,

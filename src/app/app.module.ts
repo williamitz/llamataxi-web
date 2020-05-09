@@ -11,6 +11,7 @@ import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { ComponentsModule } from './components/components.module';
 import { FormsModule } from '@angular/forms';
 import { AccountUserComponent } from './pages/adminPages/account-user/account-user.component';
+import { ProfileDriverComponent } from './pages/adminPages/profile-driver/profile-driver.component';
 
 @NgModule({
   declarations: [

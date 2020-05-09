@@ -4,6 +4,7 @@ import { NavPatherComponent } from '../../pages/adminPages/nav-pather/nav-pather
 import { NavChildrenComponent } from '../../pages/adminPages/nav-children/nav-children.component';
 import { ApplicationComponent } from '../../pages/adminPages/application/application.component';
 import { AccountUserComponent } from '../../pages/adminPages/account-user/account-user.component';
+import { ProfileDriverComponent } from '../../pages/adminPages/profile-driver/profile-driver.component';
 
 export const ADMIN_ROUTES: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home', data: { title: 'Dashboard' }},
@@ -12,5 +13,6 @@ export const ADMIN_ROUTES: Routes = [
   { path: 'navChildren', component: NavChildrenComponent },
   { path: 'application', component: ApplicationComponent, data: { title: 'Aplicaciones' } },
   { path: 'accountUser', component: AccountUserComponent, data: { title: 'Cuentas de usuario' } },
+  { path: 'profileDriver/:id', component: ProfileDriverComponent, data: { title: 'Perfil del conductor' } },
 
 ];
