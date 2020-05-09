@@ -5,7 +5,7 @@ import { AuthService } from '../../../services/auth.service';
 
 import { StorageService } from '../../../services/storage.service';
 import { Router } from '@angular/router';
-import swal from 'sweetalert';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-login',
@@ -32,11 +32,11 @@ export class LoginComponent implements OnInit {
 
         if (res.showError !== 0) {
           const { css, msg } = this.onGetError( res.showError );
-          swal({
+          swal.fire({
             title: 'Mensaje al usuario',
             text: msg,
-            icon: css,
-            buttons: ['Ok']
+            icon: 'warning',
+            // buttons: ['Ok']
           });
 
           return;

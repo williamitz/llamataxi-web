@@ -10,6 +10,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { ApplicationComponent } from '../../pages/adminPages/application/application.component';
 import { PipesModule } from '../../pipes/pipes.module';
 import { FormsModule } from '@angular/forms';
+import { AccountUserComponent } from '../../pages/adminPages/account-user/account-user.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { FormsModule } from '@angular/forms';
     HomeComponent,
     NavPatherComponent,
     NavChildrenComponent,
-    ApplicationComponent
+    ApplicationComponent,
+    AccountUserComponent
   ],
   imports: [
     CommonModule,
