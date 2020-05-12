@@ -25,6 +25,10 @@ export class AccountUserComponent implements OnInit {
   loading = false;
   pathImg = URI_API + `/User/Img/Get/`;
   token = '';
+  showInactive = false;
+  titleModal = 'Nuevo usuario';
+  txtButton = 'Guardar';
+
   /**
    * dateVerified: null
    * document: "03653617"

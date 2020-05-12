@@ -8,6 +8,17 @@
                     <table class="table align-items-center">
                         <thead class="thead-light">
                             <tr>
+                                <th colspan="4">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalUser">
+                                  Nuevo
+                                </button>
+                                </th>
+                                <th colspan="3" id="alertUser">
+
+                                </th>
+                            </tr>
+                            <tr>
                                 <th scope="col" class="sort" data-sort="name">#</th>
                                 <th scope="col" class="sort" data-sort="budget">Apellidos y nombres</th>
                                 <th scope="col" class="sort" data-sort="status">Usuario</th>
@@ -82,7 +93,7 @@
                                       Ver inactivos
                                     </span>&nbsp;
                                             <label class="custom-toggle chkInactive">
-                                        <input type="checkbox" name="showInactive" [(ngModel)]="showInactive" (click)="onGetApplication(1, true)">
+                                        <input type="checkbox" name="showInactive" [(ngModel)]="showInactive" (click)="onGetListUser(1, true)">
                                         <span class="custom-toggle-slider rounded-circle"></span>
                                     </label>
                                         </div>
@@ -125,6 +136,30 @@
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalUser" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">{{ titleModal }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                ...
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">{{ txtButton }}</button>
+                <button type="button" class="btn btn-primary">Understood</button>
+            </div>
         </div>
     </div>
 </div>

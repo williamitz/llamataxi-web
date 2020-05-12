@@ -12,6 +12,7 @@ import { PipesModule } from '../../pipes/pipes.module';
 import { FormsModule } from '@angular/forms';
 import { AccountUserComponent } from '../../pages/adminPages/account-user/account-user.component';
 import { ProfileDriverComponent } from '../../pages/adminPages/profile-driver/profile-driver.component';
+import { SwiperModule } from 'ngx-swiper-wrapper';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { ProfileDriverComponent } from '../../pages/adminPages/profile-driver/pr
     ComponentsModule,
     PipesModule,
     FormsModule,
+    SwiperModule,
     RouterModule.forChild( ADMIN_ROUTES )
   ]
 })

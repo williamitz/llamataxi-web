@@ -42,13 +42,13 @@
                         <span class="font-weight-light">, {{ dataProfile.yearsOld }} </span>
                     </h5>
                     <div class="h5 font-weight-300">
-                        <i class="fa fa-user"></i> {{ dataProfile.userName }}
+                        <i class="fa fa-user"></i>&nbsp; {{ dataProfile.userName }}
                     </div>
                     <div class="h5 mt-4">
-                        <i class="fa fa-envelope"></i> {{ dataProfile.email }}
+                        <i class="fa fa-envelope"></i> &nbsp; {{ dataProfile.email }}
                     </div>
                     <div>
-                        <i class="fa fa-phone"></i> {{ dataProfile.phone }}
+                        <i class="fa fa-phone"></i> &nbsp; {{ dataProfile.prefixPhone }} {{ dataProfile.phone }}
                     </div>
                 </div>
             </div>
@@ -59,89 +59,367 @@
             <div class="card-header">
                 <div class="row align-items-center">
                     <div class="col-8">
-                        <h3 class="mb-0">Edit profile </h3>
+                        <h3 class="mb-0">Perfil del conductor </h3>
                     </div>
-                    <div class="col-4 text-right">
+                    <!-- <div class="col-4 text-right">
                         <a href="#!" class="btn btn-sm btn-primary">Settings</a>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             <div class="card-body">
                 <form>
-                    <h6 class="heading-small text-muted mb-4">User information</h6>
+                    <h6 class="heading-small text-muted mb-4">Datos personales</h6>
                     <div class="pl-lg-4">
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-username">Username</label>
-                                    <input type="text" id="input-username" class="form-control" placeholder="Username" value="lucky.jesse">
+                                    <label class="form-control-label">Documento</label>
+                                    <input type="text" class="form-control" placeholder="DNI" readonly [value]="dataProfile.prefix">
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-email">Email address</label>
-                                    <input type="email" id="input-email" class="form-control" placeholder="jesse@example.com">
+                                    <label class="form-control-label">N&uacute;mero</label>
+                                    <input class="form-control" readonly placeholder="00000000" [value]="dataProfile.document">
                                 </div>
                             </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label">Verificado por reniec</label>
+                                    <input readonly class="form-control" [value]="dataProfile.verifyReniec | yesno" placeholder="jesse@example.com">
+                                </div>
+                            </div>
+
                         </div>
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-5">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-first-name">First name</label>
-                                    <input type="text" id="input-first-name" class="form-control" placeholder="First name" value="Lucky">
+                                    <label class="form-control-label">
+                                      Nacionalidad
+                                    </label>
+                                    <input type="text" class="form-control" [value]="dataProfile.nameCountry">
                                 </div>
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-last-name">Last name</label>
-                                    <input type="text" id="input-last-name" class="form-control" placeholder="Last name" value="Jesse">
+                                    <label class="form-control-label">
+                                    Fecha nacimiento
+                                  </label>
+                                    <input type="text" class="form-control" [value]="dataProfile.brithDate | date">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                      Taxista certificado
+                                    </label>
+                                    <input type="text" class="form-control" placeholder="Last name" [value]="dataProfile.isEmployee | yesno">
                                 </div>
                             </div>
                         </div>
                     </div>
                     <hr class="my-4" />
                     <!-- Address -->
-                    <h6 class="heading-small text-muted mb-4">Contact information</h6>
+                    <h6 class="heading-small text-muted mb-4">Documentos</h6>
                     <div class="pl-lg-4">
                         <div class="row">
-                            <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-address">Address</label>
-                                    <input id="input-address" class="form-control" placeholder="Home Address" value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09" type="text">
+                            <div class="col-md-6">
+                                <!-- style="width: 18rem; " :entity/:idEntity/:fileName -->
+                                <div class="card" (click)="onShowPreview()" style="cursor: pointer;">
+                                    <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgLicense + token" alt="Card image cap" style="height: 170px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Licencia de conducir</h5>
+                                        <p class="card-text">
+                                            Expiraci&oacute;n - {{ dataProfile.dateLicenseExpiration | date }}
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="dataProfile.isEmployee" class="col-md-6">
+                                <!-- style="width: 18rem; " :entity/:idEntity/:fileName -->
+                                <div class="card">
+                                    <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgPhotoCheck + token" alt="Card image cap" style="height: 170px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Foto check</h5>
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-city">City</label>
-                                    <input type="text" id="input-city" class="form-control" placeholder="City" value="New York">
+                            <div class="col-lg-6">
+                                <div class="text-center" *ngIf="criminalIsPdf">
+                                    <canvas class=" card col-lg-12" #canvasCriminal>
+
+                                    </canvas>
+                                    <h4>Antecedentes penales</h4>
                                 </div>
+                                <div *ngIf="!criminalIsPdf">
+
+                                    <div class="card" style="width: 18rem;">
+                                        <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgCriminalRecord + token" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Antecedentes penales</h5>
+
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-country">Country</label>
-                                    <input type="text" id="input-country" class="form-control" placeholder="Country" value="United States">
+                            <div class="col-lg-6">
+                                <div class="text-center" *ngIf="policialIsPdf">
+                                    <canvas class=" card col-lg-12" #canvasPolicial>
+
+                                    </canvas>
+                                    <h4>Antecedentes policiales</h4>
                                 </div>
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-country">Postal code</label>
-                                    <input type="number" id="input-postal-code" class="form-control" placeholder="Postal code">
+                                <div *ngIf="!policialIsPdf">
+
+                                    <div class="card" style="width: 18rem;">
+                                        <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgPolicialRecord + token" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Antecedentes policiales</h5>
+
+                                        </div>
+                                    </div>
                                 </div>
+
+
+
                             </div>
                         </div>
                     </div>
-                    <hr class="my-4" />
+                    <!-- <hr class="my-4" /> -->
                     <!-- Description -->
-                    <h6 class="heading-small text-muted mb-4">About me</h6>
+                    <!-- <h6 class="heading-small text-muted mb-4">About me</h6>
                     <div class="pl-lg-4">
                         <div class="form-group">
                             <label class="form-control-label">About Me</label>
                             <textarea rows="4" class="form-control" placeholder="A few words about you ...">A beautiful Dashboard for Bootstrap 4. It is Free and Open Source.</textarea>
                         </div>
-                    </div>
+                    </div> -->
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        <div class="containerTime">
+
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <h3 class="mb-0">Timeline</h3>
+                </div>
+                <div class="card-body">
+                    <div class="timeline timeline-one-side" data-timeline-content="axis" data-timeline-axis-style="dashed">
+                        <div class="timeline-block">
+                            <span class="timeline-step badge-success">
+                          <i class="ni ni-bell-55"></i>
+                        </span>
+                            <div class="timeline-content">
+                                <small class="text-muted font-weight-bold">10:30 AM</small>
+                                <h5 class=" mt-3 mb-0">New message</h5>
+                                <p class=" text-sm mt-1 mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                <div class="mt-3">
+                                    <span class="badge badge-pill badge-success">design</span>
+                                    <span class="badge badge-pill badge-success">system</span>
+                                    <span class="badge badge-pill badge-success">creative</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-block">
+                            <span class="timeline-step badge-danger">
+                          <i class="ni ni-html5"></i>
+                        </span>
+                            <div class="timeline-content">
+                                <small class="text-muted font-weight-bold">10:30 AM</small>
+                                <h5 class=" mt-3 mb-0">Product issue</h5>
+                                <p class=" text-sm mt-1 mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                <div class="mt-3">
+                                    <span class="badge badge-pill badge-danger">design</span>
+                                    <span class="badge badge-pill badge-danger">system</span>
+                                    <span class="badge badge-pill badge-danger">creative</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-block">
+                            <span class="timeline-step badge-info">
+                          <i class="ni ni-like-2"></i>
+                        </span>
+                            <div class="timeline-content">
+                                <small class="text-muted font-weight-bold">10:30 AM</small>
+                                <h5 class=" mt-3 mb-0">New likes</h5>
+                                <p class=" text-sm mt-1 mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                <div class="mt-3">
+                                    <span class="badge badge-pill badge-info">design</span>
+                                    <span class="badge badge-pill badge-info">system</span>
+                                    <span class="badge badge-pill badge-info">creative</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-block">
+                            <span class="timeline-step badge-success">
+                          <i class="ni ni-bell-55"></i>
+                        </span>
+                            <div class="timeline-content">
+                                <small class="text-muted font-weight-bold">10:30 AM</small>
+                                <h5 class=" mt-3 mb-0">New message</h5>
+                                <p class=" text-sm mt-1 mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                <div class="mt-3">
+                                    <span class="badge badge-pill badge-success">design</span>
+                                    <span class="badge badge-pill badge-success">system</span>
+                                    <span class="badge badge-pill badge-success">creative</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-block">
+                            <span class="timeline-step badge-danger">
+                          <i class="ni ni-html5"></i>
+                        </span>
+                            <div class="timeline-content">
+                                <small class="text-muted font-weight-bold">10:30 AM</small>
+                                <h5 class=" mt-3 mb-0">Product issue</h5>
+                                <p class=" text-sm mt-1 mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                <div class="mt-3">
+                                    <span class="badge badge-pill badge-danger">design</span>
+                                    <span class="badge badge-pill badge-danger">system</span>
+                                    <span class="badge badge-pill badge-danger">creative</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <h3>Vehiculos</h3>
+        <div class="swiper-container" [swiper]="configSlider" [(index)]="index">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" *ngFor="let vehicle of vehicles">
+                    <div class="table">
+
+                        <div class="row">
+                            <div class="col-12">
+                                <h4> {{vehicle.numberPlate}} </h4>
+                                <p>
+                                    {{ vehicle.year }}
+                                    <br> {{ vehicle.color | color }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgPropertyCard  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px; " class="borderImg">
+                                <p>Tarjeta de propiedad</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgSoat  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px;" class="borderImg">
+                                <p>
+                                    Soat <br> Exp. {{ vehicle.dateSoatExpiration | date }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiFrontal  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
+                            </div>
+                            <div class="col-6">
+                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiBack  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swiper-scrollbar"></div>
+            <div class="swiper-pagination"></div>
+
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+        <!-- <swiper [config]="configSlider" ([index])="index">
+
+            <div *ngFor="let vehicle of vehicles">
+
+                <div class="table">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <h4> {{vehicle.numberPlate}} </h4>
+                            <p>
+                                {{ vehicle.year }}
+                                <br> {{ vehicle.color | color }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgPropertyCard  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px; " class="borderImg">
+                            <p>Tarjeta de propiedad</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgSoat  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px;" class="borderImg">
+                            <p>
+                                Soat <br> Exp. {{ vehicle.dateSoatExpiration | date }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiFrontal  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
+                        </div>
+                        <div class="col-6">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiBack  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swiper-button-prevTwo"></div>
+            <div class="swiper-button-nextTwo"></div>
+        </swiper> -->
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" style="display: none;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="btnShowPreview">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
