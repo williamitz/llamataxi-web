@@ -156,3 +156,8 @@ i-bell-55::before {
 .borderImg {
     border: 1px solid royalblue;
 }
+
+.msgLength {
+    position: relative;
+    left: 85%;
+}

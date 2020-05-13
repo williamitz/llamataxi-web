@@ -3,6 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { StorageService } from './storage.service';
 import { IResponse } from '../interfaces/response.interface';
+import { UserModel } from '../models/user.model';
 
 const URI_API = environment.URL_SERVER;
 
@@ -24,5 +25,26 @@ export class UserService {
     this.storage.onLoadToken();
     return this.http.get<IResponse>( URI_API + `/User/Get${ params }`, { headers: { Authorization: this.storage.token } } );
   }
+
+  onAddUser( body: UserModel ) {
+    return this.http.post<IResponse>( URI_API + `/User/Add`, body, { headers: { Authorization: this.storage.token } } );
+  }
+
+  onGetNationalityAll() {
+    // this.storage.onLoadToken();
+    return this.http.get<IResponse>( URI_API + `/nationality/GetAll`, { headers: { Authorization: this.storage.token } } );
+  }
+
+  onGetTypeDocumentAll() {
+    // this.storage.onLoadToken();
+    return this.http.get<IResponse>( URI_API + `/typeDocument/GetAll`, { headers: { Authorization: this.storage.token } } );
+  }
+
+  onGetReniec( document: string ) {
+    return this.http.get( `/dni/${ document }` );
+  }
+
+
+
 
 }

@@ -1,8 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { UserService } from '../../../services/user.service';
 import { PagerService } from '../../../services/pager.service';
 import { environment } from '../../../../environments/environment';
 import { StorageService } from '../../../services/storage.service';
+import { UserModel } from 'src/app/models/user.model';
+import { INationality } from 'src/app/interfaces/nationality.interface';
+import { ITypeDocument } from '../../../interfaces/type-document.interface';
+import { Subscription } from 'rxjs';
+import { IRespReniec } from '../../../interfaces/reniec.interface';
+import * as $ from 'jquery';
+import { Options } from 'select2';
+import { NgForm } from '@angular/forms';
 
 const URI_API = environment.URL_SERVER;
 @Component({
@@ -10,7 +18,7 @@ const URI_API = environment.URL_SERVER;
   templateUrl: './account-user.component.html',
   styleUrls: ['./account-user.component.css']
 })
-export class AccountUserComponent implements OnInit {
+export class AccountUserComponent implements OnInit, OnDestroy {
 
   dataUser: any[] = [];
 
@@ -23,33 +31,28 @@ export class AccountUserComponent implements OnInit {
 
   loadData = false;
   loading = false;
+  loadingReniec = false;
   pathImg = URI_API + `/User/Img/Get/`;
   token = '';
   showInactive = false;
   titleModal = 'Nuevo usuario';
   txtButton = 'Guardar';
 
-  /**
-   * dateVerified: null
-   * document: "03653617"
-   * email: "Acb.industri@hotmail.com"
-   * fkUserVerified: null
-   * img: "2-photo.png"
-   * name: "ANGELO"
-   * nameComplete: "CALLE BERMEO, ANGELO"
-   * nameCountry: "Perú"
-   * nameDocument: "Documento nacional de identidad"
-   * phone: "949503460"
-   * pkDriver: 2
-   * pkPerson: 2
-   * prefix: "DNI"
-   * prefixPhone: "+51"
-   * role: "DRIVER_ROLE"
-   * surname: "CALLE BERMEO"
-   * userName: "949503460"
-   * verified: 0
-   * verifyReniec: 1
-   */
+  dataNationality: INationality[] = [];
+  dataTypeDoc: ITypeDocument[] = [];
+
+  nationalitySbc: Subscription;
+  typeDocSbc: Subscription;
+  docLong = 8;
+
+  bodyUser: UserModel;
+  optCbx: Options = {
+    theme: 'classic',
+    closeOnSelect: false,
+    width: '300',
+    allowClear: true
+  };
+  prefix = '+';
 
   constructor( private userSvc: UserService , private pagerSvc: PagerService, private storage: StorageService) { }
 
@@ -57,6 +60,29 @@ export class AccountUserComponent implements OnInit {
     this.storage.onLoadToken();
     this.token = `?token=${ this.storage.token }`;
     this.onGetListUser( 1 );
+    this.bodyUser = new UserModel();
+    this.onLoadTypeDoc();
+    this.onLoadNationality();
+  }
+
+  onLoadTypeDoc() {
+    this.nationalitySbc = this.userSvc.onGetTypeDocumentAll().subscribe( (res) => {
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      this.dataTypeDoc = res.data;
+    });
+  }
+
+  onLoadNationality() {
+    this.typeDocSbc = this.userSvc.onGetNationalityAll().subscribe( (res) => {
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      this.dataNationality = res.data;
+    });
   }
 
   onGetListUser( page: number, chk = false ) {
@@ -77,6 +103,128 @@ export class AccountUserComponent implements OnInit {
       }
 
     });
+  }
+
+  onChangeCountry(event: INationality) {
+    this.prefix = event.prefixPhone;
+    console.log(event);
+  }
+
+  onChangeDocument() {
+    console.log('cambio', this.bodyUser.document.length);
+    if ( this.bodyUser.fkTypeDocument === 1 && this.bodyUser.document.length === 8 ) {
+      this.loadingReniec = true;
+      this.userSvc.onGetReniec( this.bodyUser.document ).subscribe( (res: IRespReniec) => {
+        this.loadingReniec = false;
+        if (!res) {
+          console.log(' no encontrado');
+          this.bodyUser.verifyReniec = false;
+          return;
+        }
+        console.log(res);
+        this.bodyUser.verifyReniec = true;
+        this.bodyUser.name = res.nombres,
+        this.bodyUser.surname = `${ res.apellido_paterno } ${ res.apellido_materno }`;
+      });
+    }
+  }
+
+  onSubmitUser( frm: NgForm ) {
+    if (frm.valid) {
+
+      this.loading = true;
+      if (!this.loadData) {
+        this.userSvc.onAddUser( this.bodyUser ).subscribe( (res) => {
+          if (!res.ok) {
+            throw new Error( res.error );
+          }
+
+          const { msg, css, icon } = this.onGetError( res.showError );
+          this.loading = false;
+
+          if (res.showError !== 0) {
+            this.onShowAlert('alertUserModal', css, icon, msg );
+            return;
+          }
+          this.onShowAlert('alertUser', css, icon, msg );
+          $('#btnCloseModal').trigger('click');
+          this.onGetListUser(1);
+        });
+
+        return;
+      }
+
+      console.log(this.bodyUser);
+    }
+  }
+
+  onShowAlert( idAlert: string, css: string, icon: string, msg: string ) {
+    let html = `<div class="alert alert-${ css } alert-dismissible fade show" role="alert">`;
+    html += `<span class="alert-icon"><i class="fa fa-${ icon }"></i></span>`;
+    html += `<span class="alert-text"> ${ msg } </span>`;
+    html += `<button type="button" class="close" data-dismiss="alert" aria-label="Close">`;
+    html += `<span aria-hidden="true">&times;</span>`;
+    html += `</button>`;
+    html += `</div>`;
+
+    $(`#${ idAlert }`).html(html);
+  }
+
+  onResetForm() {
+    this.loadData = false;
+    this.titleModal = 'Nuevo usuario';
+    this.txtButton = 'Guardar';
+
+    $('#frmUser').trigger('click');
+    this.bodyUser.onReset();
+  }
+
+  onChangeTypeDoc() {
+    const finded = this.dataTypeDoc.find( doc => doc.pkTypeDocument = this.bodyUser.fkTypeDocument );
+    if (!finded) {
+      throw new Error('No se encontró registro');
+    }
+
+    this.docLong = finded.longitude;
+  }
+
+  ngOnDestroy() {
+    this.nationalitySbc.unsubscribe();
+    this.typeDocSbc.unsubscribe();
+  }
+
+  onGetError( showError: number ) {
+    let arrError = showError === 0 ? ['Se ha creado un nuevo usuario con éxito'] : ['Ya existe un registro'];
+    const css = showError === 0 ? 'success' : 'danger';
+    const icon = showError === 0 ? 'check' : 'exclamation-circle';
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 1) {
+      arrError.push('con este usuario');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 2) {
+      arrError.push('con este email');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 4) {
+      arrError.push('se encuentra inactivo');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 8) {
+      arrError = ['No se encontró tipo de documento'];
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 16) {
+      arrError = ['No se encontró nacionalidad'];
+    }
+
+    return { msg: arrError.join(', '), css, icon };
+
   }
 
 }

@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import Swiper from 'swiper';
 import { IVehicle } from '../../../interfaces/vehicle.interface';
 import { IProfileDriver } from 'src/app/interfaces/driver-profile.interface';
+import { MessageModel } from '../../../models/message.model';
 
 const URI_API = environment.URL_SERVER;
 declare var pdfjsLib: any;
@@ -17,12 +18,14 @@ declare var pdfjsLib: any;
 })
 export class ProfileDriverComponent implements OnInit {
   // :entity/:idEntity/:fileName
-  @ViewChild('canvasCriminal', {static: false}) canvasCriminal: ElementRef;
-  @ViewChild('canvasPolicial', {static: false}) canvasPolicial: ElementRef;
+  @ViewChild('canvasCriminal') canvasCriminal: ElementRef;
+  @ViewChild('canvasPolicial') canvasPolicial: ElementRef;
 
   pathDriver = URI_API + `/Driver/Img/Get/`;
   pathImg = URI_API + `/User/Img/Get/`;
   token = '';
+
+  bodyMessage: MessageModel;
 
   criminalIsPdf = false;
   policialIsPdf = false;
@@ -48,8 +51,6 @@ export class ProfileDriverComponent implements OnInit {
     },
   };
 
-
-
   constructor(private router: ActivatedRoute, private driverSvc: DriverService, private storage: StorageService) { }
 
   ngOnInit() {
@@ -57,6 +58,7 @@ export class ProfileDriverComponent implements OnInit {
     this.token = `?token=${ this.storage.token }`;
     console.log(this.router.snapshot.params.id);
     this.onGetProfile( this.router.snapshot.params.id || 0 );
+    this.bodyMessage = new MessageModel();
     // console.log(this.router.snapshot.data);
   }
 
@@ -153,5 +155,6 @@ export class ProfileDriverComponent implements OnInit {
   onShowPreview() {
     $('#btnShowPreview').trigger('click');
   }
+
 
 }

@@ -14,7 +14,9 @@
             <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
                 <div class="d-flex justify-content-between">
                     <a href="#" class="btn btn-sm btn-info  mr-4 ">Connect</a>
-                    <a href="#" class="btn btn-sm btn-default float-right">Message</a>
+                    <button class="btn btn-sm btn-default float-right" data-toggle="modal" data-target="#modalMessage">
+                      Mensaje
+                    </button>
                 </div>
             </div>
             <div class="card-body pt-0">
@@ -51,6 +53,15 @@
                         <i class="fa fa-phone"></i> &nbsp; {{ dataProfile.prefixPhone }} {{ dataProfile.phone }}
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4>Mensajería</h4>
+            </div>
+            <div class="card-body">
+
             </div>
         </div>
     </div>
@@ -420,6 +431,67 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo mensaje</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+                <form action="">
+                    <div class="form-group">
+                        <label for="txtSubject">Asunto</label>
+                        <input id="txtSubject" type="text" class="form-control " name="subject" [(ngModel)]="bodyMessage.subject" #subject="ngModel" required maxlength="50" [ngClass]="{
+                          'is-invalid': (subject.errors?.required || subject.errors?.maxlength ) && subject.touched,
+                          'is-valid': !subject.errors?.required && !subject.errors?.maxlength && subject.touched }">
+                        <span *ngIf="subject.errors?.required && subject.touched">
+                          <small class="text-danger">*Requerido</small>
+                        </span>
+                        <span *ngIf="subject.errors?.maxlength && subject.touched">
+                          <small class="text-danger">*M&aacute;ximo 50 caracteres</small>
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtMessage">
+                          Asunto
+                        </label>
+                        <span class="msgLength">
+                              <small>{{ bodyMessage.message.length }}</small>
+                            </span>
+                        <textarea id="txtMessage" class="form-control" rows="10" name="message" [(ngModel)]="bodyMessage.message" #message="ngModel" required maxlength="255" [ngClass]="{
+                          'is-invalid': (message.errors?.required || message.errors?.maxlength ) && message.touched,
+                          'is-valid': !message.errors?.required && !message.errors?.maxlength && message.touched }">
+                      </textarea>
+
+                        <span *ngIf="message.errors?.required && message.touched">
+                          <small class="text-danger">*Requerido</small>
+                        </span>
+                        <span *ngIf="message.errors?.maxlength && message.touched">
+                          <small class="text-danger">*M&aacute;ximo 255 caracteres</small>
+                        </span>
+
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary">
+
+                  <i class="ni ni-send"></i>
+                  Enviar
+                </button>
             </div>
         </div>
     </div>

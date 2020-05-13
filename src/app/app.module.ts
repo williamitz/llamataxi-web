@@ -1,8 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
-
-
+// import { NgSelect2Module } from 'ng-select2';
+import { NgSelectModule } from '@ng-select/ng-select';
 import { SwiperModule } from 'ngx-swiper-wrapper';
 import { SWIPER_CONFIG } from 'ngx-swiper-wrapper';
 import { SwiperConfigInterface } from 'ngx-swiper-wrapper';
@@ -39,6 +39,8 @@ const socketConfig: SocketIoConfig = { url: environment.URL_SERVER, options: {} 
     AppRoutingModule,
     ComponentsModule,
     SwiperModule,
+    // NgSelect2Module,
+    NgSelectModule,
     SocketIoModule.forRoot(socketConfig),
   ],
   providers: [

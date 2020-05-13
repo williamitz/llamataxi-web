@@ -13,6 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { AccountUserComponent } from '../../pages/adminPages/account-user/account-user.component';
 import { ProfileDriverComponent } from '../../pages/adminPages/profile-driver/profile-driver.component';
 import { SwiperModule } from 'ngx-swiper-wrapper';
+// import { NgSelect2Module } from 'ng-select2';
+import { NgSelectModule } from '@ng-select/ng-select';
+
 
 
 @NgModule({
@@ -30,6 +33,8 @@ import { SwiperModule } from 'ngx-swiper-wrapper';
     PipesModule,
     FormsModule,
     SwiperModule,
+    NgSelectModule,
+    // NgSelect2Module,
     RouterModule.forChild( ADMIN_ROUTES )
   ]
 })
