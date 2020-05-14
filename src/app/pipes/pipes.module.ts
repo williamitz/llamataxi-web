@@ -5,6 +5,7 @@ import { YesnoPipe } from './yesno.pipe';
 import { RolesPipe } from './roles.pipe';
 import { ColorPipe } from './color.pipe';
 import { MomentPipe } from './moment.pipe';
+import { ReplacePipe } from './replace.pipe';
 
 @NgModule({
   declarations: [
@@ -12,14 +13,16 @@ import { MomentPipe } from './moment.pipe';
     YesnoPipe,
     RolesPipe,
     ColorPipe,
-    MomentPipe
+    MomentPipe,
+    ReplacePipe
   ],
   exports: [
     RowIndexPipe,
     YesnoPipe,
     RolesPipe,
     ColorPipe,
-    MomentPipe
+    MomentPipe,
+    ReplacePipe
   ],
   imports: [
     CommonModule

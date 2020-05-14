@@ -31,7 +31,7 @@ export class ProfileDriverComponent implements OnInit {
   token = '';
 
   bodyMessage: MessageModel;
-
+  bodyResponse: MessageModel;
   criminalIsPdf = false;
   policialIsPdf = false;
 
@@ -59,10 +59,12 @@ export class ProfileDriverComponent implements OnInit {
   };
 
   dataMsg: IMsg[] = [];
+  dataMsgRes: IMsg[] = [];
   dataViewMsg: IMsg = {
     pkMessage: 0
   };
-
+  newResponse = false;
+  loadingResponse = false;
   // tslint:disable-next-line: max-line-length
   constructor(private router: ActivatedRoute, private driverSvc: DriverService, private storage: StorageService, private msgSvc: MessageService) { }
 
@@ -73,6 +75,7 @@ export class ProfileDriverComponent implements OnInit {
     this.pkDriver = Number( this.router.snapshot.params.id ) || 0;
     this.onGetProfile( this.pkDriver );
     this.bodyMessage = new MessageModel(true);
+    this.bodyResponse = new MessageModel( true );
     this.onGetMessages();
     // console.log(this.router.snapshot.data);
   }
@@ -207,7 +210,7 @@ export class ProfileDriverComponent implements OnInit {
           icon: 'success',
           text: 'Mensaje enviado exitosamente'
         });
-        console.log(res);
+        this.onGetMessages();
       });
     }
   }
@@ -241,14 +244,93 @@ export class ProfileDriverComponent implements OnInit {
   onShowViewMsg( pkMessage: number ) {
     console.log('mensaje', pkMessage);
     this.dataViewMsg = this.dataMsg.find( msg => msg.pkMessage === pkMessage );
+    this.bodyResponse.pkMessage = this.dataViewMsg.pkMessage;
+    this.bodyResponse.fkUserReceptor = this.dataProfile.pkUser;
     this.msgSvc.onGetResponseMsg( pkMessage ).subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
 
+      this.dataMsgRes = res.data;
       console.log(res);
     });
     $('#btnShowViewMsgModal').trigger('click');
+  }
+
+  onSubmitMsgRes(frmMsgRes: NgForm) {
+    if (frmMsgRes.valid) {
+      console.log(this.bodyResponse);
+      this.loadingResponse = true;
+
+      this.msgSvc.onAddMsgRes( this.bodyResponse ).subscribe( (res) => {
+        if (!res.ok) {
+          throw new Error( res.error );
+        }
+
+        this.loadingResponse = false;
+        if (res.showError !== 0) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: this.onGetErrorMsgRes( res.showError )
+          });
+          return;
+        }
+
+        const finded = this.dataMsg.find( msg => msg.pkMessage === this.bodyResponse.pkMessage );
+        finded.totalResponses += 1;
+        const resRes: any = res.data;
+        this.dataMsgRes.push({
+            pkMessage: resRes.pkMessage,
+            fkUserEmisor: 0,
+            fkUserReceptor: 0,
+            nameEmisor: resRes.nameEmisor,
+            nameReceptor: resRes.nameReceptor,
+            dateRegister: resRes.dateRegister,
+            message: this.bodyResponse.message
+        });
+
+        Swal.fire({
+          icon: 'success',
+          title: 'Mensaje al usuario',
+          text: 'Mensaje enviado con éxito'
+        });
+        this.newResponse = false;
+        this.bodyResponse.message = '';
+        console.log(res);
+      });
+    }
+  }
+
+  onGetErrorMsgRes( showError: number ) {
+    const arrError = showError === 0 ? ['Mensaje enviado con éxito'] : ['Error'];
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 1) {
+      arrError.push('no se encontró registro del mensaje');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 2) {
+      arrError.push('no se encontró registro del mensaje');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 4) {
+      arrError.push('emisor inactivo');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 8) {
+      arrError.push('no se encontró registro del receptor');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 16) {
+      arrError.push('receptor inactivo');
+    }
+
+    return arrError.join(', ');
   }
 
 }

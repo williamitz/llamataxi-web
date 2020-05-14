@@ -30,4 +30,10 @@ export class MessageService {
     // tslint:disable-next-line: max-line-length
     return this.http.get<IResponse>( URI_API + `/Message/Get/Response/${ pkMessage }`, {headers: { Authorization: this.storageSvc.token }} );
   }
+
+  onAddMsgRes( body: MessageModel ) {
+    this.storageSvc.onLoadToken();
+    return this.http.post<IResponse>( URI_API + `/Message/Add/Response`, body, {headers: { Authorization: this.storageSvc.token }} );
+  }
+
 }

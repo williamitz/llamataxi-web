@@ -83,8 +83,8 @@
                                 <!-- <div class="custom-control custom-checkbox custom-checkbox-success">
                                     <input class="custom-control-input" id="chk-msg-{{ msg.pkMessage }}" type="checkbox" checked="">
                                     <label class="custom-control-label" for="chk-msg-{{ msg.pkMessage }}"></label>
-                                </div> *ngIf="msg.totalResponses > 0" -->
-                                <span class="badge badge-pill badge-success">+{{ msg.totalResponses }}</span>
+                                </div> -->
+                                <span *ngIf="msg.totalResponses > 0" class="badge badge-pill badge-success">+{{ msg.totalResponses }}</span>
                             </div>
                         </div>
                     </li>
@@ -590,23 +590,34 @@
 
                     </div>
                     <div class="col-10">
-                        <span>
-                          <h5>
-                            De: {{ dataViewMsg.nameEmisor }}
-                        </h5>
-                        </span>
+                        <div class="row">
+                            <div class="col-7">
+                                <span>
+                                    <h5>
+                                      De: {{ dataViewMsg.nameEmisor }}
+                                  </h5>
+                                  </span>
 
-                        <small>
-                              {{ dataViewMsg.userEmisor }}
-                              <br>
-                              {{ dataViewMsg.dateRegister | moment }}
-                        </small>
-
+                                <small>
+                                        {{ dataViewMsg.userEmisor }}
+                                        <br>
+                                        {{ dataViewMsg.dateRegister | moment }}
+                                  </small>
+                            </div>
+                            <div class="col-5 text-center">
+                                <button class="btn btn-sm btn-primary " (click)="newResponse = true">
+                                    Responder
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
+
                 <div class="row">
-                    <div class="col-12 subject-border">
-                        {{ dataViewMsg.message }}
+                    <div class="col-12 ">
+                        <div class="form-group subject-border">
+                            {{ dataViewMsg.message }}
+                        </div>
                     </div>
                 </div>
 
@@ -616,75 +627,63 @@
                         <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
 
                             <!-- Accordion card -->
-                            <div class="card-pd">
+                            <div class="card-pd" *ngFor="let msgRes of dataMsgRes">
 
                                 <!-- Card header -->
                                 <div class="" role="tab" id="headingOne1">
-                                    <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1" aria-expanded="true" aria-controls="collapseOne1">
-                                        <h5 class="mb-0">
-                                            Collapsible Group Item #1 <i class="fas fa-angle-down rotate-icon"></i>
-                                        </h5>
+                                    <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseRes{{ msgRes.pkMessage }}" aria-expanded="true">
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <h5 class="mb-0">
+                                                    {{ msgRes.nameEmisor }} &nbsp;&nbsp;-&nbsp;&nbsp; {{ msgRes.dateRegister | moment }}
+                                                </h5>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <i class="fas fa-angle-down rotate-icon"></i>
+                                            </div>
+                                        </div>
                                     </a>
                                 </div>
                                 <!-- Card body -->
-                                <div id="collapseOne1" class="collapse show" role="tabpanel" aria-labelledby="headingOne1" data-parent="#accordionEx">
+                                <div id="collapseRes{{ msgRes.pkMessage }}" class="collapse show" role="tabpanel" aria-labelledby="headingOne1" data-parent="#accordionEx">
                                     <div class="">
-                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi mollitia debitis porro autem reprehenderit et accusantium, eos quos vero eaque omnis est sed doloribus molestiae repellendus esse sapiente dolore! Deleniti!
+                                        <p>
+                                            {{ msgRes.message }}
+                                        </p>
                                     </div>
                                 </div>
 
                             </div>
-                            <!-- Accordion card -->
 
-                            <!-- Accordion card -->
-                            <div class=" card-pd">
-
-                                <!-- Card header -->
-                                <div class="" role="tab" id="headingTwo2">
-                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">
-                                        <h5 class="mb-0">
-                                            Collapsible Group Item #2 <i class="fas fa-angle-down rotate-icon"></i>
-                                        </h5>
-                                    </a>
-                                </div>
-
-                                <!-- Card body -->
-                                <div id="collapseTwo2" class="collapse" role="tabpanel" aria-labelledby="headingTwo2" data-parent="#accordionEx">
-                                    <div class="">
-                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi blanditiis corporis accusamus, beatae necessitatibus, porro pariatur exercitationem vero amet sed nemo quasi, ab eos ad eius cum dolorem. Ut, tempora!
-                                    </div>
-                                </div>
-
-                            </div>
-                            <!-- Accordion card -->
-
-                            <!-- Accordion card -->
-                            <div class="card-pd">
-
-                                <!-- Card header -->
-                                <div class="" role="tab" id="headingThree3">
-                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseThree3" aria-expanded="false" aria-controls="collapseThree3">
-                                        <h5 class="mb-0">
-                                            Collapsible Group Item #3 <i class="fas fa-angle-down rotate-icon"></i>
-                                        </h5>
-                                    </a>
-                                </div>
-
-                                <!-- Card body -->
-                                <div id="collapseThree3" class="collapse" role="tabpanel" aria-labelledby="headingThree3" data-parent="#accordionEx">
-                                    <div class="">
-                                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Praesentium culpa unde at cumque ex ut dolorum inventore. Obcaecati quidem doloremque, explicabo quam error similique neque repudiandae cum commodi laudantium ab!
-                                    </div>
-                                </div>
-
-                            </div>
-                            <!-- Accordion card -->
 
                         </div>
                         <!-- Accordion wrapper -->
                     </div>
                 </div>
 
+                <div *ngIf="newResponse" class="row">
+                    <div class="col-10">
+                        <form #frmMsgRes="ngForm">
+
+                            <textarea class="form-control" name="messageRes" [(ngModel)]="bodyResponse.message" #msgResponse="ngModel" rows="3" placeholder="Escriba una respuesta" required [ngClass]="{
+                          'is-invalid': msgResponse.errors?.required && msgResponse.touched,
+                          'is-valid': !msgResponse.errors?.required && msgResponse.touched
+                        }">
+                        </textarea>
+                            <span *ngIf="msgResponse.errors?.required && msgResponse.touched">
+                              <small class="text-danger">*Requerido</small>
+                            </span>
+                        </form>
+                    </div>
+                    <div class="col-2 text-center" style="padding-top: 10px;">
+                        <button class="btn btn-sm btn-danger" (click)="newResponse = false">
+                          Cerrar
+                        </button>
+                        <button class="btn btn-sm btn-success" style="margin-top: 10px;" [disabled]="frmMsgRes.invalid || loadingResponse" (click)="onSubmitMsgRes(frmMsgRes)">
+                          Enviar
+                        </button>
+                    </div>
+                </div>
 
             </div>
             <div class="modal-footer">
