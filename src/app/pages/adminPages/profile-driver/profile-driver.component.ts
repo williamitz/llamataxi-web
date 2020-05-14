@@ -4,10 +4,13 @@ import { DriverService } from '../../../services/driver.service';
 import { environment } from '../../../../environments/environment';
 import { StorageService } from '../../../services/storage.service';
 import Swal from 'sweetalert2';
-import Swiper from 'swiper';
 import { IVehicle } from '../../../interfaces/vehicle.interface';
 import { IProfileDriver } from 'src/app/interfaces/driver-profile.interface';
 import { MessageModel } from '../../../models/message.model';
+import { NgForm } from '@angular/forms';
+import { MessageService } from '../../../services/message.service';
+import * as $ from 'jquery';
+import { IMsg } from '../../../interfaces/message.interface';
 
 const URI_API = environment.URL_SERVER;
 declare var pdfjsLib: any;
@@ -21,6 +24,8 @@ export class ProfileDriverComponent implements OnInit {
   @ViewChild('canvasCriminal') canvasCriminal: ElementRef;
   @ViewChild('canvasPolicial') canvasPolicial: ElementRef;
 
+  pkDriver = 0;
+
   pathDriver = URI_API + `/Driver/Img/Get/`;
   pathImg = URI_API + `/User/Img/Get/`;
   token = '';
@@ -33,6 +38,8 @@ export class ProfileDriverComponent implements OnInit {
   dataProfile: IProfileDriver = {
     img: ''
   };
+
+  loading = false;
 
   vehicles: IVehicle[];
   index = 0;
@@ -51,14 +58,22 @@ export class ProfileDriverComponent implements OnInit {
     },
   };
 
-  constructor(private router: ActivatedRoute, private driverSvc: DriverService, private storage: StorageService) { }
+  dataMsg: IMsg[] = [];
+  dataViewMsg: IMsg = {
+    pkMessage: 0
+  };
+
+  // tslint:disable-next-line: max-line-length
+  constructor(private router: ActivatedRoute, private driverSvc: DriverService, private storage: StorageService, private msgSvc: MessageService) { }
 
   ngOnInit() {
     this.storage.onLoadToken();
     this.token = `?token=${ this.storage.token }`;
     console.log(this.router.snapshot.params.id);
-    this.onGetProfile( this.router.snapshot.params.id || 0 );
-    this.bodyMessage = new MessageModel();
+    this.pkDriver = Number( this.router.snapshot.params.id ) || 0;
+    this.onGetProfile( this.pkDriver );
+    this.bodyMessage = new MessageModel(true);
+    this.onGetMessages();
     // console.log(this.router.snapshot.data);
   }
 
@@ -151,10 +166,89 @@ export class ProfileDriverComponent implements OnInit {
     });
   }
 
+  onGetMessages() {
+    this.msgSvc.onGetMessages( this.pkDriver, 1, 10, true ).subscribe( (res) => {
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      this.dataMsg = res.data;
+      console.log(res);
+    });
+  }
 
   onShowPreview() {
     $('#btnShowPreview').trigger('click');
   }
 
+  onSendMessage(frm: NgForm) {
+    if (frm.valid) {
+      this.loading = true;
+      this.bodyMessage.fkUserReceptor = this.dataProfile.pkUser;
+      console.log(this.bodyMessage);
+      this.msgSvc.onAddMessage( this.bodyMessage ).subscribe( (res) => {
+        if (!res.ok) {
+          throw new Error( res.error );
+        }
+
+        this.loading = false;
+        if (res.showError !== 0) {
+          Swal.fire({
+            title: 'Mensaje al usuario',
+            icon: 'error',
+            text: this.onGetErrorMsg( res.showError )
+          });
+
+          return;
+        }
+        $('#btnCloseModalMg').trigger('click');
+        Swal.fire({
+          title: 'Mensaje al usuario',
+          icon: 'success',
+          text: 'Mensaje enviado exitosamente'
+        });
+        console.log(res);
+      });
+    }
+  }
+
+  onGetErrorMsg( showError: number ) {
+    let arrError = showError === 0 ? ['Mensaje enviado con éxito'] : ['Error'];
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 1) {
+      arrError.push('no se encontró registro del emisor');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 2) {
+      arrError.push('emisor inactivo');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 4) {
+      arrError.push('no se encontró registro del receptor');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 8) {
+      arrError.push('receptor inactivo');
+    }
+
+    return arrError.join(', ');
+  }
+
+  onShowViewMsg( pkMessage: number ) {
+    console.log('mensaje', pkMessage);
+    this.dataViewMsg = this.dataMsg.find( msg => msg.pkMessage === pkMessage );
+    this.msgSvc.onGetResponseMsg( pkMessage ).subscribe( (res) => {
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      console.log(res);
+    });
+    $('#btnShowViewMsgModal').trigger('click');
+  }
 
 }

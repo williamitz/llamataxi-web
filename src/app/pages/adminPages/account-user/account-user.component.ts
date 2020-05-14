@@ -11,6 +11,7 @@ import { IRespReniec } from '../../../interfaces/reniec.interface';
 import * as $ from 'jquery';
 import { Options } from 'select2';
 import { NgForm } from '@angular/forms';
+import { SocketService } from '../../../services/socket.service';
 
 const URI_API = environment.URL_SERVER;
 @Component({
@@ -20,6 +21,8 @@ const URI_API = environment.URL_SERVER;
 })
 export class AccountUserComponent implements OnInit, OnDestroy {
 
+  userCnnSbc: Subscription;
+  userDiscnnSbc: Subscription;
   dataUser: any[] = [];
 
   infoPagination = 'Mostrando 0 de 0 registros.';
@@ -54,15 +57,18 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   };
   prefix = '+';
 
-  constructor( private userSvc: UserService , private pagerSvc: PagerService, private storage: StorageService) { }
+  // tslint:disable-next-line: max-line-length
+  constructor( private userSvc: UserService , private pagerSvc: PagerService, private storage: StorageService, private sk: SocketService) { }
 
   ngOnInit() {
     this.storage.onLoadToken();
     this.token = `?token=${ this.storage.token }`;
-    this.onGetListUser( 1 );
     this.bodyUser = new UserModel();
+    this.onGetListUser( 1 );
     this.onLoadTypeDoc();
     this.onLoadNationality();
+    this.onListenConnections();
+    this.onListenDisconnect();
   }
 
   onLoadTypeDoc() {
@@ -158,6 +164,24 @@ export class AccountUserComponent implements OnInit, OnDestroy {
     }
   }
 
+  onListenConnections() {
+    this.userCnnSbc = this.sk.onListen('user-connect').subscribe( (payload: any) => {
+      const finded = this.dataUser.find( user => Number(user.pkUser) === Number( payload.pkUser ) );
+      if (finded) {
+        finded.statusSocket = true;
+      }
+    });
+  }
+
+  onListenDisconnect() {
+    this.userDiscnnSbc = this.sk.onListen('user-disconnect').subscribe( (payload: any) => {
+      const finded = this.dataUser.find( user => Number(user.pkUser) === Number( payload.pkUser ) );
+      if (finded) {
+        finded.statusSocket = false;
+      }
+    });
+  }
+
   onShowAlert( idAlert: string, css: string, icon: string, msg: string ) {
     let html = `<div class="alert alert-${ css } alert-dismissible fade show" role="alert">`;
     html += `<span class="alert-icon"><i class="fa fa-${ icon }"></i></span>`;
@@ -186,11 +210,6 @@ export class AccountUserComponent implements OnInit, OnDestroy {
     }
 
     this.docLong = finded.longitude;
-  }
-
-  ngOnDestroy() {
-    this.nationalitySbc.unsubscribe();
-    this.typeDocSbc.unsubscribe();
   }
 
   onGetError( showError: number ) {
@@ -224,6 +243,14 @@ export class AccountUserComponent implements OnInit, OnDestroy {
     }
 
     return { msg: arrError.join(', '), css, icon };
+
+  }
+
+  ngOnDestroy() {
+    this.nationalitySbc.unsubscribe();
+    this.typeDocSbc.unsubscribe();
+    this.userCnnSbc.unsubscribe();
+    this.userDiscnnSbc.unsubscribe();
 
   }
 

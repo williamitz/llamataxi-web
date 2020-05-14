@@ -4,19 +4,22 @@ import { RowIndexPipe } from './row-index.pipe';
 import { YesnoPipe } from './yesno.pipe';
 import { RolesPipe } from './roles.pipe';
 import { ColorPipe } from './color.pipe';
+import { MomentPipe } from './moment.pipe';
 
 @NgModule({
   declarations: [
     RowIndexPipe,
     YesnoPipe,
     RolesPipe,
-    ColorPipe
+    ColorPipe,
+    MomentPipe
   ],
   exports: [
     RowIndexPipe,
     YesnoPipe,
     RolesPipe,
-    ColorPipe
+    ColorPipe,
+    MomentPipe
   ],
   imports: [
     CommonModule

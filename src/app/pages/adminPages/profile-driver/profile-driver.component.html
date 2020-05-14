@@ -61,7 +61,77 @@
                 <h4>Mensajería</h4>
             </div>
             <div class="card-body">
+                <ul class="list-group list-group-flush" data-toggle="checklist">
 
+                    <li *ngFor="let msg of dataMsg" class="checklist-entry list-group-item flex-column align-items-start py-4 px-4" style="cursor: pointer;" (click)="onShowViewMsg( msg.pkMessage )">
+
+                        <div class="checklist-item checklist-item-checked">
+                            <div class="checklist-info">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <img class="avatar avatar-64 img-circle" [src]="pathImg + msg.imgEmisor + token" />
+                                    </div>
+                                    <div class="col-9">
+
+                                        <h5 class="checklist-title mb-0">{{ msg.subject }}</h5>
+                                    </div>
+                                </div>
+
+                                <small>{{ msg.dateRegister | moment }}</small>
+                            </div>
+                            <div>
+                                <!-- <div class="custom-control custom-checkbox custom-checkbox-success">
+                                    <input class="custom-control-input" id="chk-msg-{{ msg.pkMessage }}" type="checkbox" checked="">
+                                    <label class="custom-control-label" for="chk-msg-{{ msg.pkMessage }}"></label>
+                                </div> *ngIf="msg.totalResponses > 0" -->
+                                <span class="badge badge-pill badge-success">+{{ msg.totalResponses }}</span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- <li class="checklist-entry list-group-item flex-column align-items-start py-4 px-4">
+                        <div class="checklist-item checklist-item-warning">
+                            <div class="checklist-info">
+                                <h5 class="checklist-title mb-0">Lunch meeting</h5>
+                                <small>10:30 AM</small>
+                            </div>
+                            <div>
+                                <div class="custom-control custom-checkbox custom-checkbox-warning">
+                                    <input class="custom-control-input" id="chk-todo-task-2" type="checkbox">
+                                    <label class="custom-control-label" for="chk-todo-task-2"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-entry list-group-item flex-column align-items-start py-4 px-4">
+                        <div class="checklist-item checklist-item-info">
+                            <div class="checklist-info">
+                                <h5 class="checklist-title mb-0">Argon Dashboard Launch</h5>
+                                <small>10:30 AM</small>
+                            </div>
+                            <div>
+                                <div class="custom-control custom-checkbox custom-checkbox-info">
+                                    <input class="custom-control-input" id="chk-todo-task-3" type="checkbox">
+                                    <label class="custom-control-label" for="chk-todo-task-3"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-entry list-group-item flex-column align-items-start py-4 px-4">
+                        <div class="checklist-item checklist-item-danger checklist-item-checked">
+                            <div class="checklist-info">
+                                <h5 class="checklist-title mb-0">Winter Hackaton</h5>
+                                <small>10:30 AM</small>
+                            </div>
+                            <div>
+                                <div class="custom-control custom-checkbox custom-checkbox-danger">
+                                    <input class="custom-control-input" id="chk-todo-task-4" type="checkbox" checked="">
+                                    <label class="custom-control-label" for="chk-todo-task-4"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </li> -->
+                </ul>
             </div>
         </div>
     </div>
@@ -436,20 +506,18 @@
     </div>
 </div>
 
-
-
 <!-- Modal -->
 <div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Nuevo mensaje</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+                <button type="button" id="btnCloseModalMg" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
-                <form action="">
+                <form #frmMessage="ngForm">
                     <div class="form-group">
                         <label for="txtSubject">Asunto</label>
                         <input id="txtSubject" type="text" class="form-control " name="subject" [(ngModel)]="bodyMessage.subject" #subject="ngModel" required maxlength="50" [ngClass]="{
@@ -487,11 +555,140 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">
+                <button type="button" class="btn btn-primary" [disabled]="frmMessage.invalid || loading" (click)="onSendMessage(frmMessage)">
 
                   <i class="ni ni-send"></i>
                   Enviar
+                  <span *ngIf="loading">
+                    <i class="fa fa-spinner fa-pulse"></i>
+                  </span>
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button type="button" style="display: none;" class="btn btn-primary" data-toggle="modal" data-target="#modalViewMessage" id="btnShowViewMsgModal">
+  Launch demo modal
+</button>
+<div class="modal fade" id="modalViewMessage" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ dataViewMsg.subject }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-2">
+
+                        <img class="avatar avatar-64 img-circle" [src]="pathImg + dataViewMsg.imgEmisor + token" />
+
+                    </div>
+                    <div class="col-10">
+                        <span>
+                          <h5>
+                            De: {{ dataViewMsg.nameEmisor }}
+                        </h5>
+                        </span>
+
+                        <small>
+                              {{ dataViewMsg.userEmisor }}
+                              <br>
+                              {{ dataViewMsg.dateRegister | moment }}
+                        </small>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 subject-border">
+                        {{ dataViewMsg.message }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <!--Accordion wrapper-->
+                        <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+
+                            <!-- Accordion card -->
+                            <div class="card-pd">
+
+                                <!-- Card header -->
+                                <div class="" role="tab" id="headingOne1">
+                                    <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1" aria-expanded="true" aria-controls="collapseOne1">
+                                        <h5 class="mb-0">
+                                            Collapsible Group Item #1 <i class="fas fa-angle-down rotate-icon"></i>
+                                        </h5>
+                                    </a>
+                                </div>
+                                <!-- Card body -->
+                                <div id="collapseOne1" class="collapse show" role="tabpanel" aria-labelledby="headingOne1" data-parent="#accordionEx">
+                                    <div class="">
+                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi mollitia debitis porro autem reprehenderit et accusantium, eos quos vero eaque omnis est sed doloribus molestiae repellendus esse sapiente dolore! Deleniti!
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Accordion card -->
+
+                            <!-- Accordion card -->
+                            <div class=" card-pd">
+
+                                <!-- Card header -->
+                                <div class="" role="tab" id="headingTwo2">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">
+                                        <h5 class="mb-0">
+                                            Collapsible Group Item #2 <i class="fas fa-angle-down rotate-icon"></i>
+                                        </h5>
+                                    </a>
+                                </div>
+
+                                <!-- Card body -->
+                                <div id="collapseTwo2" class="collapse" role="tabpanel" aria-labelledby="headingTwo2" data-parent="#accordionEx">
+                                    <div class="">
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi blanditiis corporis accusamus, beatae necessitatibus, porro pariatur exercitationem vero amet sed nemo quasi, ab eos ad eius cum dolorem. Ut, tempora!
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Accordion card -->
+
+                            <!-- Accordion card -->
+                            <div class="card-pd">
+
+                                <!-- Card header -->
+                                <div class="" role="tab" id="headingThree3">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseThree3" aria-expanded="false" aria-controls="collapseThree3">
+                                        <h5 class="mb-0">
+                                            Collapsible Group Item #3 <i class="fas fa-angle-down rotate-icon"></i>
+                                        </h5>
+                                    </a>
+                                </div>
+
+                                <!-- Card body -->
+                                <div id="collapseThree3" class="collapse" role="tabpanel" aria-labelledby="headingThree3" data-parent="#accordionEx">
+                                    <div class="">
+                                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Praesentium culpa unde at cumque ex ut dolorum inventore. Obcaecati quidem doloremque, explicabo quam error similique neque repudiandae cum commodi laudantium ab!
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Accordion card -->
+
+                        </div>
+                        <!-- Accordion wrapper -->
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
         </div>
     </div>

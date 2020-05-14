@@ -4,6 +4,7 @@ export interface IProfileDriver {
   dateVerified?: Date;
   document?: string;
   email?: string;
+  pkUser?: number;
   fkUserVerified?: number;
   img?: string;
   imgCriminalRecord?: string;

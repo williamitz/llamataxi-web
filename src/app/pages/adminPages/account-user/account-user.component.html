@@ -8,7 +8,7 @@
                     <table class="table align-items-center">
                         <thead class="thead-light">
                             <tr>
-                                <th colspan="3">
+                                <th colspan="4">
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalUser">
                                       Nuevo
                                     </button>
@@ -24,6 +24,7 @@
                                 <th scope="col">Email</th>
                                 <th scope="col" class="sort" data-sort="completion">Rol</th>
                                 <th scope="col" class="sort" data-sort="completion">Verificado</th>
+                                <th scope="col" class="sort" data-sort="completion">Conectado</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
@@ -66,6 +67,19 @@
                                     </span>
                                     </span>
                                 </td>
+
+                                <td>
+                                    <span class="badge badge-dot mr-4">
+                                  <i  [ngClass]="{'bg-success': user.statusSocket, 'bg-danger': !user.statusSocket}">
+
+                                  </i>
+                                  <span class="status">
+                                    {{ user.statusSocket | yesno }}
+                                  </span>
+                                    </span>
+                                </td>
+
+
                                 <td class="text-right">
                                     <div class="dropdown">
                                         <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -82,7 +96,7 @@
                         </tbody>
                         <tfoot>
                             <tr>
-                                <th colspan="3">
+                                <th colspan="4">
                                     <div class="row">
                                         <div class="col-7">
                                             {{ infoPagination }}
@@ -98,7 +112,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th colspan="3">
+                                <th colspan="4">
 
                                     <div *ngIf="pagination.currentPage" class="text-right">
 
