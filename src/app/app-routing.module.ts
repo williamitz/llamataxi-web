@@ -9,17 +9,21 @@ const APP_ROUTES: Routes = [
   { path: '',
     pathMatch: 'full',
     component: AuthLayoutComponent,
-    loadChildren: './layouts/auth-layout/auth-layout.module#AuthLayoutModule'
+    loadChildren: () => import('./layouts/auth-layout/auth-layout.module').then(m => m.AuthLayoutModule)
   },
 
   { path: 'admin',
     // pathMatch: 'full',
     data: {title: 'Dashboard'},
     component: AdminLayoutComponent,
-    loadChildren: './layouts/admin-layout/admin-layout.module#AdminLayoutModule'
+    loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(m => m.AdminLayoutModule)
   },
 
-
+  {
+    path: 'login',
+    component: AuthLayoutComponent,
+    loadChildren: () => import('./layouts/auth-layout/auth-layout.module').then(m => m.AuthLayoutModule)
+  }
 ];
 
 @NgModule({

@@ -1,3 +1,4 @@
+
 import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
@@ -19,6 +20,10 @@ import { CategoryComponent } from "../../pages/adminPages/category/category.comp
 import { VehicleDriverComponent } from "../../pages/adminPages/vehicleDriver/vehicleDriver.component";
 import { TaxiMapComponent } from "./../../pages/adminPages/taxiMap/taxiMap.component";
 import { AgmCoreModule } from "@agm/core";
+import { SwiperModule } from 'ngx-swiper-wrapper';
+// import { NgSelect2Module } from 'ng-select2';
+import { NgSelectModule } from '@ng-select/ng-select';
+
 @NgModule({
   declarations: [
     HomeComponent,

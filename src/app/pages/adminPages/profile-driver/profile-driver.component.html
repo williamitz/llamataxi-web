@@ -1,0 +1,695 @@
+<div class="row">
+    <div class="col-xl-4 order-xl-2">
+        <div class="card card-profile">
+            <img src="../assets/img/theme/img-1-1000x600.jpg" alt="Image placeholder" class="card-img-top">
+            <div class="row justify-content-center">
+                <div class="col-lg-3 order-lg-2">
+                    <div class="card-profile-image">
+                        <a href="#">
+                            <img [src]="pathImg + dataProfile.img + token" class="rounded-circle">
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
+                <div class="d-flex justify-content-between">
+                    <a href="#" class="btn btn-sm btn-info  mr-4 ">Connect</a>
+                    <button class="btn btn-sm btn-default float-right" data-toggle="modal" data-target="#modalMessage">
+                      Mensaje
+                    </button>
+                </div>
+            </div>
+            <div class="card-body pt-0">
+                <div class="row">
+                    <div class="col">
+                        <div class="card-profile-stats d-flex justify-content-center">
+                            <div>
+                                <span class="heading">22</span>
+                                <span class="description">Friends</span>
+                            </div>
+                            <div>
+                                <span class="heading">10</span>
+                                <span class="description">Photos</span>
+                            </div>
+                            <div>
+                                <span class="heading">89</span>
+                                <span class="description">Comments</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <h5 class="h3">
+                        {{ dataProfile.nameComplete }}
+                        <span class="font-weight-light">, {{ dataProfile.yearsOld }} </span>
+                    </h5>
+                    <div class="h5 font-weight-300">
+                        <i class="fa fa-user"></i>&nbsp; {{ dataProfile.userName }}
+                    </div>
+                    <div class="h5 mt-4">
+                        <i class="fa fa-envelope"></i> &nbsp; {{ dataProfile.email }}
+                    </div>
+                    <div>
+                        <i class="fa fa-phone"></i> &nbsp; {{ dataProfile.prefixPhone }} {{ dataProfile.phone }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4>Mensajería</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush" data-toggle="checklist">
+
+                    <li *ngFor="let msg of dataMsg" class="checklist-entry list-group-item flex-column align-items-start py-4 px-4" style="cursor: pointer;" (click)="onShowViewMsg( msg.pkMessage )">
+
+                        <div class="checklist-item checklist-item-checked">
+                            <div class="checklist-info">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <img class="avatar avatar-64 img-circle" [src]="pathImg + msg.imgEmisor + token" />
+                                    </div>
+                                    <div class="col-9">
+
+                                        <h5 class="checklist-title mb-0">{{ msg.subject }}</h5>
+                                    </div>
+                                </div>
+
+                                <small>{{ msg.dateRegister | moment }}</small>
+                            </div>
+                            <div>
+                                <!-- <div class="custom-control custom-checkbox custom-checkbox-success">
+                                    <input class="custom-control-input" id="chk-msg-{{ msg.pkMessage }}" type="checkbox" checked="">
+                                    <label class="custom-control-label" for="chk-msg-{{ msg.pkMessage }}"></label>
+                                </div> *ngIf="msg.totalResponses > 0" -->
+                                <span class="badge badge-pill badge-success">+{{ msg.totalResponses }}</span>
+                            </div>
+                        </div>
+                    </li>
+
+                    <!-- <li class="checklist-entry list-group-item flex-column align-items-start py-4 px-4">
+                        <div class="checklist-item checklist-item-warning">
+                            <div class="checklist-info">
+                                <h5 class="checklist-title mb-0">Lunch meeting</h5>
+                                <small>10:30 AM</small>
+                            </div>
+                            <div>
+                                <div class="custom-control custom-checkbox custom-checkbox-warning">
+                                    <input class="custom-control-input" id="chk-todo-task-2" type="checkbox">
+                                    <label class="custom-control-label" for="chk-todo-task-2"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-entry list-group-item flex-column align-items-start py-4 px-4">
+                        <div class="checklist-item checklist-item-info">
+                            <div class="checklist-info">
+                                <h5 class="checklist-title mb-0">Argon Dashboard Launch</h5>
+                                <small>10:30 AM</small>
+                            </div>
+                            <div>
+                                <div class="custom-control custom-checkbox custom-checkbox-info">
+                                    <input class="custom-control-input" id="chk-todo-task-3" type="checkbox">
+                                    <label class="custom-control-label" for="chk-todo-task-3"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="checklist-entry list-group-item flex-column align-items-start py-4 px-4">
+                        <div class="checklist-item checklist-item-danger checklist-item-checked">
+                            <div class="checklist-info">
+                                <h5 class="checklist-title mb-0">Winter Hackaton</h5>
+                                <small>10:30 AM</small>
+                            </div>
+                            <div>
+                                <div class="custom-control custom-checkbox custom-checkbox-danger">
+                                    <input class="custom-control-input" id="chk-todo-task-4" type="checkbox" checked="">
+                                    <label class="custom-control-label" for="chk-todo-task-4"></label>
+                                </div>
+                            </div>
+                        </div>
+                    </li> -->
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-8 order-xl-1">
+        <div class="card">
+            <div class="card-header">
+                <div class="row align-items-center">
+                    <div class="col-8">
+                        <h3 class="mb-0">Perfil del conductor </h3>
+                    </div>
+                    <!-- <div class="col-4 text-right">
+                        <a href="#!" class="btn btn-sm btn-primary">Settings</a>
+                    </div> -->
+                </div>
+            </div>
+            <div class="card-body">
+                <form>
+                    <h6 class="heading-small text-muted mb-4">Datos personales</h6>
+                    <div class="pl-lg-4">
+                        <div class="row">
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label">Documento</label>
+                                    <input type="text" class="form-control" placeholder="DNI" readonly [value]="dataProfile.prefix">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label">N&uacute;mero</label>
+                                    <input class="form-control" readonly placeholder="00000000" [value]="dataProfile.document">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label">Verificado por reniec</label>
+                                    <input readonly class="form-control" [value]="dataProfile.verifyReniec | yesno" placeholder="jesse@example.com">
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                      Nacionalidad
+                                    </label>
+                                    <input type="text" class="form-control" [value]="dataProfile.nameCountry">
+                                </div>
+                            </div>
+                            <div class="col-lg-4">
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                    Fecha nacimiento
+                                  </label>
+                                    <input type="text" class="form-control" [value]="dataProfile.brithDate | date">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                      Taxista certificado
+                                    </label>
+                                    <input type="text" class="form-control" placeholder="Last name" [value]="dataProfile.isEmployee | yesno">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-4" />
+                    <!-- Address -->
+                    <h6 class="heading-small text-muted mb-4">Documentos</h6>
+                    <div class="pl-lg-4">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <!-- style="width: 18rem; " :entity/:idEntity/:fileName -->
+                                <div class="card" (click)="onShowPreview()" style="cursor: pointer;">
+                                    <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgLicense + token" alt="Card image cap" style="height: 170px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Licencia de conducir</h5>
+                                        <p class="card-text">
+                                            Expiraci&oacute;n - {{ dataProfile.dateLicenseExpiration | date }}
+                                        </p>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div *ngIf="dataProfile.isEmployee" class="col-md-6">
+                                <!-- style="width: 18rem; " :entity/:idEntity/:fileName -->
+                                <div class="card">
+                                    <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgPhotoCheck + token" alt="Card image cap" style="height: 170px;">
+                                    <div class="card-body">
+                                        <h5 class="card-title">Foto check</h5>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <div class="text-center" *ngIf="criminalIsPdf">
+                                    <canvas class=" card col-lg-12" #canvasCriminal>
+
+                                    </canvas>
+                                    <h4>Antecedentes penales</h4>
+                                </div>
+                                <div *ngIf="!criminalIsPdf">
+
+                                    <div class="card" style="width: 18rem;">
+                                        <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgCriminalRecord + token" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Antecedentes penales</h5>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="text-center" *ngIf="policialIsPdf">
+                                    <canvas class=" card col-lg-12" #canvasPolicial>
+
+                                    </canvas>
+                                    <h4>Antecedentes policiales</h4>
+                                </div>
+                                <div *ngIf="!policialIsPdf">
+
+                                    <div class="card" style="width: 18rem;">
+                                        <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgPolicialRecord + token" alt="Card image cap">
+                                        <div class="card-body">
+                                            <h5 class="card-title">Antecedentes policiales</h5>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </div>
+                    <!-- <hr class="my-4" /> -->
+                    <!-- Description -->
+                    <!-- <h6 class="heading-small text-muted mb-4">About me</h6>
+                    <div class="pl-lg-4">
+                        <div class="form-group">
+                            <label class="form-control-label">About Me</label>
+                            <textarea rows="4" class="form-control" placeholder="A few words about you ...">A beautiful Dashboard for Bootstrap 4. It is Free and Open Source.</textarea>
+                        </div>
+                    </div> -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-6">
+        <div class="containerTime">
+
+            <div class="card">
+                <div class="card-header bg-transparent">
+                    <h3 class="mb-0">Timeline</h3>
+                </div>
+                <div class="card-body">
+                    <div class="timeline timeline-one-side" data-timeline-content="axis" data-timeline-axis-style="dashed">
+                        <div class="timeline-block">
+                            <span class="timeline-step badge-success">
+                          <i class="ni ni-bell-55"></i>
+                        </span>
+                            <div class="timeline-content">
+                                <small class="text-muted font-weight-bold">10:30 AM</small>
+                                <h5 class=" mt-3 mb-0">New message</h5>
+                                <p class=" text-sm mt-1 mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                <div class="mt-3">
+                                    <span class="badge badge-pill badge-success">design</span>
+                                    <span class="badge badge-pill badge-success">system</span>
+                                    <span class="badge badge-pill badge-success">creative</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-block">
+                            <span class="timeline-step badge-danger">
+                          <i class="ni ni-html5"></i>
+                        </span>
+                            <div class="timeline-content">
+                                <small class="text-muted font-weight-bold">10:30 AM</small>
+                                <h5 class=" mt-3 mb-0">Product issue</h5>
+                                <p class=" text-sm mt-1 mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                <div class="mt-3">
+                                    <span class="badge badge-pill badge-danger">design</span>
+                                    <span class="badge badge-pill badge-danger">system</span>
+                                    <span class="badge badge-pill badge-danger">creative</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-block">
+                            <span class="timeline-step badge-info">
+                          <i class="ni ni-like-2"></i>
+                        </span>
+                            <div class="timeline-content">
+                                <small class="text-muted font-weight-bold">10:30 AM</small>
+                                <h5 class=" mt-3 mb-0">New likes</h5>
+                                <p class=" text-sm mt-1 mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                <div class="mt-3">
+                                    <span class="badge badge-pill badge-info">design</span>
+                                    <span class="badge badge-pill badge-info">system</span>
+                                    <span class="badge badge-pill badge-info">creative</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-block">
+                            <span class="timeline-step badge-success">
+                          <i class="ni ni-bell-55"></i>
+                        </span>
+                            <div class="timeline-content">
+                                <small class="text-muted font-weight-bold">10:30 AM</small>
+                                <h5 class=" mt-3 mb-0">New message</h5>
+                                <p class=" text-sm mt-1 mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                <div class="mt-3">
+                                    <span class="badge badge-pill badge-success">design</span>
+                                    <span class="badge badge-pill badge-success">system</span>
+                                    <span class="badge badge-pill badge-success">creative</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="timeline-block">
+                            <span class="timeline-step badge-danger">
+                          <i class="ni ni-html5"></i>
+                        </span>
+                            <div class="timeline-content">
+                                <small class="text-muted font-weight-bold">10:30 AM</small>
+                                <h5 class=" mt-3 mb-0">Product issue</h5>
+                                <p class=" text-sm mt-1 mb-0">Nullam id dolor id nibh ultricies vehicula ut id elit. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+                                <div class="mt-3">
+                                    <span class="badge badge-pill badge-danger">design</span>
+                                    <span class="badge badge-pill badge-danger">system</span>
+                                    <span class="badge badge-pill badge-danger">creative</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-6">
+        <h3>Vehiculos</h3>
+        <div class="swiper-container" [swiper]="configSlider" [(index)]="index">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide" *ngFor="let vehicle of vehicles">
+                    <div class="table">
+
+                        <div class="row">
+                            <div class="col-12">
+                                <h4> {{vehicle.numberPlate}} </h4>
+                                <p>
+                                    {{ vehicle.year }}
+                                    <br> {{ vehicle.color | color }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgPropertyCard  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px; " class="borderImg">
+                                <p>Tarjeta de propiedad</p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgSoat  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px;" class="borderImg">
+                                <p>
+                                    Soat <br> Exp. {{ vehicle.dateSoatExpiration | date }}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiFrontal  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
+                            </div>
+                            <div class="col-6">
+                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiBack  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swiper-scrollbar"></div>
+            <div class="swiper-pagination"></div>
+
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+        </div>
+        <!-- <swiper [config]="configSlider" ([index])="index">
+
+            <div *ngFor="let vehicle of vehicles">
+
+                <div class="table">
+
+                    <div class="row">
+                        <div class="col-12">
+                            <h4> {{vehicle.numberPlate}} </h4>
+                            <p>
+                                {{ vehicle.year }}
+                                <br> {{ vehicle.color | color }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgPropertyCard  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px; " class="borderImg">
+                            <p>Tarjeta de propiedad</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgSoat  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px;" class="borderImg">
+                            <p>
+                                Soat <br> Exp. {{ vehicle.dateSoatExpiration | date }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiFrontal  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
+                        </div>
+                        <div class="col-6">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiBack  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="swiper-button-prevTwo"></div>
+            <div class="swiper-button-nextTwo"></div>
+        </swiper> -->
+    </div>
+</div>
+
+<!-- Button trigger modal -->
+<button type="button" style="display: none;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="btnShowPreview">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+            </div>
+            <div class="modal-body">
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Nuevo mensaje</h5>
+                <button type="button" id="btnCloseModalMg" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #frmMessage="ngForm">
+                    <div class="form-group">
+                        <label for="txtSubject">Asunto</label>
+                        <input id="txtSubject" type="text" class="form-control " name="subject" [(ngModel)]="bodyMessage.subject" #subject="ngModel" required maxlength="50" [ngClass]="{
+                          'is-invalid': (subject.errors?.required || subject.errors?.maxlength ) && subject.touched,
+                          'is-valid': !subject.errors?.required && !subject.errors?.maxlength && subject.touched }">
+                        <span *ngIf="subject.errors?.required && subject.touched">
+                          <small class="text-danger">*Requerido</small>
+                        </span>
+                        <span *ngIf="subject.errors?.maxlength && subject.touched">
+                          <small class="text-danger">*M&aacute;ximo 50 caracteres</small>
+                        </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtMessage">
+                          Asunto
+                        </label>
+                        <span class="msgLength">
+                              <small>{{ bodyMessage.message.length }}</small>
+                            </span>
+                        <textarea id="txtMessage" class="form-control" rows="10" name="message" [(ngModel)]="bodyMessage.message" #message="ngModel" required maxlength="255" [ngClass]="{
+                          'is-invalid': (message.errors?.required || message.errors?.maxlength ) && message.touched,
+                          'is-valid': !message.errors?.required && !message.errors?.maxlength && message.touched }">
+                      </textarea>
+
+                        <span *ngIf="message.errors?.required && message.touched">
+                          <small class="text-danger">*Requerido</small>
+                        </span>
+                        <span *ngIf="message.errors?.maxlength && message.touched">
+                          <small class="text-danger">*M&aacute;ximo 255 caracteres</small>
+                        </span>
+
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" [disabled]="frmMessage.invalid || loading" (click)="onSendMessage(frmMessage)">
+
+                  <i class="ni ni-send"></i>
+                  Enviar
+                  <span *ngIf="loading">
+                    <i class="fa fa-spinner fa-pulse"></i>
+                  </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button type="button" style="display: none;" class="btn btn-primary" data-toggle="modal" data-target="#modalViewMessage" id="btnShowViewMsgModal">
+  Launch demo modal
+</button>
+<div class="modal fade" id="modalViewMessage" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ dataViewMsg.subject }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-2">
+
+                        <img class="avatar avatar-64 img-circle" [src]="pathImg + dataViewMsg.imgEmisor + token" />
+
+                    </div>
+                    <div class="col-10">
+                        <span>
+                          <h5>
+                            De: {{ dataViewMsg.nameEmisor }}
+                        </h5>
+                        </span>
+
+                        <small>
+                              {{ dataViewMsg.userEmisor }}
+                              <br>
+                              {{ dataViewMsg.dateRegister | moment }}
+                        </small>
+
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 subject-border">
+                        {{ dataViewMsg.message }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <!--Accordion wrapper-->
+                        <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+
+                            <!-- Accordion card -->
+                            <div class="card-pd">
+
+                                <!-- Card header -->
+                                <div class="" role="tab" id="headingOne1">
+                                    <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseOne1" aria-expanded="true" aria-controls="collapseOne1">
+                                        <h5 class="mb-0">
+                                            Collapsible Group Item #1 <i class="fas fa-angle-down rotate-icon"></i>
+                                        </h5>
+                                    </a>
+                                </div>
+                                <!-- Card body -->
+                                <div id="collapseOne1" class="collapse show" role="tabpanel" aria-labelledby="headingOne1" data-parent="#accordionEx">
+                                    <div class="">
+                                        Lorem ipsum, dolor sit amet consectetur adipisicing elit. Nisi mollitia debitis porro autem reprehenderit et accusantium, eos quos vero eaque omnis est sed doloribus molestiae repellendus esse sapiente dolore! Deleniti!
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Accordion card -->
+
+                            <!-- Accordion card -->
+                            <div class=" card-pd">
+
+                                <!-- Card header -->
+                                <div class="" role="tab" id="headingTwo2">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseTwo2" aria-expanded="false" aria-controls="collapseTwo2">
+                                        <h5 class="mb-0">
+                                            Collapsible Group Item #2 <i class="fas fa-angle-down rotate-icon"></i>
+                                        </h5>
+                                    </a>
+                                </div>
+
+                                <!-- Card body -->
+                                <div id="collapseTwo2" class="collapse" role="tabpanel" aria-labelledby="headingTwo2" data-parent="#accordionEx">
+                                    <div class="">
+                                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Commodi blanditiis corporis accusamus, beatae necessitatibus, porro pariatur exercitationem vero amet sed nemo quasi, ab eos ad eius cum dolorem. Ut, tempora!
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Accordion card -->
+
+                            <!-- Accordion card -->
+                            <div class="card-pd">
+
+                                <!-- Card header -->
+                                <div class="" role="tab" id="headingThree3">
+                                    <a class="collapsed" data-toggle="collapse" data-parent="#accordionEx" href="#collapseThree3" aria-expanded="false" aria-controls="collapseThree3">
+                                        <h5 class="mb-0">
+                                            Collapsible Group Item #3 <i class="fas fa-angle-down rotate-icon"></i>
+                                        </h5>
+                                    </a>
+                                </div>
+
+                                <!-- Card body -->
+                                <div id="collapseThree3" class="collapse" role="tabpanel" aria-labelledby="headingThree3" data-parent="#accordionEx">
+                                    <div class="">
+                                        Lorem, ipsum dolor sit amet consectetur adipisicing elit. Praesentium culpa unde at cumque ex ut dolorum inventore. Obcaecati quidem doloremque, explicabo quam error similique neque repudiandae cum commodi laudantium ab!
+                                    </div>
+                                </div>
+
+                            </div>
+                            <!-- Accordion card -->
+
+                        </div>
+                        <!-- Accordion wrapper -->
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

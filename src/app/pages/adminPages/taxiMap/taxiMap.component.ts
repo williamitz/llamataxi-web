@@ -56,12 +56,6 @@ export class TaxiMapComponent implements OnInit {
       label: "C",
       draggable: true,
     },
-    {
-      lat: 51.723301,
-      lng: 7.895301,
-      label: "d",
-      draggable: true,
-    },
   ];
 }
 

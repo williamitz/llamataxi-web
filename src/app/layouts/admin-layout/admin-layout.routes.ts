@@ -11,33 +11,29 @@ import { NotificationComponent } from "../../pages/adminPages/notification/notif
 import { VehicleDriverComponent } from "../../pages/adminPages/vehicleDriver/vehicleDriver.component";
 import { CategoryComponent } from "../../pages/adminPages/category/category.component";
 import { TaxiMapComponent } from "src/app/pages/adminPages/taxiMap/taxiMap.component";
+import { ProfileDriverComponent } from '../../pages/adminPages/profile-driver/profile-driver.component';
 
 export const ADMIN_ROUTES: Routes = [
   {
-    path: "",
-    pathMatch: "full",
-    redirectTo: "home",
-    data: { title: "Dashboard" },
+    path: '',
+    pathMatch: 'full',
+    redirectTo: 'home',
+    data: { title: 'Dashboard' },
   },
-  { path: "home", component: HomeComponent, data: { title: "Dashboard" } },
-  { path: "navFather", component: NavFatherComponent },
-  { path: "navChildren", component: NavChildrenComponent },
-  { path: "brand", component: BrandComponent },
-  { path: "model", component: ModelComponent },
-  { path: "menuRole", component: MenuRoleComponent },
-  { path: "notification", component: NotificationComponent },
-  { path: "vehicleDriver", component: VehicleDriverComponent },
-  { path: "category", component: CategoryComponent },
-  { path: "taxiMap", component: TaxiMapComponent },
-
-  {
-    path: "application",
-    component: ApplicationComponent,
-    data: { title: "Aplicaciones" },
-  },
-  {
-    path: "accountUser",
-    component: AccountUserComponent,
-    data: { title: "Cuentas de usuario" },
-  },
+  { path: 'home', component: HomeComponent, data: { title: 'Dashboard' } },
+  { path: 'navFather', component: NavFatherComponent },
+  { path: 'navChildren', component: NavChildrenComponent },
+  { path: 'brand', component: BrandComponent },
+  { path: 'model', component: ModelComponent },
+  { path: 'menuRole', component: MenuRoleComponent },
+  { path: 'notification', component: NotificationComponent },
+  { path: 'vehicleDriver', component: VehicleDriverComponent },
+  { path: 'category', component: CategoryComponent },
+  { path: 'taxiMap', component: TaxiMapComponent },
+  { path: '', pathMatch: 'full', redirectTo: 'home', data: { title: 'Dashboard' }},
+  { path: 'home', component: HomeComponent, data: { title: 'Dashboard' }},
+  { path: 'navChildren', component: NavChildrenComponent },
+  { path: 'application', component: ApplicationComponent, data: { title: 'Aplicaciones' } },
+  { path: 'accountUser', component: AccountUserComponent, data: { title: 'Cuentas de usuario' } },
+  { path: 'profileDriver/:id', component: ProfileDriverComponent, data: { title: 'Perfil del conductor' } },
 ];

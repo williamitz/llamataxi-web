@@ -8,52 +8,78 @@
                     <table class="table align-items-center">
                         <thead class="thead-light">
                             <tr>
-                                <th scope="col" class="sort" data-sort="name">Project</th>
-                                <th scope="col" class="sort" data-sort="budget">Budget</th>
-                                <th scope="col" class="sort" data-sort="status">Status</th>
-                                <th scope="col">Users</th>
-                                <th scope="col" class="sort" data-sort="completion">Completion</th>
+                                <th colspan="4">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalUser">
+                                      Nuevo
+                                    </button>
+                                </th>
+                                <th colspan="4" id="alertUser">
+
+                                </th>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="sort" data-sort="name">#</th>
+                                <th scope="col" class="sort" data-sort="budget">Apellidos y nombres</th>
+                                <th scope="col" class="sort" data-sort="status">Usuario</th>
+                                <th scope="col">Email</th>
+                                <th scope="col" class="sort" data-sort="completion">Rol</th>
+                                <th scope="col" class="sort" data-sort="completion">Verificado</th>
+                                <th scope="col" class="sort" data-sort="completion">Conectado</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody class="list">
 
-                            <tr>
+                            <tr *ngFor="let user of dataUser | rowIndex: pagination.currentPage">
+                                <td>
+                                    {{ user.rowIndex }}
+                                </td>
                                 <th scope="row">
                                     <div class="media align-items-center">
-                                        <a href="#" class="avatar rounded-circle mr-3">
+                                        <a href="/admin/profileDriver/{{ user.pkDriver }}" target="_blank" class="avatar rounded-circle mr-3">
 
-
-                                            <img alt="Image placeholder" src="../../assets/img/theme/bootstrap.jpg">
-
+                                            <img alt="Image placeholder" [src]="pathImg + user.img + token">
 
                                         </a>
                                         <div class="media-body">
-                                            <span class="name mb-0 text-sm">Argon Design System</span>
+                                            <span class="name mb-0 text-sm">
+                                              {{ user.nameComplete }}
+                                            </span>
                                         </div>
                                     </div>
                                 </th>
                                 <td class="budget">
-                                    $2500 USD
+                                    {{ user.userName }}
+                                </td>
+                                <td>
+                                    {{ user.email }}
+                                </td>
+                                <td>
+                                    {{ user.role | roles }}
                                 </td>
                                 <td>
                                     <span class="badge badge-dot mr-4">
-                                <i class="bg-warning"></i>
-                                <span class="status">pending</span>
+                                    <i  [ngClass]="{'bg-success': user.verified, 'bg-danger': !user.verified}">
+
+                                    </i>
+                                    <span class="status">
+                                      {{ user.verified | yesno }}
+                                    </span>
                                     </span>
                                 </td>
+
                                 <td>
+                                    <span class="badge badge-dot mr-4">
+                                  <i  [ngClass]="{'bg-success': user.statusSocket, 'bg-danger': !user.statusSocket}">
+
+                                  </i>
+                                  <span class="status">
+                                    {{ user.statusSocket | yesno }}
+                                  </span>
+                                    </span>
                                 </td>
-                                <td>
-                                    <div class="d-flex align-items-center">
-                                        <span class="completion mr-2">60%</span>
-                                        <div>
-                                            <div class="progress">
-                                                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"></div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
+
+
                                 <td class="text-right">
                                     <div class="dropdown">
                                         <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -68,10 +94,316 @@
                                 </td>
                             </tr>
                         </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            {{ infoPagination }}
+                                        </div>
+                                        <div class="col-5">
+                                            <span class="">
+                                      Ver inactivos
+                                    </span>&nbsp;
+                                            <label class="custom-toggle chkInactive">
+                                        <input type="checkbox" name="showInactive" [(ngModel)]="showInactive" (click)="onGetListUser(1, true)">
+                                        <span class="custom-toggle-slider rounded-circle"></span>
+                                    </label>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th colspan="4">
+
+                                    <div *ngIf="pagination.currentPage" class="text-right">
+
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-center mt-2">
+
+                                                <li class="page-item prev" [ngClass]="{'disabled':pagination.currentPage === 1}">
+                                                    <a class="page-link" (click)="onGetListUser(pagination.currentPage - 1)">
+                                                        <i class="fa fa-angle-left"></i>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="page-item" *ngFor="let page of pagination.pages" [ngClass]="{active:pagination.currentPage === page}">
+                                                    <a class="page-link" (click)="onGetListUser(page)">
+                                                {{ page }}
+                                            </a>
+                                                </li>
+
+                                                <li class="page-item next" [ngClass]="{'disabled':pagination.currentPage === pagination.totalPages}">
+                                                    <a class="page-link" (click)="onGetListUser(pagination.currentPage + 1)">
+                                                        <i class="fa fa-angle-right"></i>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                        </nav>
+                                    </div>
+                                </th>
+                            </tr>
+                        </tfoot>
                     </table>
                 </div>
             </div>
 
+        </div>
+    </div>
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalUser" data-backdrop="static" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">{{ titleModal }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onResetForm()">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #frmUser="ngForm" id="frmUser">
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+
+                                <label class="form-control-label" for="cbxTypeDoc"> Tipo Documento </label>
+                                <select class="form-control" name="cbxTypeDoc" id="cbxTypeDoc" (change)="onChangeTypeDoc()">
+                                  <option value="" disabled>-- Seleccione --</option>
+                                  <option *ngFor="let doc of dataTypeDoc" [value]=" doc.pkTypeDocument " >
+                                    {{ doc.nameDocument }}
+                                  </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="txtDocument"># Documento</label>
+                                <input class="form-control" type="text" id="txtDocument" name="document" #document="ngModel" [(ngModel)]="bodyUser.document" (change)="onChangeDocument()" [ngClass]="{'
+                            is-invalid':
+                                (document.errors?.required || document.errors?.pattern || document.errors?.minlength || document.errors?.maxlength ) && document.touched,
+                              'is-valid': !document.errors?.required && !document.errors?.pattern && !document.errors?.minlength && !document.errors?.maxlength && document.touched}" pattern="^[\d]{0,20}$" required [minlength]="docLong" [maxlength]="docLong">
+                                <span *ngIf="document.errors?.pattern && document.touched">
+                                  <small class="text-danger">*Solo n&uacute;meros</small>
+                                </span>
+                                <span *ngIf="document.errors?.required && document.touched">
+                                  <small class="text-danger">*Requerido</small>
+                                </span>
+
+                                <span *ngIf="document.errors?.minlength && document.touched">
+                                  <small class="text-danger">
+                                    *M&iacute;nimo {{ docLong }} caracteres
+                                  </small>
+                                </span>
+
+                                <span *ngIf="document.errors?.maxlength && document.touched">
+                                  <small class="text-danger">
+                                    *M&aacute;ximo {{ docLong }} caracteres
+                                  </small>
+                                </span>
+                                <span *ngIf="loadingReniec" class="spinReniec text-primary">
+                                  <i class="fa fa-spinner fa-pulse"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="txtName" class="form-control-label">Nombres</label>
+                                <input class="form-control" type="text" id="txtName" name="names" #names="ngModel" [(ngModel)]="bodyUser.name" [ngClass]="{'
+                            is-invalid': (names.errors?.required || names.errors?.minlength ) && names.touched,
+                          'is-valid': !names.errors?.required && !names.errors?.minlength && names.touched}" required minlength="3">
+
+                                <span *ngIf="names.errors?.required && names.touched">
+                                  <small class="text-danger">*Requerido</small>
+                                </span>
+
+                                <span *ngIf="names.errors?.minlength && names.touched">
+                                  <small class="text-danger">*M&iacute;nimo 3 caracteres</small>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="txtSurname" class="form-control-label">Apellidos</label>
+                                <input class="form-control" type="text" id="txtSurname" name="surnames" #surname="ngModel" [(ngModel)]="bodyUser.surname" [ngClass]="{'
+                            is-invalid': (surname.errors?.required || surname.errors?.minlength ) && surname.touched,
+                          'is-valid': !surname.errors?.required && !surname.errors?.minlength && surname.touched}" required minlength="3">
+
+                                <span *ngIf="surname.errors?.required && surname.touched">
+                                  <small class="text-danger">*Requerido</small>
+                                </span>
+
+                                <span *ngIf="surname.errors?.minlength && surname.touched">
+                                  <small class="text-danger">*M&iacute;nimo 3 caracteres</small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="txtName" class="form-control-label">Sexo</label>
+
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="rbtM" name="customRadio" [(ngModel)]="bodyUser.sex" class="custom-control-input" value="M">
+                                    <label class="custom-control-label" for="rbtM">Masculino</label>
+                                </div>
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="rbtF" name="customRadio" class="custom-control-input" value="F" [(ngModel)]="bodyUser.sex">
+                                    <label class="custom-control-label" for="rbtF">Femenino</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+
+                                <label class="form-control-label" for="cbxNationality"> Nacionalidad </label>
+                                <ng-select [items]="dataNationality" bindValue="pkNationality" bindLabel="nameCountry" [(ngModel)]="bodyUser.fkNationality" (change)="onChangeCountry($event)" name="country" #country="ngModel" required="true" class="is-invalid" [ngClass]="{
+                                  'is-invalid': country.errors?.required ,
+                                  'is-valid': !country.errors?.required
+                                }">
+
+                                </ng-select>
+                                <span *ngIf="country.errors?.required ">
+                                  <small class="text-danger">*Requerido</small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="form-group">
+                                <label class="form-control-label" for="txtEmail">Email</label>
+                                <input type="email" id="txtEmail" class="form-control" name="email" [(ngModel)]="bodyUser.email" #email="ngModel" pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" required [ngClass]="{
+                                  'is-invalid': (email.errors?.required || email.errors?.pattern ) && email.touched,
+                                  'is-valid': (!email.errors?.required || !email.errors?.pattern ) && email.touched
+                                }">
+
+                                <span *ngIf="email.errors?.required && email.touched">
+                                  <small class="text-danger">*Requerido</small>
+                                </span>
+
+                                <span *ngIf="email.errors?.pattern && email.touched">
+                                  <small class="text-danger">*Email inv&aacute;lido</small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-control-label" for="">Tel&eacute;fono</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">
+                                      {{ prefix }}
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="000000000" name="phone" [(ngModel)]="bodyUser.phone" #phone="ngModel" [ngClass]="{
+                                  'is-invalid': phone.errors?.required && phone.touched,
+                                  'is-valid': !phone.errors?.required && phone.touched
+                                }" required>
+
+                            </div>
+                            <span *ngIf="phone.errors?.required && phone.touched">
+                                <small class="text-danger">*Requerido</small>
+                              </span>
+                        </div>
+
+                        <div class="col-6">
+                            <label class="form-control-label" for="cbxRole">Rol de usuario</label>
+                            <select name="role" [(ngModel)]="bodyUser.role" #role="ngModel" id="cbxRole" class="form-control" required [ngClass]="{
+                              'is-invalid': role.errors?.required && role.touched,
+                              'is-valid': !role.errors?.required && role.touched
+                            }">
+                            <option value="" disabled> --Seleccione--</option>
+                            <option value="ADMIN_ROLE" >Administrador</option>
+                            <option value="ATTENTION_DOLE" >Atenci&oacute;n al cliente</option>
+                          </select>
+
+                            <span *ngIf="role.errors?.required && role.touched">
+                              <small class="text-danger">*Requerido</small>
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div class="row">
+                        <div class="col-6">
+
+                            <div class="form-group">
+                                <label for="txtUserName" class="form-control-label">Usuario</label>
+                                <input class="form-control" type="text" id="txtUserName" name="userName" #userName="ngModel" [(ngModel)]="bodyUser.userName" [ngClass]="{'is-invalid': (userName.errors?.required || userName.errors?.minlength ) && userName.touched,
+                              'is-valid': !userName.errors?.required && !userName.errors?.minlength && userName.touched}" pattern="^[a-zA-Z0-9@._-]{0,30}$" required minlength="9">
+
+                                <span *ngIf="userName.errors?.required && userName.touched">
+                            <small class="text-danger">*Requerido</small>
+                          </span>
+
+                                <span *ngIf="userName.errors?.pattern && userName.touched">
+                            <small class="text-danger">*Solo email o tel&eacute;fono</small>
+                          </span>
+
+                                <span *ngIf="userName.errors?.minlength && userName.touched">
+                            <small class="text-danger">*M&iacute;nimo 9 caracteres</small>
+                          </span>
+                            </div>
+
+                        </div>
+                        <div class="col-6">
+
+                            <div class="form-group">
+                                <label for="txtpass" class="form-control-label">Contrase&ntilde;a</label>
+                                <input class="form-control" type="text" id="txtpass" name="pass" #pass="ngModel" [(ngModel)]="bodyUser.userPassword" [ngClass]="{'is-invalid': (pass.errors?.required || pass.errors?.minlength ) && pass.touched,
+                              'is-valid': !pass.errors?.required && !pass.errors?.minlength && pass.touched}" pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*" required minlength="6">
+
+                                <span *ngIf="pass.errors?.required && pass.touched">
+                            <small class="text-danger">*Requerido</small>
+                          </span>
+
+                                <span *ngIf="pass.errors?.pattern && pass.touched">
+                            <small class="text-danger">*Una mayuscula, minuscula y un n&uacute;mero</small>
+                          </span>
+
+                                <span *ngIf="pass.errors?.minlength && pass.touched">
+                            <small class="text-danger">*M&iacute;nimo 9 caracteres</small>
+                          </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12" id="alertUserModal">
+
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCloseModal" (click)="onResetForm()">
+                  Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" [disabled]="frmUser.invalid || loading" (click)="onSubmitUser(frmUser)">
+                  {{ txtButton }}
+
+                  <span *ngIf="loading" class="text-primary">
+                    <i class="fa fa-spinner fa-pulse"></i>
+                  </span>
+                </button>
+            </div>
         </div>
     </div>
 </div>
