@@ -11,6 +11,22 @@
   },
   "private": true,
   "dependencies": {
+<<<<<<< HEAD
+    "@agm/core": "^1.1.0",
+    "@angular/animations": "~8.1.0",
+    "@angular/common": "~8.1.0",
+    "@angular/compiler": "~8.1.0",
+    "@angular/core": "~8.1.0",
+    "@angular/forms": "~8.1.0",
+    "@angular/platform-browser": "~8.1.0",
+    "@angular/platform-browser-dynamic": "~8.1.0",
+    "@angular/router": "~8.1.0",
+    "jquery": "^3.5.1",
+    "rxjs": "~6.4.0",
+    "sweetalert2": "^9.10.12",
+    "tslib": "^1.11.2",
+    "zone.js": "~0.9.1"
+=======
     "@angular/animations": "~10.0.0-next.6",
     "@angular/common": "~10.0.0-next.6",
     "@angular/compiler": "~10.0.0-next.6",
@@ -29,6 +45,7 @@
     "swiper": "^5.3.8",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"
+>>>>>>> ffa3cec9d8a5500bec3e8b6bf0a2bb34cc2ca7c7
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.1000.0-next.4",
