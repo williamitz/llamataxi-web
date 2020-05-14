@@ -1,0 +1,347 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="table-responsive">
+                <div>
+                    <table class="table align-items-center">
+                        <thead class="thead-light">
+                            <tr>
+                                <th colspan="3">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#VehicleDriverModal">
+                                        Nuevo
+                                    </button>
+                                </th>
+                                <th colspan="3" id="alertVehicleDriver">
+
+                                </th>
+                            </tr>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Conductor</th>
+                                <th scope="col">Marca</th>
+                                <th scope="col">Modelo</th>
+                                <!--   <th scope="col">isProper</th> 
+                                <th scope="col">imgLease</th>-->
+                                <th scope="col">Placa</th>
+                                <th scope="col">Año</th>
+                                <th scope="col">Color</th>
+                                <!-- <th scope="col">imgSoat</th>
+                                <th scope="col">dateSoatExpiration</th>
+                                <th scope="col">imgPropertyCard</th> -->
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+
+                            <tr *ngFor="let app of dataVehicleDriver | rowIndex: pagination.currentPage">
+                                <th scope="row">
+                                    {{ app.rowIndex }}
+                                </th>
+                                <td class="budget">
+                                    {{ app.nameComplete }}
+                                </td>
+                                <td>
+                                    {{ app.nameBrand }}
+                                </td>
+                                <td>
+                                    {{ app.nameModel }}
+                                </td>
+                                <!--  <td>
+                                    {{ app.isProper }}
+                                </td>
+                                <td>
+                                    {{ app.imgLease }}
+                                </td> -->
+                                <td>
+                                    {{ app.numberPlate }}
+                                </td>
+                                <td>
+                                    {{ app.year }}
+                                </td>
+                                <td>
+                                    {{ app.color }}
+                                </td>
+                                <!--   <td>
+                                    {{ app.imgSoat }}
+                                </td>
+                                <td>
+                                    {{ app.dateSoatExpiration }}
+                                </td>
+                                <td>
+                                    {{ app.imgPropertyCard }}
+                                </td> -->
+                                <td class="text-right">
+                                    <button *ngIf="app.statusRegister" class="btn btn-outline-primary btn-icon"
+                                        type="button" data-toggle="modal" data-target="#VehicleDriverModal"
+                                        (click)="onEdit( app.pkVehicleDriver )">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+
+                                    <button class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal"
+                                        data-target="#confirmModal" (click)="onConfirm( app.pkVehicleDriver )">
+                                        <span *ngIf="app.statusRegister">
+                                            <i class="fa fa-trash"></i>
+                                        </span>
+
+                                        <span *ngIf="!app.statusRegister">
+                                            <i class="fa fa-recycle"></i>
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            {{ infoPagination }}
+                                        </div>
+                                        <div class="col-5">
+                                            <span class="">
+                                                Ver inactivos
+                                            </span>&nbsp;
+                                            <label class="custom-toggle chkInactive">
+                                                <input type="checkbox" name="showInactive" [(ngModel)]="showInactive"
+                                                    (click)="onGetVehicleDriver(1, true)">
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th colspan="3">
+
+                                    <div *ngIf="pagination.currentPage" class="text-right">
+
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-center mt-2">
+
+                                                <li class="page-item prev"
+                                                    [ngClass]="{'disabled':pagination.currentPage === 1}">
+                                                    <a class="page-link"
+                                                        (click)="onGetVehicleDriver(pagination.currentPage - 1)">
+                                                        <i class="fa fa-angle-left"></i>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="page-item" *ngFor="let page of pagination.pages"
+                                                    [ngClass]="{active:pagination.currentPage === page}">
+                                                    <a class="page-link" (click)="onGetVehicleDriver(page)">
+                                                        {{ page }}
+                                                    </a>
+                                                </li>
+
+                                                <li class="page-item next"
+                                                    [ngClass]="{'disabled':pagination.currentPage === pagination.totalPages}">
+                                                    <a class="page-link"
+                                                        (click)="onGetVehicleDriver(pagination.currentPage + 1)">
+                                                        <i class="fa fa-angle-right"></i>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                        </nav>
+                                    </div>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" data-backdrop="static" id="VehicleDriverModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> {{ titleModal }} </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onReset()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form #frmVehicleDriver="ngForm" id="frmVehicleDriver">
+                    <div class="form-group">
+                        <label for="txtFkDriver">Conductor</label>
+                        <select class="form-control" id="txtFkDriver" name="fkDriver" placeholder="Seleccione Categoría"
+                            #fkDriver="ngModel" [(ngModel)]="bodyVehicleDriver.fkDriver">
+                            <option value="0" disabled> -- Seleccione -- </option>
+                            <option [value]="item.pkDriver" *ngFor="let item of dataDriver">
+                                {{item.nameComplete}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtFkBrand">Marca</label>
+                        <select class="form-control" id="txtFkBrand" name="fkBrand" placeholder="Seleccione Categoría"
+                            #fkBrand="ngModel" [(ngModel)]="bodyVehicleDriver.fkBrand">
+                            <option value="0" disabled> -- Seleccione -- </option>
+                            <option [value]="item.pkBrand" *ngFor="let item of dataBrand">
+                                {{item.nameBrand}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtFkModel">Modelo</label>
+                        <select class="form-control" id="txtFkModel" name="fkModel" placeholder="Seleccione Categoría"
+                            #fkModel="ngModel" [(ngModel)]="bodyVehicleDriver.fkModel">
+                            <option value="0" disabled> -- Seleccione -- </option>
+                            <option [value]="item.pkModel" *ngFor="let item of dataModel">
+                                {{item.nameModel}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtIsProper" class="form-control-label">Es Propio</label>
+                        <input class="form-control" id="txtIsProper" name="isProper"
+                            [(ngModel)]="bodyVehicleDriver.isProper" #isProper="ngModel" required [ngClass]="{'is-invalid': isProper.errors?.required && isProper.touched,
+                          'is-valid': !isProper.errors?.required && isProper.touched}">
+                        <span *ngIf="isProper.errors?.required && isProper.touched">
+                            <small class="text-danger">*Requerido</small>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtImgLease" class="form-control-label">imgLease</label>
+                        <input class="form-control" id="txtImgLease" name="imgLease"
+                            [(ngModel)]="bodyVehicleDriver.imgLease" #imgLease="ngModel" required [ngClass]="{'is-invalid': imgLease.errors?.required && imgLease.touched,
+                          'is-valid': !imgLease.errors?.required && imgLease.touched}">
+                        <span *ngIf="imgLease.errors?.required && imgLease.touched">
+                            <small class="text-danger">*Requerido</small>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtNumberPlate" class="form-control-label">Placa</label>
+                        <input class="form-control" type="text" id="txtNumberPlate" name="numberPlate"
+                            #numberPlate="ngModel" [(ngModel)]="bodyVehicleDriver.numberPlate"
+                            [ngClass]="{'is-invalid': (numberPlate.errors?.required || numberPlate.errors?.minlength ) && numberPlate.touched,
+                          'is-valid': !numberPlate.errors?.required && !numberPlate.errors?.minlength && numberPlate.touched}" required minlength="6">
+
+                        <span *ngIf="numberPlate.errors?.required && numberPlate.touched">
+                            <small class="text-danger">*Requerido</small>
+                        </span>
+
+                        <span *ngIf="numberPlate.errors?.minlength && numberPlate.touched">
+                            <small class="text-danger">*M&iacute;nimo 6 caracteres</small>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="txtYear" class="form-control-label">Año</label>
+                                <input class="form-control" id="txtYear" name="year"
+                                    [(ngModel)]="bodyVehicleDriver.year" #year="ngModel" required [ngClass]="{'is-invalid': year.errors?.required && year.touched,
+                                  'is-valid': !year.errors?.required && year.touched}">
+                                <span *ngIf="year.errors?.required && year.touched">
+                                    <small class="text-danger">*Requerido</small>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="txtColor" class="form-control-label">Color</label>
+                                <input class="form-control" id="txtColor" name="color"
+                                    [(ngModel)]="bodyVehicleDriver.color" #color="ngModel" required [ngClass]="{'is-invalid': color.errors?.required && color.touched,
+                                  'is-valid': !color.errors?.required && color.touched}">
+                                <span *ngIf="color.errors?.required && color.touched">
+                                    <small class="text-danger">*Requerido</small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <label for="txtImgSoat" class="form-control-label">imgSoat</label>
+                        <input class="form-control" id="txtImgSoat" name="imgSoat"
+                            [(ngModel)]="bodyVehicleDriver.imgSoat" #imgSoat="ngModel" required [ngClass]="{'is-invalid': imgSoat.errors?.required && imgSoat.touched,
+                          'is-valid': !imgSoat.errors?.required && imgSoat.touched}">
+                        <span *ngIf="imgSoat.errors?.required && imgSoat.touched">
+                            <small class="text-danger">*Requerido</small>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtDateSoatExpiration" class="form-control-label">Fecha de experiación del
+                            soat</label>
+                        <input class="form-control" type="date" id="txtDateSoatExpiration" name="dateSoatExpiration"
+                            [(ngModel)]="bodyVehicleDriver.dateSoatExpiration" #dateSoatExpiration="ngModel" required
+                            [ngClass]="{'is-invalid': dateSoatExpiration.errors?.required && dateSoatExpiration.touched,
+                          'is-valid': !dateSoatExpiration.errors?.required && dateSoatExpiration.touched}">
+                        <span *ngIf="dateSoatExpiration.errors?.required && dateSoatExpiration.touched">
+                            <small class="text-danger">*Requerido</small>
+                        </span>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtImgPropertyCard" class="form-control-label">imgPropertyCard</label>
+                        <input class="form-control" id="txtImgPropertyCard" name="imgPropertyCard"
+                            [(ngModel)]="bodyVehicleDriver.imgPropertyCard" #imgPropertyCard="ngModel" required
+                            [ngClass]="{'is-invalid': imgPropertyCard.errors?.required && imgPropertyCard.touched,
+                          'is-valid': !imgPropertyCard.errors?.required && imgPropertyCard.touched}">
+                        <span *ngIf="imgPropertyCard.errors?.required && imgPropertyCard.touched">
+                            <small class="text-danger">*Requerido</small>
+                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="col-12" id="alertVehicleDriverModal">
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="onReset()">
+                    Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" [disabled]="frmVehicleDriver.invalid || loading"
+                    (click)="onSubmit(frmVehicleDriver)">
+                    {{ textButton }}
+                    <span *ngIf="loading">
+                        <i class="fa fa-spinner fa-pulse "></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mensaje al usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Est&aacute; seguro(a) de <strong class="text-primary">{{ actionConfirm }}</strong> este registro?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCloseConfirm">
+                    Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" [disabled]="loading" (click)="onDelete()">
+                    Aceptar
+                    <span *ngIf="loading">
+                        <i class="fa fa-spinner fa-pulse "></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

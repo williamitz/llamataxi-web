@@ -9,53 +9,39 @@
                                 <th colspan="3">
                                     <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#NavChildrenModal">
+                                        data-target="#CategoryModal">
                                         Nuevo
                                     </button>
                                 </th>
-                                <th colspan="3" id="alertNavChildren">
+                                <th colspan="3" id="alertCategory">
 
                                 </th>
                             </tr>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">NavFather</th>
-                                <th scope="col">navChildrenText</th>
-                                <th scope="col">navChildrenPath</th>
-                                <th scope="col">navChildrenIcon</th>
+                                <th scope="col">Nombre</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody class="list">
 
-                            <tr *ngFor="let app of dataNavChildren | rowIndex: pagination.currentPage">
+                            <tr *ngFor="let app of dataCategory | rowIndex: pagination.currentPage">
                                 <th scope="row">
                                     {{ app.rowIndex }}
                                 </th>
                                 <td class="budget">
-                                    {{ app.navFatherText }}
+                                    {{ app.nameCategory }}
                                 </td>
-                                <td>
-                                    {{ app.navChildrenText }}
-                                </td>
-                                <td>
-                                    {{ app.navChildrenPath }}
-                                </td>
-                                <td>
-                                    {{ app.navChildrenIcon }}
-                                </td>
-                                <td>
-                                    {{ app.dateRegister | date }}
-                                </td>
+
                                 <td class="text-right">
                                     <button *ngIf="app.statusRegister" class="btn btn-outline-primary btn-icon"
-                                        type="button" data-toggle="modal" data-target="#NavChildrenModal"
-                                        (click)="onEdit( app.pkNavChildren )">
+                                        type="button" data-toggle="modal" data-target="#CategoryModal"
+                                        (click)="onEdit( app.pkCategory )">
                                         <i class="fa fa-edit"></i>
                                     </button>
 
                                     <button class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal"
-                                        data-target="#confirmModal" (click)="onConfirm( app.pkNavChildren )">
+                                        data-target="#confirmModal" (click)="onConfirm( app.pkCategory )">
                                         <span *ngIf="app.statusRegister">
                                             <i class="fa fa-trash"></i>
                                         </span>
@@ -81,7 +67,7 @@
                                             </span>&nbsp;
                                             <label class="custom-toggle chkInactive">
                                                 <input type="checkbox" name="showInactive" [(ngModel)]="showInactive"
-                                                    (click)="onGetNavChildren(1, true)">
+                                                    (click)="onGetCategory(1, true)">
                                                 <span class="custom-toggle-slider rounded-circle"></span>
                                             </label>
                                         </div>
@@ -97,7 +83,7 @@
                                                 <li class="page-item prev"
                                                     [ngClass]="{'disabled':pagination.currentPage === 1}">
                                                     <a class="page-link"
-                                                        (click)="onGetNavChildren(pagination.currentPage - 1)">
+                                                        (click)="onGetCategory(pagination.currentPage - 1)">
                                                         <i class="fa fa-angle-left"></i>
                                                         <span class="sr-only">Previous</span>
                                                     </a>
@@ -105,7 +91,7 @@
 
                                                 <li class="page-item" *ngFor="let page of pagination.pages"
                                                     [ngClass]="{active:pagination.currentPage === page}">
-                                                    <a class="page-link" (click)="onGetNavChildren(page)">
+                                                    <a class="page-link" (click)="onGetCategory(page)">
                                                         {{ page }}
                                                     </a>
                                                 </li>
@@ -113,7 +99,7 @@
                                                 <li class="page-item next"
                                                     [ngClass]="{'disabled':pagination.currentPage === pagination.totalPages}">
                                                     <a class="page-link"
-                                                        (click)="onGetNavChildren(pagination.currentPage + 1)">
+                                                        (click)="onGetCategory(pagination.currentPage + 1)">
                                                         <i class="fa fa-angle-right"></i>
                                                         <span class="sr-only">Next</span>
                                                     </a>
@@ -136,7 +122,7 @@
 
 
 <!-- Modal -->
-<div class="modal fade" data-backdrop="static" id="NavChildrenModal" tabindex="-1" role="dialog" aria-hidden="true">
+<div class="modal fade" data-backdrop="static" id="CategoryModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -147,61 +133,26 @@
             </div>
             <div class="modal-body">
 
-                <form #frmNavChildren="ngForm" id="frmNavChildren">
-                    <div class="form-group">
-                        <label for="txtFkNavFather">FkNavFather</label>
-                        <select class="form-control" id="txtFkNavFather" name="fkNavFather"
-                            placeholder="Seleccione al Cliente" #fkNavFather="ngModel"
-                            [(ngModel)]="bodyNavChildren.fkNavFather">
-                            <option value="" disabled>Seleccione Opcion Padre </option>
-                            <option [value]="item.pkNavFather" *ngFor="let item of dataNavFather">{{item.navFatherText}}
-                            </option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="txtNavChildrenText" class="form-control-label">navChildrenText</label>
-                        <input class="form-control" type="text" id="txtNavChildrenText" name="navChildrenText"
-                            #navChildrenText="ngModel" [(ngModel)]="bodyNavChildren.navChildrenText"
-                            [ngClass]="{'is-invalid': (navChildrenText.errors?.required || navChildrenText.errors?.minlength ) && navChildrenText.touched,
-                          'is-valid': !navChildrenText.errors?.required && !navChildrenText.errors?.minlength && navChildrenText.touched}" required minlength="3">
+                <form #frmCategory="ngForm" id="frmCategory">
 
-                        <span *ngIf="navChildrenText.errors?.required && navChildrenText.touched">
+                    <div class="form-group">
+                        <label for="txtNameCategory" class="form-control-label">Nombre</label>
+                        <input class="form-control" type="text" id="txtNameCategory" name="nameCategory"
+                            #nameCategory="ngModel" [(ngModel)]="bodyCategory.nameCategory"
+                            [ngClass]="{'is-invalid': (nameCategory.errors?.required || nameCategory.errors?.minlength ) && nameCategory.touched,
+                          'is-valid': !nameCategory.errors?.required && !nameCategory.errors?.minlength && nameCategory.touched}" required minlength="3">
+
+                        <span *ngIf="nameCategory.errors?.required && nameCategory.touched">
                             <small class="text-danger">*Requerido</small>
                         </span>
 
-                        <span *ngIf="navChildrenText.errors?.minlength && navChildrenText.touched">
+                        <span *ngIf="nameCategory.errors?.minlength && nameCategory.touched">
                             <small class="text-danger">*M&iacute;nimo 3 caracteres</small>
                         </span>
                     </div>
 
-                    <div class="form-group">
-                        <label for="cbxNavChildrenPath" class="form-control-label">navChildrenPath</label>
-
-                        <input class="form-control" id="cbxNavChildrenPath" name="navChildrenPath"
-                            [(ngModel)]="bodyNavChildren.navChildrenPath" #navChildrenPath="ngModel" required [ngClass]="{'is-invalid': navChildrenPath.errors?.required && navChildrenPath.touched,
-                          'is-valid': !navChildrenPath.errors?.required && navChildrenPath.touched}">
-
-                        <span *ngIf="navChildrenPath.errors?.required && navChildrenPath.touched">
-                            <small class="text-danger">*Requerido</small>
-                        </span>
-
-                    </div>
-
-                    <div class="form-group">
-                        <label for="cbxNavChildrenIcon" class="form-control-label">navChildrenIcon</label>
-
-                        <input class="form-control" id="cbxNavChildrenIcon" name="navChildrenIcon"
-                            [(ngModel)]="bodyNavChildren.navChildrenIcon" #navChildrenIcon="ngModel" required [ngClass]="{'is-invalid': navChildrenIcon.errors?.required && navChildrenIcon.touched,
-                          'is-valid': !navChildrenIcon.errors?.required && navChildrenIcon.touched}">
-
-                        <span *ngIf="navChildrenIcon.errors?.required && navChildrenIcon.touched">
-                            <small class="text-danger">*Requerido</small>
-                        </span>
-
-                    </div>
-
                     <div class="row">
-                        <div class="col-12" id="alertNavChildrenModal">
+                        <div class="col-12" id="alertCategoryModal">
 
                         </div>
                     </div>
@@ -213,8 +164,8 @@
                     (click)="onReset()">
                     Cerrar
                 </button>
-                <button type="button" class="btn btn-primary" [disabled]="frmNavChildren.invalid || loading"
-                    (click)="onSubmit(frmNavChildren)">
+                <button type="button" class="btn btn-primary" [disabled]="frmCategory.invalid || loading"
+                    (click)="onSubmit(frmCategory)">
                     {{ textButton }}
                     <span *ngIf="loading">
                         <i class="fa fa-spinner fa-pulse "></i>
