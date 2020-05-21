@@ -1,30 +1,30 @@
-import { Component, OnInit } from "@angular/core";
-import { NavFatherModel } from "src/app/models/navFather.model";
-import { INavFather } from "src/app/interfaces/navFather.interface";
-import { NavFatherService } from "src/app/services/navFather.service";
-import { PagerService } from "src/app/services/pager.service";
-import { NgForm } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { NavFatherModel } from 'src/app/models/navFather.model';
+import { INavFather } from 'src/app/interfaces/navFather.interface';
+import { NavFatherService } from 'src/app/services/navFather.service';
+import { PagerService } from 'src/app/services/pager.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: "app-nav-father",
-  templateUrl: "./nav-father.component.html",
+  selector: 'app-nav-father',
+  templateUrl: './nav-father.component.html',
   styleUrls: [],
 })
 export class NavFatherComponent implements OnInit {
   bodyNavFather: NavFatherModel;
   dataNavFather: INavFather[] = [];
-  titleModal = "Nuevo Nav Father";
-  textButton = "Guardar";
-  actionConfirm = "eliminar";
+  titleModal = 'Nuevo menú padre';
+  textButton = 'Guardar';
+  actionConfirm = 'eliminar';
   showInactive = false;
 
-  infoPagination = "Mostrando 0 de 0 registros.";
+  infoPagination = 'Mostrando 0 de 0 registros.';
   pagination = {
     currentPage: 0,
     pages: [],
     totalPages: 0,
   };
-
+  qName = '';
   loadData = false;
   loading = false;
 
@@ -42,10 +42,9 @@ export class NavFatherComponent implements OnInit {
     if (chk) {
       this.showInactive = !this.showInactive;
     }
-    this.NavFatherSvc.onGetListNavFather(page, "", this.showInactive).subscribe(
+    this.NavFatherSvc.onGetListNavFather(page, this.qName, this.showInactive).subscribe(
       (res) => {
-        console.log("res");
-        console.log(res);
+
         if (!res.ok) {
           throw new Error(res.error);
         }
@@ -55,8 +54,7 @@ export class NavFatherComponent implements OnInit {
 
         if (this.pagination.totalPages > 0) {
           const start = (this.pagination.currentPage - 1) * 10 + 1;
-          const vend =
-            (this.pagination.currentPage - 1) * 10 + this.dataNavFather.length;
+          const vend = (this.pagination.currentPage - 1) * 10 + this.dataNavFather.length;
           this.infoPagination = `Mostrando del ${start} al ${vend} de ${res.total} registros.`;
         }
       }
@@ -76,13 +74,13 @@ export class NavFatherComponent implements OnInit {
             this.loading = false;
             const { css, icon, msg } = this.onGetError(res.showError);
             if (res.showError !== 0) {
-              this.onShowAlert("alertNavFatherModal", css, icon, msg);
+              this.onShowAlert('alertNavFatherModal', css, icon, msg);
               return;
             } else {
-              this.onShowAlert("alertNavFather", css, icon, msg);
+              this.onShowAlert('alertNavFather', css, icon, msg);
             }
 
-            $("#btnCloseModal").trigger("click");
+            $('#btnCloseModal').trigger('click');
             this.onGetNavFather(1);
           }
         );
@@ -100,13 +98,13 @@ export class NavFatherComponent implements OnInit {
           const { css, icon, msg } = this.onGetError(res.showError);
 
           if (res.showError !== 0) {
-            this.onShowAlert("alertNavFatherModal", css, icon, msg);
+            this.onShowAlert('alertNavFatherModal', css, icon, msg);
             return;
           } else {
-            this.onShowAlert("alertNavFather", css, icon, msg);
+            this.onShowAlert('alertNavFather', css, icon, msg);
           }
 
-          $("#btnCloseModal").trigger("click");
+          $('#btnCloseModal').trigger('click');
           this.onGetNavFather(1);
         }
       );
@@ -118,15 +116,15 @@ export class NavFatherComponent implements OnInit {
       (NavFather) => NavFather.pkNavFather === id
     );
     if (!finded) {
-      console.error("No se encontro registro!!!");
+      console.error('No se encontro registro!!!');
       return;
     }
 
     this.bodyNavFather.pkNavFather = finded.pkNavFather;
     this.bodyNavFather.navFatherText = finded.navFatherText;
 
-    this.titleModal = "Editar Nav Father";
-    this.textButton = "Guardar cambios";
+    this.titleModal = 'Editar menu padre';
+    this.textButton = 'Guardar cambios';
 
     this.loadData = true;
   }
@@ -141,38 +139,31 @@ export class NavFatherComponent implements OnInit {
 
       this.loading = false;
       const { css, icon, msg } = this.onGetError(res.showError);
-      const action = this.bodyNavFather.statusRegister
-        ? "restaurado"
-        : "eliminado";
-      this.onShowAlert(
-        "alertNavFather",
-        css,
-        icon,
-        `Se ha ${action} una aplicacion con éxito`
-      );
+      const action = this.bodyNavFather.statusRegister ? 'restaurado' : 'eliminado';
 
       if (res.showError !== 0) {
-        this.onShowAlert("alertNavFatherModal", css, icon, msg);
+        this.onShowAlert('alertNavFather', css, icon, msg);
         return;
+      } else {
+        this.onShowAlert('alertNavFather', css, icon, `Se ha ${ action } un menú padre con éxito` );
+
       }
 
-      $("#btnCloseConfirm").trigger("click");
+      $('#btnCloseConfirm').trigger('click');
       this.onGetNavFather(1);
     });
   }
 
   onConfirm(id: number) {
-    const finded = this.dataNavFather.find(
-      (NavFather) => NavFather.pkNavFather === id
-    );
+    const finded = this.dataNavFather.find( (np) => np.pkNavFather === id );
     if (!finded) {
-      console.error("No se encontro registro!!!");
+      console.error('No se encontro registro!!!');
       return;
     }
 
     this.bodyNavFather.pkNavFather = finded.pkNavFather;
     this.bodyNavFather.statusRegister = !finded.statusRegister;
-    this.actionConfirm = finded.statusRegister ? "eliminar" : "restaurar";
+    this.actionConfirm = finded.statusRegister ? 'eliminar' : 'restaurar';
   }
 
   onShowAlert(idAlert: string, css: string, icon: string, msg: string) {
@@ -188,32 +179,39 @@ export class NavFatherComponent implements OnInit {
   }
 
   onGetError(showError: number) {
-    const css = showError === 0 ? "success" : "danger";
-    const icon = showError === 0 ? "check" : "exclamation-circle";
-    const action = this.loadData ? "actualizado" : "creado";
-    const arrErr =
-      showError === 0
-        ? [`Se ha ${action} una NavFather con éxito`]
-        : ["Error, ya existe un registro"];
+    const css = showError === 0 ? 'success' : 'danger';
+    const icon = showError === 0 ? 'check' : 'exclamation-circle';
+    const action = this.loadData ? 'actualizado' : 'creado';
+    let arrErr = showError === 0 ? [`Se ha ${action} una NavFather con éxito`] : ['Error, ya existe un registro'];
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 1) {
-      arrErr.push("con este nombre");
+      arrErr.push('con este nombre');
     }
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 2) {
-      arrErr.push("se encuentra inactivo");
+      arrErr.push('se encuentra inactivo');
     }
 
-    return { css, icon, msg: arrErr.join(", ") };
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 4) {
+      arrErr = ['Error', 'Existen menús hijos asociados a este padre'];
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 8) {
+      arrErr = ['Error', 'No se encontró registro'];
+    }
+
+    return { css, icon, msg: arrErr.join(', ') };
   }
 
   onReset() {
-    $("#frmNavFather").trigger("reset");
+    $('#frmNavFather').trigger('reset');
     this.bodyNavFather.onReset();
-    this.titleModal = "Nueva aplicación";
-    this.textButton = "Guardar";
+    this.titleModal = 'Nueva aplicación';
+    this.textButton = 'Guardar';
     this.loadData = false;
   }
 }

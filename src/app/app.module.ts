@@ -39,7 +39,6 @@ const socketConfig: SocketIoConfig = { url: environment.URL_SERVER, options: {} 
     AppRoutingModule,
     ComponentsModule,
     SwiperModule,
-    // NgSelect2Module,
     NgSelectModule,
     SocketIoModule.forRoot(socketConfig),
   ],

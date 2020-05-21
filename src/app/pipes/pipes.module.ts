@@ -6,6 +6,8 @@ import { RolesPipe } from './roles.pipe';
 import { ColorPipe } from './color.pipe';
 import { MomentPipe } from './moment.pipe';
 import { ReplacePipe } from './replace.pipe';
+import { SexPipe } from './sex.pipe';
+import { UserUrlPipe } from './user-url.pipe';
 
 @NgModule({
   declarations: [
@@ -14,7 +16,9 @@ import { ReplacePipe } from './replace.pipe';
     RolesPipe,
     ColorPipe,
     MomentPipe,
-    ReplacePipe
+    ReplacePipe,
+    SexPipe,
+    UserUrlPipe
   ],
   exports: [
     RowIndexPipe,
@@ -22,7 +26,9 @@ import { ReplacePipe } from './replace.pipe';
     RolesPipe,
     ColorPipe,
     MomentPipe,
-    ReplacePipe
+    ReplacePipe,
+    SexPipe,
+    UserUrlPipe
   ],
   imports: [
     CommonModule

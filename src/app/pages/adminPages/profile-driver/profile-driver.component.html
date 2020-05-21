@@ -13,7 +13,10 @@
             </div>
             <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
                 <div class="d-flex justify-content-between">
-                    <a href="#" class="btn btn-sm btn-info  mr-4 ">Connect</a>
+                    <button class="btn btn-sm  mr-4 " (click)="onShowModalVerifDriver()" [ngClass]="{'btn-info': dataProfile.verified,
+                                                              'btn-danger': !dataProfile.verified }">
+                        {{ dataProfile.verified ? 'Verificado' : 'Pendiente' }}
+                    </button>
                     <button class="btn btn-sm btn-default float-right" data-toggle="modal" data-target="#modalMessage">
                       Mensaje
                     </button>
@@ -89,48 +92,6 @@
                         </div>
                     </li>
 
-                    <!-- <li class="checklist-entry list-group-item flex-column align-items-start py-4 px-4">
-                        <div class="checklist-item checklist-item-warning">
-                            <div class="checklist-info">
-                                <h5 class="checklist-title mb-0">Lunch meeting</h5>
-                                <small>10:30 AM</small>
-                            </div>
-                            <div>
-                                <div class="custom-control custom-checkbox custom-checkbox-warning">
-                                    <input class="custom-control-input" id="chk-todo-task-2" type="checkbox">
-                                    <label class="custom-control-label" for="chk-todo-task-2"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="checklist-entry list-group-item flex-column align-items-start py-4 px-4">
-                        <div class="checklist-item checklist-item-info">
-                            <div class="checklist-info">
-                                <h5 class="checklist-title mb-0">Argon Dashboard Launch</h5>
-                                <small>10:30 AM</small>
-                            </div>
-                            <div>
-                                <div class="custom-control custom-checkbox custom-checkbox-info">
-                                    <input class="custom-control-input" id="chk-todo-task-3" type="checkbox">
-                                    <label class="custom-control-label" for="chk-todo-task-3"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    <li class="checklist-entry list-group-item flex-column align-items-start py-4 px-4">
-                        <div class="checklist-item checklist-item-danger checklist-item-checked">
-                            <div class="checklist-info">
-                                <h5 class="checklist-title mb-0">Winter Hackaton</h5>
-                                <small>10:30 AM</small>
-                            </div>
-                            <div>
-                                <div class="custom-control custom-checkbox custom-checkbox-danger">
-                                    <input class="custom-control-input" id="chk-todo-task-4" type="checkbox" checked="">
-                                    <label class="custom-control-label" for="chk-todo-task-4"></label>
-                                </div>
-                            </div>
-                        </div>
-                    </li> -->
                 </ul>
             </div>
         </div>
@@ -167,36 +128,55 @@
 
                             <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label class="form-control-label">Verificado por reniec</label>
-                                    <input readonly class="form-control" [value]="dataProfile.verifyReniec | yesno" placeholder="jesse@example.com">
+                                    <label class="form-control-label">
+                                  Nacionalidad
+                                </label>
+                                    <input type="text" class="form-control" [value]="dataProfile.nameCountry">
                                 </div>
+
                             </div>
 
                         </div>
                         <div class="row">
-                            <div class="col-lg-5">
-                                <div class="form-group">
-                                    <label class="form-control-label">
-                                      Nacionalidad
-                                    </label>
-                                    <input type="text" class="form-control" [value]="dataProfile.nameCountry">
-                                </div>
-                            </div>
+
                             <div class="col-lg-4">
                                 <div class="form-group">
                                     <label class="form-control-label">
                                     Fecha nacimiento
                                   </label>
-                                    <input type="text" class="form-control" [value]="dataProfile.brithDate | date">
+                                    <input type="text" class="form-control" [value]="dataProfile.brithDate | date" readonly>
                                 </div>
                             </div>
-
+                            <div class="col-lg-2">
+                                <div class="form-group">
+                                    <label class="form-control-label">
+                                    Sexo
+                                  </label>
+                                    <span class="badge badge-pill badge-primary" [ngClass]="{'badge-info': dataProfile.sex === 'M',
+                                  'badge-danger': dataProfile.sex === 'F' }">
+                                    {{dataProfile.sex | sex}}
+                                  </span>
+                                </div>
+                            </div>
                             <div class="col-lg-3">
                                 <div class="form-group">
                                     <label class="form-control-label">
                                       Taxista certificado
                                     </label>
-                                    <input type="text" class="form-control" placeholder="Last name" [value]="dataProfile.isEmployee | yesno">
+                                    <span class="badge badge-pill badge-success" [ngClass]="{'badge-success': dataProfile.isEmployee,
+                                    'badge-info': !dataProfile.isEmployee }">
+                                      {{dataProfile.isEmployee | yesno}}
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label class="form-control-label">Verificado reniec</label>
+                                    <br>
+                                    <span class="badge badge-pill badge-success" [ngClass]="{'badge-success': dataProfile.verifyReniec,
+                                'badge-danger': !dataProfile.verifyReniec }">
+                                  {{dataProfile.verifyReniec | yesno}}
+                                </span>
                                 </div>
                             </div>
                         </div>
@@ -208,14 +188,28 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <!-- style="width: 18rem; " :entity/:idEntity/:fileName -->
-                                <div class="card" (click)="onShowPreview()" style="cursor: pointer;">
+                                <div class="card">
                                     <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgLicense + token" alt="Card image cap" style="height: 170px;">
                                     <div class="card-body">
-                                        <h5 class="card-title">Licencia de conducir</h5>
-                                        <p class="card-text">
-                                            Expiraci&oacute;n - {{ dataProfile.dateLicenseExpiration | date }}
-                                        </p>
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <h5 class="card-title">Licencia de conducir</h5>
+                                                <p class="card-text">
+                                                    Exp. - {{ dataProfile.dateLicenseExpiration | date }}
+                                                </p>
+                                            </div>
+                                            <div class="col-5">
+                                                <a [href]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgLicense + token" target="blank" class="btn btn-sm btn-info" title="Descargar">
+                                                    <i class="fa fa-download"></i>
+                                                </a>
 
+                                                <label class="btn btn-sm btn-primary" title="Reemplazar" for="fileLicense">
+                                                  <i class="fa fa-upload"></i>
+                                                </label>
+                                            </div>
+                                        </div>
+
+                                        <input type="file" id="fileLicense" style="display: none;" (change)="onChangeFile( 'DRIVER', 'LICENSE', $event.target.files )">
                                     </div>
                                 </div>
                             </div>
@@ -225,7 +219,20 @@
                                 <div class="card">
                                     <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgPhotoCheck + token" alt="Card image cap" style="height: 170px;">
                                     <div class="card-body">
-                                        <h5 class="card-title">Foto check</h5>
+                                        <div class="row">
+                                            <div class="col-7">
+                                                <h5 class="card-title">Foto check</h5>
+                                            </div>
+                                            <div class="col-5">
+                                                <a [href]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgPhotoCheck + token" target="blank" class="btn btn-sm btn-info" title="Descargar">
+                                                    <i class="fa fa-download"></i>
+                                                </a>
+                                                <label class="btn btn-sm btn-primary" title="Reemplazar" for="filePhoto">
+                                                <i class="fa fa-upload"></i>
+                                              </label>
+                                            </div>
+                                        </div>
+                                        <input type="file" id="filePhoto" style="display: none;" (change)="onChangeFile( 'DRIVER', 'PHOTO_CHECK', $event.target.files )">
 
                                     </div>
                                 </div>
@@ -237,14 +244,40 @@
                                     <canvas class=" card col-lg-12" #canvasCriminal>
 
                                     </canvas>
-                                    <h4>Antecedentes penales</h4>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <h4>Antecedentes penales</h4>
+                                        </div>
+                                        <div class="col-4">
+                                            <a [href]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgCriminalRecord + token" target="blank" class="btn btn-sm btn-info" title="Descargar">
+                                                <i class="fa fa-download"></i>
+                                            </a>
+                                            <label class="btn btn-sm btn-primary" title="Reemplazar" for="fileCrimial">
+                                              <i class="fa fa-upload"></i>
+                                            </label>
+                                        </div>
+                                        <input type="file" id="fileCrimial" style="display: none;" (change)="onChangeFile( 'DRIVER', 'CRIMINAL_RECORD', $event.target.files, true )">
+                                    </div>
                                 </div>
                                 <div *ngIf="!criminalIsPdf">
 
                                     <div class="card" style="width: 18rem;">
-                                        <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgCriminalRecord + token" alt="Card image cap">
+                                        <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgCriminalRecord + token" alt="Card image cap" style="height: 440px;">
                                         <div class="card-body">
-                                            <h5 class="card-title">Antecedentes penales</h5>
+                                            <div class="row">
+                                                <div class="col-7">
+                                                    <h5 class="card-title">Antecedentes penales</h5>
+                                                </div>
+                                                <div class="col-5">
+                                                    <a [href]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgCriminalRecord + token" target="blank" class="btn btn-sm btn-info" title="Descargar">
+                                                        <i class="fa fa-download"></i>
+                                                    </a>
+                                                    <label class="btn btn-sm btn-primary" title="Reemplazar" for="fileCrimialTwo">
+                                                    <i class="fa fa-upload"></i>
+                                                  </label>
+                                                </div>
+                                                <input type="file" id="fileCrimialTwo" style="display: none;" (change)="onChangeFile( 'DRIVER', 'CRIMINAL_RECORD', $event.target.files, true )">
+                                            </div>
 
                                         </div>
                                     </div>
@@ -256,21 +289,44 @@
                                     <canvas class=" card col-lg-12" #canvasPolicial>
 
                                     </canvas>
-                                    <h4>Antecedentes policiales</h4>
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <h4>Antecedentes policiales</h4>
+                                        </div>
+                                        <div class="col-4">
+                                            <a [href]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgPolicialRecord + token" target="blank" class="btn btn-sm btn-info" title="Descargar">
+                                                <i class="fa fa-download"></i>
+                                            </a>
+                                            <label class="btn btn-sm btn-primary" title="Reemplazar" for="filePolicial">
+                                              <i class="fa fa-upload"></i>
+                                            </label>
+                                        </div>
+                                        <input type="file" id="filePolicial" style="display: none;" (change)="onChangeFile( 'DRIVER', 'POLICIAL_RECORD', $event.target.files, true )">
+                                    </div>
                                 </div>
                                 <div *ngIf="!policialIsPdf">
 
                                     <div class="card" style="width: 18rem;">
-                                        <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgPolicialRecord + token" alt="Card image cap">
+                                        <img class="card-img-top rounded" [src]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgPolicialRecord + token" alt="Card image cap" style="height: 440px;">
                                         <div class="card-body">
-                                            <h5 class="card-title">Antecedentes policiales</h5>
+                                            <div class="row">
+                                                <div class="col-7">
+                                                    <h5 class="card-title">Antecedentes policiales</h5>
+                                                </div>
+                                                <div class="col-5">
+                                                    <a [href]="pathDriver + 'driver/' + dataProfile.pkDriver + '/' + dataProfile.imgPolicialRecord + token" target="blank" class="btn btn-sm btn-info" title="Descargar">
+                                                        <i class="fa fa-download"></i>
+                                                    </a>
+                                                    <label class="btn btn-sm btn-primary" title="Reemplazar" for="filePolicialTwo">
+                                                      <i class="fa fa-upload"></i>
+                                                    </label>
+                                                </div>
+                                                <input type="file" id="filePolicialTwo" style="display: none;" (change)="onChangeFile( 'DRIVER', 'POLICIAL_RECORD', $event.target.files, true )">
+                                            </div>
 
                                         </div>
                                     </div>
                                 </div>
-
-
-
                             </div>
                         </div>
                     </div>
@@ -388,6 +444,13 @@
 
                         <div class="row">
                             <div class="col-12">
+
+                                <div>
+                                    <span class="badge badge-pill " [ngClass]="{'badge-success': vehicle.verified,'badge-danger': !vehicle.verified
+                                    }" (click)="onShowVehicleVerif( vehicle )" [ngStyle]="{'cursor': !vehicle.verified ? 'pointer' : 'default'}">
+                                      {{ vehicle.verified ? 'Verificado' : 'Pendiente' }}
+                                    </span>
+                                </div>
                                 <h4> {{vehicle.numberPlate}} </h4>
                                 <p>
                                     {{ vehicle.year }}
@@ -397,15 +460,35 @@
                         </div>
 
                         <div class="row">
+                            <span>
+                                <a [href]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgPropertyCard + token + '&idDriver=' + dataProfile.pkDriver" target="blank" class="btn btn-sm btn-info btnDownLicense" title="Descargar">
+                                    <i class="fa fa-download"></i>
+                                </a>
+                                <label class="btn btn-sm btn-primary btnDownLicense" title="Reemplazar" for="fileLicense-{{ vehicle.pkVehicle }}">
+                                  <i class="fa fa-upload"></i>
+                                </label>
+                            </span>
                             <div class="col-12">
                                 <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgPropertyCard  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px; " class="borderImg">
+
+                                <input type="file" id="fileLicense-{{ vehicle.pkVehicle }}" style="display: none;" (change)="onChangeFile( 'VEHICLE', 'PROPERTY_CARD', $event.target.files, false, vehicle.pkVehicle )">
                                 <p>Tarjeta de propiedad</p>
                             </div>
+
                         </div>
 
                         <div class="row">
+                            <span>
+                            <a [href]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgSoat + token + '&idDriver=' + dataProfile.pkDriver" target="blank" class="btn btn-sm btn-info btnDownLicense" title="Descargar">
+                                <i class="fa fa-download"></i>
+                            </a>
+                            <label class="btn btn-sm btn-primary btnDownLicense" title="Reemplazar" for="fileSoat-{{ vehicle.pkVehicle }}">
+                              <i class="fa fa-upload"></i>
+                            </label>
+                        </span>
                             <div class="col-12">
                                 <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgSoat  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px;" class="borderImg">
+                                <input type="file" id="fileSoat-{{ vehicle.pkVehicle }}" style="display: none;" (change)="onChangeFile( 'VEHICLE', 'SOAT', $event.target.files, false, vehicle.pkVehicle )">
                                 <p>
                                     Soat <br> Exp. {{ vehicle.dateSoatExpiration | date }}
                                 </p>
@@ -430,77 +513,122 @@
             <div class="swiper-button-prev"></div>
             <div class="swiper-button-next"></div>
         </div>
-        <!-- <swiper [config]="configSlider" ([index])="index">
-
-            <div *ngFor="let vehicle of vehicles">
-
-                <div class="table">
-
-                    <div class="row">
-                        <div class="col-12">
-                            <h4> {{vehicle.numberPlate}} </h4>
-                            <p>
-                                {{ vehicle.year }}
-                                <br> {{ vehicle.color | color }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12">
-                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgPropertyCard  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px; " class="borderImg">
-                            <p>Tarjeta de propiedad</p>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-12">
-                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgSoat  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px;" class="borderImg">
-                            <p>
-                                Soat <br> Exp. {{ vehicle.dateSoatExpiration | date }}
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-6">
-                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiFrontal  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
-                        </div>
-                        <div class="col-6">
-                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiBack  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="swiper-button-prevTwo"></div>
-            <div class="swiper-button-nextTwo"></div>
-        </swiper> -->
     </div>
 </div>
 
 <!-- Button trigger modal -->
-<button type="button" style="display: none;" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal" id="btnShowPreview">
+<button type="button" style="display: none;" class="btn btn-primary" data-toggle="modal" data-target="#modalVehicle" id="btnShowVehicleVerif">
   Launch demo modal
 </button>
 
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalVehicle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
+                <h5 class="modal-title" id="exampleModalLabel">Verificar vehículo</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseModalVehicle" (click)="onResetVehicle()">
+                  <span aria-hidden="true">&times;</span>
+                </button>
             </div>
             <div class="modal-body">
+                <form #frmVehicleVerif="ngForm">
 
+                    <div class="row">
+                        <div class="col-4">
+                            <img [src]="pathDriver + 'vehicle/' + bodyVehicleVerif.pkVehicle + '/' + bodyVehicleVerif.imgFrontal  + token + '&idDriver=' + pkDriver " alt="" style="height: 188px; width: 140px;" class="borderImg">
+                        </div>
+                        <div class="col-8">
+                            <div class="row">
+                                <div class="col-12">
+                                    <h4>
+                                        {{ bodyVehicleVerif.numberPlate }} - {{ bodyVehicleVerif.color }}
+                                        <p>
+                                            {{ bodyVehicleVerif.year }}
+                                        </p>
+                                    </h4>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="cbxCategory">Categoría</label>
+                                        <select class="form-control" id="cbxCategory" name="category" #category="ngModel" [(ngModel)]="bodyVehicleVerif.fkCategory" (change)="onGetMarca()" required [ngClass]="{
+                                          'is-invalid': category.errors?.required && category.touched,
+                                          'is-valid': !category.errors?.required && category.touched
+                                        }">
+                                          <option value="" disabled selected="true">-- Seleccione --</option>
+                                          <option [value]="category.pkCategory" *ngFor="let category of dataCategory">
+                                            {{ category.nameCategory }}
+                                          </option>
+                                        </select>
+                                        <span *ngIf="category.errors?.required && category.touched">
+                                          <small class="text-danger">*Requerido</small>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="form-group">
 
+                                        <label for="cbxBrand">Marca</label>
+                                        <select class="form-control" id="cbxBrand" (change)="onGetModel()" name="brand" #brand="ngModel" [(ngModel)]="bodyVehicleVerif.fkBrand" required [ngClass]="{
+                                          'is-invalid': brand.errors?.required && brand.touched,
+                                          'is-valid': !brand.errors?.required && brand.touched
+                                        }">
+                                            <option value=""  disabled selected>-- Seleccione --</option>
+                                            <option [value]="brand.pkBrand" *ngFor="let brand of dataBrand">
+                                              {{ brand.nameBrand }}
+                                            </option>
+                                        </select>
+                                        <span *ngIf="brand.errors?.required && brand.touched">
+                                          <small class="text-danger">*Requerido</small>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+
+                                        <label for="cbxModel">Modelo</label>
+                                        <select class="form-control" id="cbxModel" name="model" #model="ngModel" [(ngModel)]="bodyVehicleVerif.fkModel" required [ngClass]="{
+                                        'is-invalid': model.errors?.required && model.touched,
+                                        'is-valid': !model.errors?.required && model.touched
+                                      }">
+                                        <option value=""  disabled selected>-- Seleccione --</option>
+                                        <option [value]="model.pkModel" *ngFor="let model of dataModel">
+                                          {{ model.nameModel }}
+                                        </option>
+                                      </select>
+                                        <span *ngIf="model.errors?.required && model.touched">
+                                        <small class="text-danger">*Requerido</small>
+                                      </span>
+                                    </div>
+                                </div>
+
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for="">Observaci&oacute;n</label>
+                                        <textarea name="obs" #obsVerif="ngModel" [(ngModel)]="bodyVehicleVerif.observation" rows="3" class="form-control" required [ngClass]="{
+                                        'is-invalid': obsVerif.errors?.required && obsVerif.touched,
+                                        'is-valid': !obsVerif.errors?.required && obsVerif.touched
+                                      }">
+                                      </textarea>
+                                        <span *ngIf="obsVerif.errors?.required && obsVerif.touched">
+                                        <small class="text-danger">*Requerido</small>
+                                      </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-success" data-dismiss="modal" [disabled]="frmVehicleVerif.invalid || loadingVehicle" (click)="onSubmitVerifVehicle(frmVehicleVerif)">
+                  <span *ngIf="loadingVehicle">
+                    <i class="fa fa-spinner fa-pulse"></i>
+                  </span>
+                  Habilitar
+                </button>
             </div>
         </div>
     </div>
@@ -687,8 +815,54 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
 </div>
+
+<button type="button" class="btn btn-block btn-warning mb-3" data-toggle="modal" data-target="#modalConfirmAccount" id="btnShowVerifDriver" style="display: none;">Notification</button>
+
+<div class="modal fade" id="modalConfirmAccount" tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">
+    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+        <div class="modal-content bg-gradient-danger">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-notification">Confirmaci&oacute;n</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseVerifDriver">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+                <form #frmverifDriver="ngForm">
+                    <div class="py-3 text-center">
+                        <i class="ni ni-bell-55 ni-5x"></i>
+                        <h4 class="heading mt-4">¿Está seguro de habilitar a este conductor?</h4>
+                    </div>
+                    <div class="form-group">
+                        <label for="">Observaci&oacute;n</label>
+                        <textarea name="driverobs" #obsdriverv="ngModel" [(ngModel)]="bodyDriverVerif.observation" required [ngClass]="{'is-invalid': obsdriverv.errors?.required && obsdriverv.touched,
+                    'is-valid': !obsdriverv.errors?.required && obsdriverv.touched}" rows="2" class="form-control">
+                        </textarea>
+                        <span *ngIf="obsdriverv.errors?.required && obsdriverv.touched">
+                      <small class="text-info">*Requerido</small>
+                    </span>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" [disabled]="frmverifDriver.invalid || loadingDriver" (click)="onSubmitVerifDriver(frmverifDriver)">
+                  Habilitar
+                  <span *ngIf="loadingDriver">
+                    <i class="fa fa-spinner fa-pulse"></i>
+                  </span>
+                </button>
+                <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">
+                  Cerrar
+                </button>
+            </div>
+
+        </div>
+    </div>

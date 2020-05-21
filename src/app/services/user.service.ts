@@ -15,6 +15,9 @@ export class UserService {
   constructor(private http: HttpClient, private storage: StorageService) { }
 
   onGetUser( page: number, rowsForPage: number, qName = '', qEmail = '', qUser = '', qRole = '', showInactive: boolean ) {
+
+    showInactive = showInactive ? false : true;
+
     let params = `?page=${page}`;
     params += `&rowsForPage=${rowsForPage}`;
     params += `&qName=${qName}`;
@@ -45,6 +48,9 @@ export class UserService {
   }
 
 
-
+  onGetProfile( pkUser: number ) {
+    this.storage.onLoadToken();
+    return this.http.get<IResponse>( URI_API + `/User/Profile/${ pkUser }`, { headers: { Authorization: this.storage.token } } );
+  }
 
 }

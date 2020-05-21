@@ -1,24 +1,19 @@
-export interface IProfileDriver {
+export interface IUserProfile {
+
+  pkUser: number;
   brithDate?: Date;
-  dateLicenseExpiration?: Date;
   dateVerified?: Date;
   document?: string;
   email?: string;
-  pkUser?: number;
   fkUserVerified?: number;
   img?: string;
-  imgCriminalRecord?: string;
-  imgLicense?: string;
-  imgPhotoCheck?: string;
-  imgPolicialRecord?: string;
-  isEmployee?: 0;
+
   sex?: string;
   name?: string;
   nameComplete?: string;
   nameCountry?: string;
   nameDocument?: string;
   phone?: string;
-  pkDriver?: number;
   pkPerson?: number;
   prefix?: string;
   prefixPhone?: string;
@@ -27,4 +22,5 @@ export interface IProfileDriver {
   verified?: number;
   verifyReniec?: number;
   yearsOld?: number;
+
 }

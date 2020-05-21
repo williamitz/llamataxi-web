@@ -5,6 +5,7 @@ export class NavChildrenModel {
   navChildrenPath: string;
   navChildrenIcon: string;
   statusRegister?: boolean;
+  isVisible: boolean;
 
   constructor() {
     this.pkNavChildren = 0;
@@ -13,6 +14,7 @@ export class NavChildrenModel {
     this.navChildrenPath = "";
     this.navChildrenIcon = "";
     this.statusRegister = true;
+    this.isVisible = true;
   }
 
   onReset() {

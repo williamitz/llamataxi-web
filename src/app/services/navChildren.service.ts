@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { NavChildrenModel } from "../models/navChildren.model";
-import { IResponse } from "../interfaces/response.interface";
-import { environment } from "../../environments/environment";
-import { StorageService } from "./storage.service";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { NavChildrenModel } from '../models/navChildren.model';
+import { IResponse } from '../interfaces/response.interface';
+import { environment } from '../../environments/environment';
+import { StorageService } from './storage.service';
 
 const URI_API = environment.URL_SERVER;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class NavChildrenService {
   constructor(private http: HttpClient, private storageSvc: StorageService) {}
@@ -40,10 +40,10 @@ export class NavChildrenService {
     );
   }
 
-  onGetListNavChildren(page: number, q: number, showInactive: boolean) {
+  onGetListNavChildren(page: number, qFather: string, qChildren: string, qUrl: string, showInactive: boolean) {
     showInactive = showInactive ? false : true;
     this.storageSvc.onLoadToken();
-    const params = `?page=${page}&q=${q}&showInactive=${showInactive}`;
+    const params = `?page=${page}&qFather=${ qFather }&qChildren=${ qChildren }&qUrl=${ qUrl }&showInactive=${showInactive}`;
 
     return this.http.get<IResponse>(URI_API + `/NavChildren/Get` + params, {
       headers: { Authorization: this.storageSvc.token },

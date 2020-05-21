@@ -4,3 +4,14 @@ export interface IMenuRole {
   role: string;
   statusRegister?: number;
 }
+
+
+export interface IMenu {
+  pkMenuRole: number;
+  fkNavChildren: number;
+  navChildrenText: string;
+  navChildrenPath: string;
+  navChildrenIcon: string;
+  role: string;
+  isVisible: boolean;
+}

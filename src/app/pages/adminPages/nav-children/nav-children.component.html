@@ -8,8 +8,7 @@
                             <tr>
                                 <th colspan="3">
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#NavChildrenModal">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#NavChildrenModal">
                                         Nuevo
                                     </button>
                                 </th>
@@ -19,48 +18,78 @@
                             </tr>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">NavFather</th>
-                                <th scope="col">navChildrenText</th>
-                                <th scope="col">navChildrenPath</th>
-                                <th scope="col">navChildrenIcon</th>
+                                <th scope="col">
+                                    Men&uacute; padre
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-search"></i>
+                                      </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+                                                <input type="text" name="qFather" [(ngModel)]="qFather" (change)="onGetNavChildren(1)" class="form-control form-control-sm" placeholder="Buscar por padre">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    Men&uacute; hijo
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-search"></i>
+                                      </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+                                                <input type="text" name="qChildren" [(ngModel)]="qChildren" (change)="onGetNavChildren(1)" class="form-control form-control-sm" placeholder="Buscar por hijo">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    Url
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-search"></i>
+                                      </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+                                                <input type="text" name="qUrl" [(ngModel)]="qUrl" (change)="onGetNavChildren(1)" class="form-control form-control-sm" placeholder="Buscar por url">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th scope="col">Icono</th>
                                 <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody class="list">
 
-                            <tr *ngFor="let app of dataNavChildren | rowIndex: pagination.currentPage">
+                            <tr *ngFor="let navChildren of dataNavChildren | rowIndex: pagination.currentPage">
                                 <th scope="row">
-                                    {{ app.rowIndex }}
+                                    {{ navChildren.rowIndex }}
                                 </th>
                                 <td class="budget">
-                                    {{ app.navFatherText }}
+                                    {{ navChildren.navFatherText }}
                                 </td>
                                 <td>
-                                    {{ app.navChildrenText }}
+                                    {{ navChildren.navChildrenText }}
                                 </td>
                                 <td>
-                                    {{ app.navChildrenPath }}
+                                    {{ navChildren.navChildrenPath }}
                                 </td>
                                 <td>
-                                    {{ app.navChildrenIcon }}
-                                </td>
-                                <td>
-                                    {{ app.dateRegister | date }}
+                                    <i class="fas {{ navChildren.navChildrenIcon }} fa-3x"></i>
                                 </td>
                                 <td class="text-right">
-                                    <button *ngIf="app.statusRegister" class="btn btn-outline-primary btn-icon"
-                                        type="button" data-toggle="modal" data-target="#NavChildrenModal"
-                                        (click)="onEdit( app.pkNavChildren )">
+                                    <button *ngIf="navChildren.statusRegister" class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal" data-target="#NavChildrenModal" (click)="onEdit( navChildren.pkNavChildren )">
                                         <i class="fa fa-edit"></i>
                                     </button>
 
-                                    <button class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal"
-                                        data-target="#confirmModal" (click)="onConfirm( app.pkNavChildren )">
-                                        <span *ngIf="app.statusRegister">
+                                    <button class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal" data-target="#confirmModal" (click)="onConfirm( navChildren.pkNavChildren )">
+                                        <span *ngIf="navChildren.statusRegister">
                                             <i class="fa fa-trash"></i>
                                         </span>
 
-                                        <span *ngIf="!app.statusRegister">
+                                        <span *ngIf="!navChildren.statusRegister">
                                             <i class="fa fa-recycle"></i>
                                         </span>
                                     </button>
@@ -94,26 +123,21 @@
                                         <nav aria-label="Page navigation example">
                                             <ul class="pagination justify-content-center mt-2">
 
-                                                <li class="page-item prev"
-                                                    [ngClass]="{'disabled':pagination.currentPage === 1}">
-                                                    <a class="page-link"
-                                                        (click)="onGetNavChildren(pagination.currentPage - 1)">
+                                                <li class="page-item prev" [ngClass]="{'disabled':pagination.currentPage === 1}">
+                                                    <a class="page-link" (click)="onGetNavChildren(pagination.currentPage - 1)">
                                                         <i class="fa fa-angle-left"></i>
                                                         <span class="sr-only">Previous</span>
                                                     </a>
                                                 </li>
 
-                                                <li class="page-item" *ngFor="let page of pagination.pages"
-                                                    [ngClass]="{active:pagination.currentPage === page}">
+                                                <li class="page-item" *ngFor="let page of pagination.pages" [ngClass]="{active:pagination.currentPage === page}">
                                                     <a class="page-link" (click)="onGetNavChildren(page)">
                                                         {{ page }}
                                                     </a>
                                                 </li>
 
-                                                <li class="page-item next"
-                                                    [ngClass]="{'disabled':pagination.currentPage === pagination.totalPages}">
-                                                    <a class="page-link"
-                                                        (click)="onGetNavChildren(pagination.currentPage + 1)">
+                                                <li class="page-item next" [ngClass]="{'disabled':pagination.currentPage === pagination.totalPages}">
+                                                    <a class="page-link" (click)="onGetNavChildren(pagination.currentPage + 1)">
                                                         <i class="fa fa-angle-right"></i>
                                                         <span class="sr-only">Next</span>
                                                     </a>
@@ -149,20 +173,16 @@
 
                 <form #frmNavChildren="ngForm" id="frmNavChildren">
                     <div class="form-group">
-                        <label for="txtFkNavFather">FkNavFather</label>
-                        <select class="form-control" id="txtFkNavFather" name="fkNavFather"
-                            placeholder="Seleccione al Cliente" #fkNavFather="ngModel"
-                            [(ngModel)]="bodyNavChildren.fkNavFather">
+                        <label for="txtFkNavFather">Menú padre</label>
+                        <select class="form-control" id="txtFkNavFather" name="fkNavFather" placeholder="Seleccione al Cliente" #fkNavFather="ngModel" [(ngModel)]="bodyNavChildren.fkNavFather">
                             <option value="" disabled>Seleccione Opcion Padre </option>
                             <option [value]="item.pkNavFather" *ngFor="let item of dataNavFather">{{item.navFatherText}}
                             </option>
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="txtNavChildrenText" class="form-control-label">navChildrenText</label>
-                        <input class="form-control" type="text" id="txtNavChildrenText" name="navChildrenText"
-                            #navChildrenText="ngModel" [(ngModel)]="bodyNavChildren.navChildrenText"
-                            [ngClass]="{'is-invalid': (navChildrenText.errors?.required || navChildrenText.errors?.minlength ) && navChildrenText.touched,
+                        <label for="txtNavChildrenText" class="form-control-label">Menú hijo</label>
+                        <input class="form-control" type="text" id="txtNavChildrenText" name="navChildrenText" #navChildrenText="ngModel" [(ngModel)]="bodyNavChildren.navChildrenText" [ngClass]="{'is-invalid': (navChildrenText.errors?.required || navChildrenText.errors?.minlength ) && navChildrenText.touched,
                           'is-valid': !navChildrenText.errors?.required && !navChildrenText.errors?.minlength && navChildrenText.touched}" required minlength="3">
 
                         <span *ngIf="navChildrenText.errors?.required && navChildrenText.touched">
@@ -175,10 +195,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="cbxNavChildrenPath" class="form-control-label">navChildrenPath</label>
+                        <label for="cbxNavChildrenPath" class="form-control-label">Url</label>
 
-                        <input class="form-control" id="cbxNavChildrenPath" name="navChildrenPath"
-                            [(ngModel)]="bodyNavChildren.navChildrenPath" #navChildrenPath="ngModel" required [ngClass]="{'is-invalid': navChildrenPath.errors?.required && navChildrenPath.touched,
+                        <input class="form-control" id="cbxNavChildrenPath" name="navChildrenPath" [(ngModel)]="bodyNavChildren.navChildrenPath" #navChildrenPath="ngModel" required [ngClass]="{'is-invalid': navChildrenPath.errors?.required && navChildrenPath.touched,
                           'is-valid': !navChildrenPath.errors?.required && navChildrenPath.touched}">
 
                         <span *ngIf="navChildrenPath.errors?.required && navChildrenPath.touched">
@@ -187,17 +206,31 @@
 
                     </div>
 
-                    <div class="form-group">
-                        <label for="cbxNavChildrenIcon" class="form-control-label">navChildrenIcon</label>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="cbxNavChildrenIcon" class="form-control-label">Icono</label>
 
-                        <input class="form-control" id="cbxNavChildrenIcon" name="navChildrenIcon"
-                            [(ngModel)]="bodyNavChildren.navChildrenIcon" #navChildrenIcon="ngModel" required [ngClass]="{'is-invalid': navChildrenIcon.errors?.required && navChildrenIcon.touched,
-                          'is-valid': !navChildrenIcon.errors?.required && navChildrenIcon.touched}">
+                                <input class="form-control" id="cbxNavChildrenIcon" name="navChildrenIcon" [(ngModel)]="bodyNavChildren.navChildrenIcon" #navChildrenIcon="ngModel" required [ngClass]="{'is-invalid': navChildrenIcon.errors?.required && navChildrenIcon.touched,
+                              'is-valid': !navChildrenIcon.errors?.required && navChildrenIcon.touched}">
 
-                        <span *ngIf="navChildrenIcon.errors?.required && navChildrenIcon.touched">
-                            <small class="text-danger">*Requerido</small>
-                        </span>
+                                <span *ngIf="navChildrenIcon.errors?.required && navChildrenIcon.touched">
+                                <small class="text-danger">*Requerido</small>
+                            </span>
 
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for=""> Visible? </label>
+                                <br>
+                                <label class="custom-toggle">
+                                  <input type="checkbox" checked name="isVisible" [(ngModel)]="bodyNavChildren.isVisible">
+                                  <span class="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Sí"></span>
+                              </label>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">
@@ -209,12 +242,10 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal"
-                    (click)="onReset()">
+                <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal" (click)="onReset()">
                     Cerrar
                 </button>
-                <button type="button" class="btn btn-primary" [disabled]="frmNavChildren.invalid || loading"
-                    (click)="onSubmit(frmNavChildren)">
+                <button type="button" class="btn btn-primary" [disabled]="frmNavChildren.invalid || loading" (click)="onSubmit(frmNavChildren)">
                     {{ textButton }}
                     <span *ngIf="loading">
                         <i class="fa fa-spinner fa-pulse "></i>

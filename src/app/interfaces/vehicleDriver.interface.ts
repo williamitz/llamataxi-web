@@ -12,4 +12,5 @@ export interface IVehicleDriver {
   dateSoatExpiration: Date;
   imgPropertyCard: string;
   statusRegister?: number;
+  verified?: boolean;
 }

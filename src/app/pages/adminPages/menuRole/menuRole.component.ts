@@ -1,30 +1,40 @@
-import { Component, OnInit } from "@angular/core";
-import { MenuRoleModel } from "src/app/models/menuRole.model";
-import { IMenuRole } from "src/app/interfaces/menuRole.interface";
-import { MenuRoleService } from "src/app/services/menuRole.service";
-import { PagerService } from "src/app/services/pager.service";
-import { NgForm } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { MenuRoleModel } from 'src/app/models/menuRole.model';
+import { IMenuRole } from 'src/app/interfaces/menuRole.interface';
+import { MenuRoleService } from 'src/app/services/menuRole.service';
+import { PagerService } from 'src/app/services/pager.service';
+import { NgForm } from '@angular/forms';
+import { IRole } from '../../../interfaces/roles.interface';
 
 @Component({
-  selector: "app-MenuRole",
-  templateUrl: "./menuRole.component.html",
-  styleUrls: [],
+  // tslint:disable-next-line: component-selector
+  selector: 'app-MenuRole',
+  templateUrl: './menuRole.component.html',
+  styleUrls: [ './menuRole.component.css' ],
 })
 export class MenuRoleComponent implements OnInit {
   bodyMenuRole: MenuRoleModel;
   dataMenuRole: IMenuRole[] = [];
   dataNavChildren: any[];
-  titleModal = "Nuevo Menu Role";
-  textButton = "Guardar";
-  actionConfirm = "eliminar";
+  titleModal = 'Nuevo Menu Role';
+  textButton = 'Guardar';
+  actionConfirm = 'eliminar';
   showInactive = false;
+  dataRole: IRole[] = [
+    { code: 'WEBMASTER_ROLE', name: 'Webmaster' },
+    { code: 'ADMIN_ROLE', name: 'Administrador' },
+    { code: 'ATTENTION_ROLE', name: 'Atención al cliente' }
+  ];
 
-  infoPagination = "Mostrando 0 de 0 registros.";
+  infoPagination = 'Mostrando 0 de 0 registros.';
   pagination = {
     currentPage: 0,
     pages: [],
     totalPages: 0,
   };
+
+  qNav = '';
+  qRole = '';
 
   loadData = false;
   loading = false;
@@ -51,7 +61,7 @@ export class MenuRoleComponent implements OnInit {
     if (chk) {
       this.showInactive = !this.showInactive;
     }
-    this.MenuRoleSvc.onGetListMenuRole(page, 0, this.showInactive).subscribe(
+    this.MenuRoleSvc.onGetListMenuRole(page, this.qNav, this.qRole, this.showInactive).subscribe(
       (res) => {
         if (!res.ok) {
           throw new Error(res.error);
@@ -82,13 +92,13 @@ export class MenuRoleComponent implements OnInit {
           this.loading = false;
           const { css, icon, msg } = this.onGetError(res.showError);
           if (res.showError !== 0) {
-            this.onShowAlert("alertMenuRoleModal", css, icon, msg);
+            this.onShowAlert('alertMenuRoleModal', css, icon, msg);
             return;
           } else {
-            this.onShowAlert("alertMenuRole", css, icon, msg);
+            this.onShowAlert('alertMenuRole', css, icon, msg);
           }
 
-          $("#btnCloseModal").trigger("click");
+          $('#btnCloseModal').trigger('click');
           this.onGetMenuRole(1);
         });
 
@@ -104,13 +114,13 @@ export class MenuRoleComponent implements OnInit {
         const { css, icon, msg } = this.onGetError(res.showError);
 
         if (res.showError !== 0) {
-          this.onShowAlert("alertMenuRoleModal", css, icon, msg);
+          this.onShowAlert('alertMenuRoleModal', css, icon, msg);
           return;
         } else {
-          this.onShowAlert("alertMenuRole", css, icon, msg);
+          this.onShowAlert('alertMenuRole', css, icon, msg);
         }
 
-        $("#btnCloseModal").trigger("click");
+        $('#btnCloseModal').trigger('click');
         this.onGetMenuRole(1);
       });
     }
@@ -121,7 +131,7 @@ export class MenuRoleComponent implements OnInit {
       (MenuRole) => MenuRole.pkMenuRole === id
     );
     if (!finded) {
-      console.error("No se encontro registro!!!");
+      console.error('No se encontro registro!!!');
       return;
     }
 
@@ -129,8 +139,8 @@ export class MenuRoleComponent implements OnInit {
     this.bodyMenuRole.fkNavChildren = finded.fkNavChildren;
     this.bodyMenuRole.role = finded.role;
 
-    this.titleModal = "Editar Menu Role";
-    this.textButton = "Guardar cambios";
+    this.titleModal = 'Editar Menu Role';
+    this.textButton = 'Guardar cambios';
 
     this.loadData = true;
   }
@@ -146,21 +156,21 @@ export class MenuRoleComponent implements OnInit {
       this.loading = false;
       const { css, icon, msg } = this.onGetError(res.showError);
       const action = this.bodyMenuRole.statusRegister
-        ? "restaurado"
-        : "eliminado";
+        ? 'restaurado'
+        : 'eliminado';
       this.onShowAlert(
-        "alertMenuRole",
+        'alertMenuRole',
         css,
         icon,
         `Se ha ${action} una aplicacion con éxito`
       );
 
       if (res.showError !== 0) {
-        this.onShowAlert("alertMenuRoleModal", css, icon, msg);
+        this.onShowAlert('alertMenuRoleModal', css, icon, msg);
         return;
       }
 
-      $("#btnCloseConfirm").trigger("click");
+      $('#btnCloseConfirm').trigger('click');
       this.onGetMenuRole(1);
     });
   }
@@ -170,13 +180,13 @@ export class MenuRoleComponent implements OnInit {
       (MenuRole) => MenuRole.pkMenuRole === id
     );
     if (!finded) {
-      console.error("No se encontro registro!!!");
+      console.error('No se encontro registro!!!');
       return;
     }
 
     this.bodyMenuRole.pkMenuRole = finded.pkMenuRole;
     this.bodyMenuRole.statusRegister = !finded.statusRegister;
-    this.actionConfirm = finded.statusRegister ? "eliminar" : "restaurar";
+    this.actionConfirm = finded.statusRegister ? 'eliminar' : 'restaurar';
   }
 
   onShowAlert(idAlert: string, css: string, icon: string, msg: string) {
@@ -192,32 +202,32 @@ export class MenuRoleComponent implements OnInit {
   }
 
   onGetError(showError: number) {
-    const css = showError === 0 ? "success" : "danger";
-    const icon = showError === 0 ? "check" : "exclamation-circle";
-    const action = this.loadData ? "actualizado" : "creado";
+    const css = showError === 0 ? 'success' : 'danger';
+    const icon = showError === 0 ? 'check' : 'exclamation-circle';
+    const action = this.loadData ? 'actualizado' : 'creado';
     const arrErr =
       showError === 0
         ? [`Se ha ${action} un MenuRole con éxito`]
-        : ["Error, ya existe un registro"];
+        : ['Error, ya existe un registro'];
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 1) {
-      arrErr.push("con este nombre");
+      arrErr.push('con este nombre');
     }
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 2) {
-      arrErr.push("se encuentra inactivo");
+      arrErr.push('se encuentra inactivo');
     }
 
-    return { css, icon, msg: arrErr.join(", ") };
+    return { css, icon, msg: arrErr.join(', ') };
   }
 
   onReset() {
-    $("#frmMenuRole").trigger("reset");
+    $('#frmMenuRole').trigger('reset');
     this.bodyMenuRole.onReset();
-    this.titleModal = "Nuevo MenuRole";
-    this.textButton = "Guardar";
+    this.titleModal = 'Nuevo MenuRole';
+    this.textButton = 'Guardar';
     this.loadData = false;
   }
 }

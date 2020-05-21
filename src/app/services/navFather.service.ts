@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { NavFatherModel } from "../models/navFather.model";
-import { IResponse } from "../interfaces/response.interface";
-import { environment } from "../../environments/environment";
-import { StorageService } from "./storage.service";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { NavFatherModel } from '../models/navFather.model';
+import { IResponse } from '../interfaces/response.interface';
+import { environment } from '../../environments/environment';
+import { StorageService } from './storage.service';
 
 const URI_API = environment.URL_SERVER;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class NavFatherService {
   constructor(private http: HttpClient, private storageSvc: StorageService) {}
@@ -42,9 +42,10 @@ export class NavFatherService {
   onGetListNavFather(page: number, q: string, showInactive: boolean) {
     showInactive = showInactive ? false : true;
     this.storageSvc.onLoadToken();
+
     const params = `?page=${page}&q=${q}&showInactive=${showInactive}`;
-    return this.http.get<IResponse>(URI_API + `/NavFather/Get` + params, {
-      headers: { Authorization: this.storageSvc.token },
+
+    return this.http.get<IResponse>(URI_API + `/NavFather/Get` + params, {  headers: { Authorization: this.storageSvc.token },
     });
   }
 }

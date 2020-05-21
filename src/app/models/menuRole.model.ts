@@ -7,13 +7,13 @@ export class MenuRoleModel {
   constructor() {
     this.pkMenuRole = 0;
     this.fkNavChildren = 0;
-    this.role = "";
+    this.role = '';
     this.statusRegister = true;
   }
 
   onReset() {
     this.pkMenuRole = 0;
     this.fkNavChildren = 0;
-    this.role = "";
+    this.role = '';
   }
 }

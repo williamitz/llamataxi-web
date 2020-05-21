@@ -72,6 +72,16 @@ export class LoginComponent implements OnInit {
       arrError.push('Usuario no verificado');
     }
 
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 8) {
+      arrError = ['Acceso restringido', 'comuniquese con el administrador'];
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 16) {
+      arrError = ['Acceso restringido', 'comuniquese con el administrador'];
+    }
+
     return {css, msg: arrError.join(', ')};
   }
 

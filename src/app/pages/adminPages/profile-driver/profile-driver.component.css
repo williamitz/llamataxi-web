@@ -229,3 +229,13 @@ i-bell-55::before {
 .card-pd {
     padding: 15px;
 }
+
+.btnOpt {
+    position: relative;
+}
+
+.btnDownLicense {
+    position: relative;
+    bottom: -5px;
+    right: -100%;
+}

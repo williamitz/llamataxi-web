@@ -39,19 +39,21 @@ export class MenuRoleService {
     );
   }
 
-  onGetListMenuRole(page: number, q: number, showInactive: boolean) {
+  onGetListMenuRole(page: number, qNav: string, qRole: string, showInactive: boolean) {
     showInactive = showInactive ? false : true;
     this.storageSvc.onLoadToken();
-    const params = `?page=${page}&q=${q}&showInactive=${showInactive}`;
+    const params = `?page=${page}&qNav=${qNav}&qRole=${ qRole }&showInactive=${showInactive}`;
 
     return this.http.get<IResponse>(URI_API + `/MenuRole/Get` + params, {
       headers: { Authorization: this.storageSvc.token },
     });
   }
+
   onGetListAllNavChildren() {
     this.storageSvc.onLoadToken();
     return this.http.get<IResponse>(URI_API + `/NavChildren/GetAll`, {
       headers: { Authorization: this.storageSvc.token },
     });
   }
+
 }

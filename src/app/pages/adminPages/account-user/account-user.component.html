@@ -18,14 +18,50 @@
                                 </th>
                             </tr>
                             <tr>
-                                <th scope="col" class="sort" data-sort="name">#</th>
-                                <th scope="col" class="sort" data-sort="budget">Apellidos y nombres</th>
-                                <th scope="col" class="sort" data-sort="status">Usuario</th>
-                                <th scope="col">Email</th>
-                                <th scope="col" class="sort" data-sort="completion">Rol</th>
-                                <th scope="col" class="sort" data-sort="completion">Verificado</th>
-                                <th scope="col" class="sort" data-sort="completion">Conectado</th>
-                                <th scope="col"></th>
+                                <th scope="col">#</th>
+                                <th scope="col">
+                                    Apellidos y nombres
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-search"></i>
+                                      </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+                                                <input type="text" name="qName" [(ngModel)]="qName" (change)="onGetListUser(1)" class="form-control form-control-sm" placeholder="Buscar por nombre">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    Usuario
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-search"></i>
+                                      </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+                                                <input type="text" name="qUser" [(ngModel)]="qUser" (change)="onGetListUser(1)" class="form-control form-control-sm" placeholder="Buscar por usuario">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    Email
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fas fa-search"></i>
+                                      </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+                                                <input type="text" name="qEmail" [(ngModel)]="qEmail" (change)="onGetListUser(1)" class="form-control form-control-sm" placeholder="Buscar por email">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>Rol</th>
+                                <th>Verificado</th>
+                                <th>Conectado</th>
+                                <th></th>
                             </tr>
                         </thead>
                         <tbody class="list">
@@ -36,10 +72,8 @@
                                 </td>
                                 <th scope="row">
                                     <div class="media align-items-center">
-                                        <a href="/admin/profileDriver/{{ user.pkDriver }}" target="_blank" class="avatar rounded-circle mr-3">
-
+                                        <a [href]=" user.role | userUrl: user.pkUser: user.pkDriver " target="_blank" class="avatar rounded-circle mr-3">
                                             <img alt="Image placeholder" [src]="pathImg + user.img + token">
-
                                         </a>
                                         <div class="media-body">
                                             <span class="name mb-0 text-sm">

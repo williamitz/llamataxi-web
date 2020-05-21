@@ -1,25 +1,26 @@
-import { Component, OnInit } from "@angular/core";
-import { BrandModel } from "src/app/models/brand.model";
-import { IBrand } from "src/app/interfaces/brand.interface";
-import { BrandService } from "src/app/services/brand.service";
-import { PagerService } from "src/app/services/pager.service";
-import { NgForm } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { BrandModel } from 'src/app/models/brand.model';
+import { IBrand } from 'src/app/interfaces/brand.interface';
+import { BrandService } from 'src/app/services/brand.service';
+import { PagerService } from 'src/app/services/pager.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: "app-brand",
-  templateUrl: "./brand.component.html",
-  styleUrls: [],
+  selector: 'app-brand',
+  templateUrl: './brand.component.html',
+  styleUrls: ['./brand.component.css'],
 })
 export class BrandComponent implements OnInit {
   bodyBrand: BrandModel;
   dataBrand: IBrand[] = [];
   dataCategory: any[];
-  titleModal = "Nuea Marca";
-  textButton = "Guardar";
-  actionConfirm = "eliminar";
+  titleModal = 'Nuea Marca';
+  textButton = 'Guardar';
+  actionConfirm = 'eliminar';
   showInactive = false;
-
-  infoPagination = "Mostrando 0 de 0 registros.";
+  qCategory = '';
+  qBrand = '';
+  infoPagination = 'Mostrando 0 de 0 registros.';
   pagination = {
     currentPage: 0,
     pages: [],
@@ -48,7 +49,7 @@ export class BrandComponent implements OnInit {
     if (chk) {
       this.showInactive = !this.showInactive;
     }
-    this.BrandSvc.onGetListBrand(page, 0, this.showInactive).subscribe(
+    this.BrandSvc.onGetListBrand(page, this.qCategory, this.qBrand, this.showInactive).subscribe(
       (res) => {
         if (!res.ok) {
           throw new Error(res.error);

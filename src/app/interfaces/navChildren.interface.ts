@@ -5,4 +5,5 @@ export interface INavChildren {
   navChildrenPath: string;
   navChildrenIcon: string;
   statusRegister?: boolean;
+  isVisible: boolean;
 }

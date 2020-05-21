@@ -41,6 +41,10 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   titleModal = 'Nuevo usuario';
   txtButton = 'Guardar';
 
+  qName = '';
+  qUser = '';
+  qEmail = '';
+
   dataNationality: INationality[] = [];
   dataTypeDoc: ITypeDocument[] = [];
 
@@ -92,7 +96,10 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   }
 
   onGetListUser( page: number, chk = false ) {
-    this.userSvc.onGetUser( page, 10, '', '', '', '', true ).subscribe( (res) => {
+    if (chk) {
+      this.showInactive = !this.showInactive;
+    }
+    this.userSvc.onGetUser( page, 10, this.qName, this.qEmail, this.qUser, '', this.showInactive ).subscribe( (res) => {
 
       if (!res.ok) {
         throw new Error( res.error );

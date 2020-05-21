@@ -6,5 +6,6 @@ export interface IResponse {
   error?: any;
   showError?: number;
   token?: string;
+  newFile?: string;
 
 }
