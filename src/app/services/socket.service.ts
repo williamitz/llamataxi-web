@@ -54,7 +54,7 @@ export class SocketService {
     this.onLoadUserSocket();
 
     return new Promise( (resolve, reject) => {
-      this.onEmit( 'sing-user', this.userSocket, ( error: any, res: IResponse ) => {
+      this.onEmit( 'sing-user', this.userSocket, ( res: IResponse ) => {
         if (!res.ok) {
           reject( res.error );
         }

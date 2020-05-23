@@ -6,9 +6,14 @@ moment.locale('es');
 })
 export class MomentPipe implements PipeTransform {
 
-  transform(date: string, format = 'MMM DD YYYY, h:mm:ss a'): unknown {
+  transform(date: string, format = 'MMM DD YYYY, h:mm:ss a', relative = false): unknown {
     console.log(date);
-    const newDate = moment(date).format(format) || 'error';
+    let newDate = '';
+    if (relative) {
+      newDate = moment(date).fromNow() || 'error';
+    } else {
+      newDate = moment(date).format(format) || 'error';
+    }
     return newDate.charAt(0).toUpperCase() + newDate.slice(1);
   }
 

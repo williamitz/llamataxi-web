@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { NotificationModel } from "../models/notification.model";
-import { IResponse } from "../interfaces/response.interface";
-import { environment } from "../../environments/environment";
-import { StorageService } from "./storage.service";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { NotificationModel } from '../models/notification.model';
+import { IResponse } from '../interfaces/response.interface';
+import { environment } from '../../environments/environment';
+import { StorageService } from './storage.service';
 
 const URI_API = environment.URL_SERVER;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class NotificationService {
   constructor(private http: HttpClient, private storageSvc: StorageService) {}
@@ -48,5 +48,21 @@ export class NotificationService {
     return this.http.get<IResponse>(URI_API + `/Notification/Get` + params, {
       headers: { Authorization: this.storageSvc.token },
     });
+  }
+
+  onGetNotifyReceptor() {
+
+    this.storageSvc.onLoadToken();
+
+    return this.http.get<IResponse>(URI_API + `/Notification/Get/Receptor`, { headers: { Authorization: this.storageSvc.token }});
+
+  }
+
+  onReadedNoti( pkNoti: number ) {
+
+    this.storageSvc.onLoadToken();
+
+    return this.http.put<IResponse>(URI_API + `/Notification/Readed/${pkNoti}`, {}, { headers: { Authorization: this.storageSvc.token }});
+
   }
 }

@@ -1,13 +1,26 @@
 export interface INotification {
   pkNotification: number;
   fkUserEmisor: number;
-  fkUserReceptor: number;
+  fkUserReceptor?: number;
   notificationTitle: string;
   notificationSubTitle: string;
   notificationMessage: string;
-  sended: number;
+  sended?: number;
   dateSend: Date;
   readed: number;
-  dateReaded: Date;
+  dateReaded?: Date;
   statusRegister?: number;
+
+  nameComplete?: string;
+  img?: string;
+  urlShow?: string;
+}
+
+
+export interface INotiSocket {
+  dataUser?: any;
+  title: string;
+  subtitle: string;
+  message: string;
+  urlShow: string;
 }
