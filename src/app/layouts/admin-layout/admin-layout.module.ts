@@ -23,6 +23,8 @@ import { SwiperModule } from 'ngx-swiper-wrapper';
 import { NgSelectModule } from '@ng-select/ng-select';
 import { ProfileDriverComponent } from '../../pages/adminPages/profile-driver/profile-driver.component';
 import { ProfileUserComponent } from '../../pages/adminPages/profile-user/profile-user.component';
+import { RateComponent } from './../../pages/adminPages/rate/rate.component';
+import { JournalComponent } from './../../pages/adminPages/journal/journal.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +41,9 @@ import { ProfileUserComponent } from '../../pages/adminPages/profile-user/profil
     VehicleDriverComponent,
     TaxiMapComponent,
     ProfileDriverComponent,
-    ProfileUserComponent
+    ProfileUserComponent,
+    RateComponent,
+    JournalComponent
   ],
   imports: [
     CommonModule,

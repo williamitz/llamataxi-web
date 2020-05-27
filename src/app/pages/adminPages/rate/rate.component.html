@@ -1,0 +1,228 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="table-responsive">
+                <div>
+                    <table class="table align-items-center">
+                        <thead class="thead-light">
+                            <tr>
+                                <th colspan="3">
+                                    <!-- Button trigger modal -->
+                                    <button type="button" class="btn btn-primary" data-toggle="modal"
+                                        data-target="#RateModal">
+                                        Nuevo
+                                    </button>
+                                </th>
+                                <th colspan="3" id="alertRate">
+
+                                </th>
+                            </tr>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Categoria</th>
+                                <th scope="col">Jornada</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col">Fecha</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+
+                            <tr *ngFor="let app of dataRate | rowIndex: pagination.currentPage">
+                                <th scope="row">
+                                    {{ app.rowIndex }}
+                                </th>
+                                <td class="budget">
+                                    {{ app.nameCategory }}
+                                </td>
+                                <td>
+                                    {{ app.fkJournal }}
+                                </td>
+                                <td>
+                                    {{ app.priceRate }}
+                                </td>
+                                <td>
+                                    {{ app.dateRegister | date }}
+                                </td>
+                                <td class="text-right">
+                                    <button *ngIf="app.statusRegister" class="btn btn-outline-primary btn-icon"
+                                        type="button" data-toggle="modal" data-target="#RateModal"
+                                        (click)="onEdit( app.pkRate )">
+                                        <i class="fa fa-edit"></i>
+                                    </button>
+
+                                    <button class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal"
+                                        data-target="#confirmModal" (click)="onConfirm( app.pkRate )">
+                                        <span *ngIf="app.statusRegister">
+                                            <i class="fa fa-trash"></i>
+                                        </span>
+
+                                        <span *ngIf="!app.statusRegister">
+                                            <i class="fa fa-recycle"></i>
+                                        </span>
+                                    </button>
+                                </td>
+                            </tr>
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="3">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            {{ infoPagination }}
+                                        </div>
+                                        <div class="col-5">
+                                            <span class="">
+                                                Ver inactivos
+                                            </span>&nbsp;
+                                            <label class="custom-toggle chkInactive">
+                                                <input type="checkbox" name="showInactive" [(ngModel)]="showInactive"
+                                                    (click)="onGetRate(1, true)">
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th colspan="3">
+
+                                    <div *ngIf="pagination.currentPage" class="text-right">
+
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-center mt-2">
+
+                                                <li class="page-item prev"
+                                                    [ngClass]="{'disabled':pagination.currentPage === 1}">
+                                                    <a class="page-link"
+                                                        (click)="onGetRate(pagination.currentPage - 1)">
+                                                        <i class="fa fa-angle-left"></i>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="page-item" *ngFor="let page of pagination.pages"
+                                                    [ngClass]="{active:pagination.currentPage === page}">
+                                                    <a class="page-link" (click)="onGetRate(page)">
+                                                        {{ page }}
+                                                    </a>
+                                                </li>
+
+                                                <li class="page-item next"
+                                                    [ngClass]="{'disabled':pagination.currentPage === pagination.totalPages}">
+                                                    <a class="page-link"
+                                                        (click)="onGetRate(pagination.currentPage + 1)">
+                                                        <i class="fa fa-angle-right"></i>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                        </nav>
+                                    </div>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" data-backdrop="static" id="RateModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> {{ titleModal }} </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onReset()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <form #frmRate="ngForm" id="frmRate">
+                    <div class="form-group">
+                        <label for="txtFkCategory">Categoría</label>
+                        <select class="form-control" id="txtFkCategory" name="fkCategory"
+                            placeholder="Seleccione Categoría" #fkCategory="ngModel" [(ngModel)]="bodyRate.fkCategory">
+                            <option [value]="item.pkCategory" *ngFor="let item of dataCategory">{{item.nameCategory}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtFkJournal">Jornada</label>
+                        <select class="form-control" id="txtFkJournal" name="fkJournal"
+                            placeholder="Seleccione Categoría" #fkJournal="ngModel" [(ngModel)]="bodyRate.fkJournal">
+                            <option [value]="item.pkJournal" *ngFor="let item of dataJournal">{{item.nameJournal}}
+                            </option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="txtPriceRate" class="form-control-label">Precio</label>
+                        <input class="form-control" type="text" id="txtPriceRate" name="priceRate" #priceRate="ngModel"
+                            [(ngModel)]="bodyRate.priceRate"
+                            [ngClass]="{'is-invalid': (priceRate.errors?.required || priceRate.errors?.minlength ) && priceRate.touched,
+                          'is-valid': !priceRate.errors?.required && !priceRate.errors?.minlength && priceRate.touched}" required minlength="1">
+
+                        <span *ngIf="priceRate.errors?.required && priceRate.touched">
+                            <small class="text-danger">*Requerido</small>
+                        </span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12" id="alertRateModal">
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal"
+                    (click)="onReset()">
+                    Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" [disabled]="frmRate.invalid || loading"
+                    (click)="onSubmit(frmRate)">
+                    {{ textButton }}
+                    <span *ngIf="loading">
+                        <i class="fa fa-spinner fa-pulse "></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mensaje al usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Est&aacute; seguro(a) de <strong class="text-primary">{{ actionConfirm }}</strong> este registro?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCloseConfirm">
+                    Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" [disabled]="loading" (click)="onDelete()">
+                    Aceptar
+                    <span *ngIf="loading">
+                        <i class="fa fa-spinner fa-pulse "></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

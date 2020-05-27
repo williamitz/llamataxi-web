@@ -15,6 +15,8 @@ import { ApplicationComponent } from '../../pages/adminPages/application/applica
 import { AccountUserComponent } from '../../pages/adminPages/account-user/account-user.component';
 import { ProfileUserComponent } from '../../pages/adminPages/profile-user/profile-user.component';
 import { AllowUrlGuard } from '../../guards/allow-url.guard';
+import { JournalComponent } from '../../pages/adminPages/journal/journal.component';
+import { RateComponent } from '../../pages/adminPages/rate/rate.component';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -90,6 +92,16 @@ export const ADMIN_ROUTES: Routes = [
     path: 'profileUser/:id',
     component: ProfileUserComponent,
     data: { title: 'Perfil del usuario' },
+    canActivate: [AllowUrlGuard]
+  },
+  {
+    path: 'journal',
+    component: JournalComponent,
+    canActivate: [AllowUrlGuard]
+  },
+  {
+    path: 'rate',
+    component: RateComponent,
     canActivate: [AllowUrlGuard]
   },
 
