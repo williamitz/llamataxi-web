@@ -1,13 +1,14 @@
-import { Component, OnInit } from "@angular/core";
-import { RateModel } from "src/app/models/rate.model";
-import { IRate } from "src/app/interfaces/rate.interface";
-import { RateService } from "src/app/services/rate.service";
-import { PagerService } from "src/app/services/pager.service";
-import { NgForm } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { RateModel } from 'src/app/models/rate.model';
+import { IRate } from 'src/app/interfaces/rate.interface';
+import { RateService } from 'src/app/services/rate.service';
+import { PagerService } from 'src/app/services/pager.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: "app-Rate",
-  templateUrl: "./Rate.component.html",
+  // tslint:disable-next-line: component-selector
+  selector: 'app-Rate',
+  templateUrl: './Rate.component.html',
   styleUrls: [],
 })
 export class RateComponent implements OnInit {
@@ -15,12 +16,12 @@ export class RateComponent implements OnInit {
   dataRate: IRate[] = [];
   dataJournal: any[];
   dataCategory: any[];
-  titleModal = "Nuevo Preci";
-  textButton = "Guardar";
-  actionConfirm = "eliminar";
+  titleModal = 'Nueva tarifa';
+  textButton = 'Guardar';
+  actionConfirm = 'eliminar';
   showInactive = false;
 
-  infoPagination = "Mostrando 0 de 0 registros.";
+  infoPagination = 'Mostrando 0 de 0 registros.';
   pagination = {
     currentPage: 0,
     pages: [],
@@ -89,13 +90,13 @@ export class RateComponent implements OnInit {
           this.loading = false;
           const { css, icon, msg } = this.onGetError(res.showError);
           if (res.showError !== 0) {
-            this.onShowAlert("alertRateModal", css, icon, msg);
+            this.onShowAlert('alertRateModal', css, icon, msg);
             return;
           } else {
-            this.onShowAlert("alertRate", css, icon, msg);
+            this.onShowAlert('alertRate', css, icon, msg);
           }
 
-          $("#btnCloseModal").trigger("click");
+          $('#btnCloseModal').trigger('click');
           this.onGetRate(1);
         });
 
@@ -111,13 +112,13 @@ export class RateComponent implements OnInit {
         const { css, icon, msg } = this.onGetError(res.showError);
 
         if (res.showError !== 0) {
-          this.onShowAlert("alertRateModal", css, icon, msg);
+          this.onShowAlert('alertRateModal', css, icon, msg);
           return;
         } else {
-          this.onShowAlert("alertRate", css, icon, msg);
+          this.onShowAlert('alertRate', css, icon, msg);
         }
 
-        $("#btnCloseModal").trigger("click");
+        $('#btnCloseModal').trigger('click');
         this.onGetRate(1);
       });
     }
@@ -126,7 +127,7 @@ export class RateComponent implements OnInit {
   onEdit(id: number) {
     const finded = this.dataRate.find((Rate) => Rate.pkRate === id);
     if (!finded) {
-      console.error("No se encontro registro!!!");
+      console.error('No se encontro registro!!!');
       return;
     }
 
@@ -135,8 +136,8 @@ export class RateComponent implements OnInit {
     this.bodyRate.fkJournal = finded.fkJournal;
     this.bodyRate.priceRate = finded.priceRate;
 
-    this.titleModal = "Editar Precio";
-    this.textButton = "Guardar cambios";
+    this.titleModal = 'Editar tarifa';
+    this.textButton = 'Guardar cambios';
 
     this.loadData = true;
   }
@@ -145,7 +146,7 @@ export class RateComponent implements OnInit {
     this.loading = true;
 
     this.RateSvc.onDeleteRate(this.bodyRate).subscribe((res) => {
-      console.log("res");
+      console.log('res');
       console.log(res);
       if (!res.ok) {
         throw new Error(res.error);
@@ -153,20 +154,20 @@ export class RateComponent implements OnInit {
 
       this.loading = false;
       const { css, icon, msg } = this.onGetError(res.showError);
-      const action = this.bodyRate.statusRegister ? "restaurado" : "eliminado";
+      const action = this.bodyRate.statusRegister ? 'restaurado' : 'eliminado';
       this.onShowAlert(
-        "alertRate",
+        'alertRate',
         css,
         icon,
         `Se ha ${action} un precio con éxito`
       );
 
       if (res.showError !== 0) {
-        this.onShowAlert("alertRateModal", css, icon, msg);
+        this.onShowAlert('alertRateModal', css, icon, msg);
         return;
       }
 
-      $("#btnCloseConfirm").trigger("click");
+      $('#btnCloseConfirm').trigger('click');
       this.onGetRate(1);
     });
   }
@@ -174,13 +175,13 @@ export class RateComponent implements OnInit {
   onConfirm(id: number) {
     const finded = this.dataRate.find((Rate) => Rate.pkRate === id);
     if (!finded) {
-      console.error("No se encontro registro!!!");
+      console.error('No se encontro registro!!!');
       return;
     }
 
     this.bodyRate.pkRate = finded.pkRate;
     this.bodyRate.statusRegister = !finded.statusRegister;
-    this.actionConfirm = finded.statusRegister ? "eliminar" : "restaurar";
+    this.actionConfirm = finded.statusRegister ? 'eliminar' : 'restaurar';
   }
 
   onShowAlert(idAlert: string, css: string, icon: string, msg: string) {
@@ -196,32 +197,32 @@ export class RateComponent implements OnInit {
   }
 
   onGetError(showError: number) {
-    const css = showError === 0 ? "success" : "danger";
-    const icon = showError === 0 ? "check" : "exclamation-circle";
-    const action = this.loadData ? "actualizado" : "creado";
+    const css = showError === 0 ? 'success' : 'danger';
+    const icon = showError === 0 ? 'check' : 'exclamation-circle';
+    const action = this.loadData ? 'actualizado' : 'creado';
     const arrErr =
       showError === 0
         ? [`Se ha ${action} un precio con éxito`]
-        : ["Error, ya existe un registro"];
+        : ['Error, ya existe un registro'];
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 1) {
-      arrErr.push("con en esta categoria y jornada");
+      arrErr.push('con en esta categoria y jornada');
     }
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 2) {
-      arrErr.push("se encuentra inactivo");
+      arrErr.push('se encuentra inactivo');
     }
 
-    return { css, icon, msg: arrErr.join(", ") };
+    return { css, icon, msg: arrErr.join(', ') };
   }
 
   onReset() {
-    $("#frmRate").trigger("reset");
+    $('#frmRate').trigger('reset');
     this.bodyRate.onReset();
-    this.titleModal = "Nuevo precio";
-    this.textButton = "Guardar";
+    this.titleModal = 'Nuevo precio';
+    this.textButton = 'Guardar';
     this.loadData = false;
   }
 }

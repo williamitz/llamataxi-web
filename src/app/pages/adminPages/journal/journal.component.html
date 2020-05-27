@@ -8,8 +8,7 @@
                             <tr>
                                 <th colspan="3">
                                     <!-- Button trigger modal -->
-                                    <button type="button" class="btn btn-primary" data-toggle="modal"
-                                        data-target="#JournalModal">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#JournalModal">
                                         Nuevo
                                     </button>
                                 </th>
@@ -22,6 +21,7 @@
                                 <th scope="col">Nombre</th>
                                 <th scope="col">Hora Inicio</th>
                                 <th scope="col">Hora Fin</th>
+                                <th scope="col"></th>
                             </tr>
                         </thead>
                         <tbody class="list">
@@ -40,14 +40,11 @@
                                     {{ app.hourEnd }}
                                 </td>
                                 <td class="text-right">
-                                    <button *ngIf="app.statusRegister" class="btn btn-outline-primary btn-icon"
-                                        type="button" data-toggle="modal" data-target="#JournalModal"
-                                        (click)="onEdit( app.pkJournal )">
+                                    <button *ngIf="app.statusRegister" class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal" data-target="#JournalModal" (click)="onEdit( app.pkJournal )">
                                         <i class="fa fa-edit"></i>
                                     </button>
 
-                                    <button class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal"
-                                        data-target="#confirmModal" (click)="onConfirm( app.pkJournal )">
+                                    <button class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal" data-target="#confirmModal" (click)="onConfirm( app.pkJournal )">
                                         <span *ngIf="app.statusRegister">
                                             <i class="fa fa-trash"></i>
                                         </span>
@@ -86,26 +83,21 @@
                                         <nav aria-label="Page navigation example">
                                             <ul class="pagination justify-content-center mt-2">
 
-                                                <li class="page-item prev"
-                                                    [ngClass]="{'disabled':pagination.currentPage === 1}">
-                                                    <a class="page-link"
-                                                        (click)="onGetJournal(pagination.currentPage - 1)">
+                                                <li class="page-item prev" [ngClass]="{'disabled':pagination.currentPage === 1}">
+                                                    <a class="page-link" (click)="onGetJournal(pagination.currentPage - 1)">
                                                         <i class="fa fa-angle-left"></i>
                                                         <span class="sr-only">Previous</span>
                                                     </a>
                                                 </li>
 
-                                                <li class="page-item" *ngFor="let page of pagination.pages"
-                                                    [ngClass]="{active:pagination.currentPage === page}">
+                                                <li class="page-item" *ngFor="let page of pagination.pages" [ngClass]="{active:pagination.currentPage === page}">
                                                     <a class="page-link" (click)="onGetJournal(page)">
                                                         {{ page }}
                                                     </a>
                                                 </li>
 
-                                                <li class="page-item next"
-                                                    [ngClass]="{'disabled':pagination.currentPage === pagination.totalPages}">
-                                                    <a class="page-link"
-                                                        (click)="onGetJournal(pagination.currentPage + 1)">
+                                                <li class="page-item next" [ngClass]="{'disabled':pagination.currentPage === pagination.totalPages}">
+                                                    <a class="page-link" (click)="onGetJournal(pagination.currentPage + 1)">
                                                         <i class="fa fa-angle-right"></i>
                                                         <span class="sr-only">Next</span>
                                                     </a>
@@ -143,9 +135,7 @@
 
                     <div class="form-group">
                         <label for="txtNameJournal" class="form-control-label">Nombre</label>
-                        <input class="form-control" type="text" id="txtNameJournal" name="nameJournal"
-                            #nameJournal="ngModel" [(ngModel)]="bodyJournal.nameJournal"
-                            [ngClass]="{'is-invalid': (nameJournal.errors?.required || nameJournal.errors?.minlength ) && nameJournal.touched,
+                        <input class="form-control" type="text" id="txtNameJournal" name="nameJournal" #nameJournal="ngModel" [(ngModel)]="bodyJournal.nameJournal" [ngClass]="{'is-invalid': (nameJournal.errors?.required || nameJournal.errors?.minlength ) && nameJournal.touched,
                           'is-valid': !nameJournal.errors?.required && !nameJournal.errors?.minlength && nameJournal.touched}" required minlength="3">
 
                         <span *ngIf="nameJournal.errors?.required && nameJournal.touched">
@@ -156,43 +146,53 @@
                             <small class="text-danger">*M&iacute;nimo 3 caracteres</small>
                         </span>
                     </div>
-                    <div class="form-group">
-                        <label for="txtCodeJournal" class="form-control-label">Codigo</label>
-                        <input class="form-control" type="text" id="txtCodeJournal" name="codeJournal"
-                            #codeJournal="ngModel" [(ngModel)]="bodyJournal.codeJournal"
-                            [ngClass]="{'is-invalid': (codeJournal.errors?.required || codeJournal.errors?.minlength ) && codeJournal.touched,
-                          'is-valid': !codeJournal.errors?.required && !codeJournal.errors?.minlength && codeJournal.touched}" required minlength="3">
 
-                        <span *ngIf="codeJournal.errors?.required && codeJournal.touched">
-                            <small class="text-danger">*Requerido</small>
-                        </span>
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="cbxCode" class="form-control-label">Codigo</label>
+                                <select class="form-control" id="cbxCode" name="codeJournal" #codeJournal="ngModel" [(ngModel)]="bodyJournal.codeJournal" [ngClass]="{'is-invalid': (codeJournal.errors?.required || codeJournal.errors?.minlength ) && codeJournal.touched,
+                                'is-valid': !codeJournal.errors?.required && !codeJournal.errors?.minlength && codeJournal.touched}" required>
+                                  <option value="" disabled selected>--Seleccione--</option>
+                                  <option value="DIURN">Diurno</option>
+                                  <option value="NOCTURN">Nocturno</option>
+                                </select>
 
-                        <span *ngIf="codeJournal.errors?.minlength && codeJournal.touched">
-                            <small class="text-danger">*M&iacute;nimo 3 caracteres</small>
-                        </span>
+                                <!-- <input class="form-control" type="text" id="txtCodeJournal" name="codeJournal" #codeJournal="ngModel" [(ngModel)]="bodyJournal.codeJournal"  required minlength="3"> -->
+
+                                <span *ngIf="codeJournal.errors?.required && codeJournal.touched">
+                                    <small class="text-danger">*Requerido</small>
+                                </span>
+
+                                <span *ngIf="codeJournal.errors?.minlength && codeJournal.touched">
+                                    <small class="text-danger">*M&iacute;nimo 3 caracteres</small>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="txtHourStart" class="form-control-label">Inicio</label>
+                                <input class="form-control text-right" type="number" id="txtHourStart" name="hourStart" #hourStart="ngModel" [(ngModel)]="bodyJournal.hourStart" [ngClass]="{'is-invalid': (hourStart.errors?.required || hourStart.errors?.minlength ) && hourStart.touched,
+                            'is-valid': !hourStart.errors?.required && !hourStart.errors?.minlength && hourStart.touched}" required minlength="1">
+
+                                <span *ngIf="hourStart.errors?.required && hourStart.touched">
+                                    <small class="text-danger">*Requerido</small>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="txtHourEnd" class="form-control-label">Fin</label>
+                                <input class="form-control text-right" type="number" id="txtHourEnd" name="hourEnd" #hourEnd="ngModel" [(ngModel)]="bodyJournal.hourEnd" [ngClass]="{'is-invalid': (hourEnd.errors?.required || hourEnd.errors?.minlength ) && hourEnd.touched,
+                            'is-valid': !hourEnd.errors?.required && !hourEnd.errors?.minlength && hourEnd.touched}" required minlength="1">
+
+                                <span *ngIf="hourEnd.errors?.required && hourEnd.touched">
+                                    <small class="text-danger">*Requerido</small>
+                                </span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label for="txtHourStart" class="form-control-label">Hora Inicio</label>
-                        <input class="form-control" type="text" id="txtHourStart" name="hourStart"
-                            #hourStart="ngModel" [(ngModel)]="bodyJournal.hourStart"
-                            [ngClass]="{'is-invalid': (hourStart.errors?.required || hourStart.errors?.minlength ) && hourStart.touched,
-                          'is-valid': !hourStart.errors?.required && !hourStart.errors?.minlength && hourStart.touched}" required minlength="1">
 
-                        <span *ngIf="hourStart.errors?.required && hourStart.touched">
-                            <small class="text-danger">*Requerido</small>
-                        </span>
-                    </div>
-                    <div class="form-group">
-                        <label for="txtHourEnd" class="form-control-label">Hora Fin</label>
-                        <input class="form-control" type="text" id="txtHourEnd" name="hourEnd"
-                            #hourEnd="ngModel" [(ngModel)]="bodyJournal.hourEnd"
-                            [ngClass]="{'is-invalid': (hourEnd.errors?.required || hourEnd.errors?.minlength ) && hourEnd.touched,
-                          'is-valid': !hourEnd.errors?.required && !hourEnd.errors?.minlength && hourEnd.touched}" required minlength="1">
-
-                        <span *ngIf="hourEnd.errors?.required && hourEnd.touched">
-                            <small class="text-danger">*Requerido</small>
-                        </span>
-                    </div>
                     <div class="row">
                         <div class="col-12" id="alertJournalModal">
 
@@ -202,12 +202,10 @@
 
             </div>
             <div class="modal-footer">
-                <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal"
-                    (click)="onReset()">
+                <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal" (click)="onReset()">
                     Cerrar
                 </button>
-                <button type="button" class="btn btn-primary" [disabled]="frmJournal.invalid || loading"
-                    (click)="onSubmit(frmJournal)">
+                <button type="button" class="btn btn-primary" [disabled]="frmJournal.invalid || loading" (click)="onSubmit(frmJournal)">
                     {{ textButton }}
                     <span *ngIf="loading">
                         <i class="fa fa-spinner fa-pulse "></i>
