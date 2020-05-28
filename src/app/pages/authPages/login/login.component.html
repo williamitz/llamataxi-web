@@ -47,8 +47,11 @@
                     </div>
 
                     <div class="text-center">
-                        <button type="button" class="btn btn-primary my-4" [disabled]="frmLogin.invalid" (click)="onLoginSubmit(frmLogin)">
+                        <button type="button" class="btn btn-primary my-4" [disabled]="frmLogin.invalid || loading" (click)="onLoginSubmit(frmLogin)">
                           Sign in
+                          <span *ngIf="loading">
+                              <i class="fa fa-spinner fa-pulse "></i>
+                          </span>
                         </button>
                     </div>
                 </form>

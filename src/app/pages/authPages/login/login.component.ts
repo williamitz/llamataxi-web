@@ -15,6 +15,7 @@ import swal from 'sweetalert2';
 export class LoginComponent implements OnInit {
 
   bodyLogin: LoginModel;
+  loading = false;
 
   constructor(private authSvc: AuthService, private storageSvc: StorageService, private router: Router) { }
 
@@ -24,12 +25,13 @@ export class LoginComponent implements OnInit {
 
   onLoginSubmit( frm: NgForm ) {
     if (frm.valid) {
-
+      this.loading = true;
       this.authSvc.onLogin( this.bodyLogin ).subscribe( (res) => {
         if (!res.ok) {
           throw new Error( res.error );
         }
 
+        this.loading = true;
         if (res.showError !== 0) {
           const { css, msg } = this.onGetError( res.showError );
           swal.fire({
