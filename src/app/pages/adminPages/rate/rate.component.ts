@@ -135,6 +135,8 @@ export class RateComponent implements OnInit {
     this.bodyRate.fkCategory = finded.fkCategory;
     this.bodyRate.fkJournal = finded.fkJournal;
     this.bodyRate.priceRate = finded.priceRate;
+    this.bodyRate.priceMin = finded.priceMin;
+
 
     this.titleModal = 'Editar tarifa';
     this.textButton = 'Guardar cambios';

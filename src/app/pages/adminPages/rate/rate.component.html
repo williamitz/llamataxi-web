@@ -12,7 +12,7 @@
                                         Nuevo
                                     </button>
                                 </th>
-                                <th colspan="3" id="alertRate">
+                                <th colspan="4" id="alertRate">
 
                                 </th>
                             </tr>
@@ -21,6 +21,7 @@
                                 <th scope="col">Categoria</th>
                                 <th scope="col">Jornada</th>
                                 <th scope="col">Precio</th>
+                                <th scope="col">Min</th>
                                 <th scope="col">Fecha</th>
                                 <th scope="col"></th>
                             </tr>
@@ -39,6 +40,9 @@
                                 </td>
                                 <td>
                                     {{ rate.priceRate | number: '.2-2' }}
+                                </td>
+                                <td>
+                                    {{ rate.priceMin | number: '.2-2' }}
                                 </td>
                                 <td>
                                     {{ rate.dateRegister | date }}
@@ -80,7 +84,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th colspan="3">
+                                <th colspan="4">
 
                                     <div *ngIf="pagination.currentPage" class="text-right">
 
@@ -138,10 +142,17 @@
                 <form #frmRate="ngForm" id="frmRate">
                     <div class="form-group">
                         <label for="txtFkCategory">Categoría</label>
-                        <select class="form-control" id="txtFkCategory" name="fkCategory" placeholder="Seleccione Categoría" #fkCategory="ngModel" [(ngModel)]="bodyRate.fkCategory">
-                            <option [value]="item.pkCategory" *ngFor="let item of dataCategory">{{item.nameCategory}}
+                        <select class="form-control" id="txtFkCategory" name="fkCategory" placeholder="Seleccione Categoría" #category="ngModel" [(ngModel)]="bodyRate.fkCategory" required [ngClass]="{'is-invalid': category.errors?.required && category.touched,
+                        'is-valid': !category.errors?.required && category.touched}">
+                          <option value="" disabled selected></option>
+                            <option [value]="item.pkCategory" *ngFor="let item of dataCategory">
+                              {{item.nameCategory}}
                             </option>
                         </select>
+
+                        <span *ngIf="category.errors?.required && category.touched">
+                          <small class="text-danger">*Requerido</small>
+                      </span>
                     </div>
 
                     <div class="row">
@@ -150,25 +161,44 @@
                                 <label for="txtFkJournal">Jornada</label>
                                 <select class="form-control" id="txtFkJournal" name="fkJournal" placeholder="Seleccione Categoría" #fkJournal="ngModel" [(ngModel)]="bodyRate.fkJournal" required [ngClass]="{'is-invalid': fkJournal.errors?.required && fkJournal.touched,
                             'is-valid': !fkJournal.errors?.required && fkJournal.touched}">
-                                  <option value="" disabled selected>--Seleccione--</option>
-                                  <option [value]="item.pkJournal" *ngFor="let item of dataJournal">{{item.nameJournal}} - {{ item.hourStart }}:00 , {{ item.hourEnd }}:00
-                                </option>
-                            </select>
+                                      <option value="" disabled selected>--Seleccione--</option>
+                                      <option [value]="item.pkJournal" *ngFor="let item of dataJournal">
+                                        {{item.nameJournal}} - {{ item.hourStart }}:00 , {{ item.hourEnd }}:00
+                                    </option>
+                                </select>
 
                                 <span *ngIf="fkJournal.errors?.required && fkJournal.touched">
-                                  <small class="text-danger">*Requerido</small>
-                              </span>
+                                    <small class="text-danger">*Requerido</small>
+                                </span>
                             </div>
                         </div>
                         <div class="col-6">
-                            <div class="form-group">
-                                <label for="txtPriceRate" class="form-control-label">Precio por k km</label>
-                                <input class="form-control text-right" type="number" id="txtPriceRate" name="priceRate" #priceRate="ngModel" [(ngModel)]="bodyRate.priceRate" [ngClass]="{'is-invalid': (priceRate.errors?.required || priceRate.errors?.minlength ) && priceRate.touched,
-                            'is-valid': !priceRate.errors?.required && !priceRate.errors?.minlength && priceRate.touched}" required minlength="1">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="txtPriceRate" class="form-control-label">Precio</label>
+                                        <input class="form-control text-right" type="number" id="txtPriceRate" name="priceRate" #priceRate="ngModel" [(ngModel)]="bodyRate.priceRate" [ngClass]="{
+                                          'is-invalid': (priceRate.errors?.required || priceRate.errors?.minlength || bodyRate.priceRate <= 0 ) && priceRate.touched,
+                                          'is-valid': !priceRate.errors?.required && !priceRate.errors?.minlength && bodyRate.priceRate > 0 && priceRate.touched}" required minlength="1" min="1">
 
-                                <span *ngIf="priceRate.errors?.required && priceRate.touched">
-                                    <small class="text-danger">*Requerido</small>
-                                </span>
+                                        <span *ngIf="priceRate.errors?.required && priceRate.touched">
+                                            <small class="text-danger">*Requerido</small>
+                                        </span>
+                                    </div>
+
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="txtPriceMin" class="form-control-label">M&iacute;nimo</label>
+                                        <input class="form-control text-right" type="number" id="txtPriceMin" name="priceMin" #priceMin="ngModel" [(ngModel)]="bodyRate.priceMin" [ngClass]="{
+                                        'is-invalid': (priceMin.errors?.required || bodyRate.priceMin <= 0 || priceMin.errors?.minlength ) && priceMin.touched,
+                                        'is-valid': !priceMin.errors?.required && bodyRate.priceMin > 0 && !priceMin.errors?.minlength && priceMin.touched}" required minlength="1" min="1">
+
+                                        <span *ngIf="priceMin.errors?.required && priceMin.touched">
+                                          <small class="text-danger">*Requerido</small>
+                                      </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -185,7 +215,7 @@
                 <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal" (click)="onReset()">
                     Cerrar
                 </button>
-                <button type="button" class="btn btn-primary" [disabled]="frmRate.invalid || loading" (click)="onSubmit(frmRate)">
+                <button type="button" class="btn btn-primary" [disabled]="frmRate.invalid || bodyRate.priceRate <= 0 || bodyRate.priceMin <= 0 || loading" (click)="onSubmit(frmRate)">
                     {{ textButton }}
                     <span *ngIf="loading">
                         <i class="fa fa-spinner fa-pulse "></i>

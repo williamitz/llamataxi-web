@@ -3,6 +3,6 @@ export interface IRate {
     fkCategory: number;
     fkJournal: number;
     priceRate: number;
+    priceMin: number;
     statusRegister?: number;
   }
-  

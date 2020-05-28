@@ -19,7 +19,7 @@ export class AllowUrlGuard implements CanActivate {
       arrUrl[ arrUrl.length - 1 ] = null;
       arrUrl = arrUrl.filter( e => e !== null );
     }
-    // console.log(`${ arrUrl.join('/') }`);
+    console.log(`${ arrUrl.join('/') }`);
     return new Promise( async (resolve) => {
       const res = await this.authSvc.onGetAllowMenu(  arrUrl.join('/') );
 
