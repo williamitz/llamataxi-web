@@ -1,7 +1,11 @@
 export interface IVehicle {
+  pkVehicle?: number;
+  fkCategory?: number;
+  fkBrand?: number;
+  fkModel?: number;
   color?: string;
   dateRegister?: Date;
-  dateSoatExpiration?: Date;
+  dateSoatExpiration?: string;
   imgPropertyCard: string;
   imgSoat?: string;
   imgTaxiBack?: string;
@@ -9,7 +13,7 @@ export interface IVehicle {
   imgTaxiInterior?: string;
   isProper?: number;
   numberPlate?: string;
-  pkVehicle?: number;
   year?: number;
-  verified?: boolean;
+  verified?: number;
+  statusRegister?: boolean;
 }

@@ -18,6 +18,10 @@ import { IBrand } from '../../../interfaces/brand.interface';
 import { ICategory } from '../../../interfaces/category.interface';
 import { IModel } from '../../../interfaces/model.interface';
 import { DriverVerif } from '../../../models/driverVerif.model';
+import { VehicleDriverModel } from '../../../models/vehicleDriver.model';
+import * as moment from 'moment';
+import { IColor } from '../../../interfaces/vehicleDriver.interface';
+import { VehicleDriverService } from '../../../services/vehicleDriver.service';
 
 const URI_API = environment.URL_SERVER;
 declare var pdfjsLib: any;
@@ -32,6 +36,30 @@ export class ProfileDriverComponent implements OnInit {
   @ViewChild('canvasPolicial') canvasPolicial: ElementRef;
 
   pkDriver = 0;
+  nowYear = moment().year();
+  dataYears: number[] = [];
+  dataColors: IColor[] = [{
+    code: 'BLACK',
+    text: 'NEGRO'
+  }, {
+    code: 'WHITE',
+    text: 'BLANCO'
+  }, {
+    code: 'YELLOW',
+    text: 'AMARILLO'
+  }, {
+    code: 'BROWN',
+    text: 'MARRÓN'
+  }, {
+    code: 'BLUE',
+    text: 'AZUL'
+  }, {
+    code: 'RED',
+    text: 'ROJO'
+  }, {
+    code: 'GREEN',
+    text: 'VERDE'
+  }];
 
   pathDriver = URI_API + `/Driver/Img/Get/`;
   pathImg = URI_API + `/User/Img/Get/`;
@@ -48,7 +76,6 @@ export class ProfileDriverComponent implements OnInit {
   };
 
   loading = false;
-
   vehicles: IVehicle[];
   index = 0;
   configSlider = {
@@ -81,9 +108,12 @@ export class ProfileDriverComponent implements OnInit {
   loadingDriver = false;
 
   replaceFile: File;
-
+  bodyVehicle: VehicleDriverModel;
   filesValid = ['PNG', 'JPG', 'JPEG', 'PDF'];
   imgValid = ['PNG', 'JPG', 'JPEG'];
+  titleModalVehicle = 'Nuevo vehículo';
+  textBtnModalVehicle = 'Guardar';
+  loadDataVehicle = false;
   /**
    * 'LICENSE'
    * ,'PHOTO_CHECK'
@@ -97,15 +127,15 @@ export class ProfileDriverComponent implements OnInit {
    */
 
   // tslint:disable-next-line: max-line-length
-  constructor(private router: ActivatedRoute, private driverSvc: DriverService, private storage: StorageService, private msgSvc: MessageService, private brandSvc: BrandService) { }
+  constructor(private router: ActivatedRoute, private driverSvc: DriverService, private storage: StorageService, private msgSvc: MessageService, private brandSvc: BrandService, private vehicleSvc: VehicleDriverService) { }
 
   ngOnInit() {
-
-    $('.toot').trigger('tooltip');
+    // $('.toot').trigger('tooltip');
     this.storage.onLoadToken();
     this.token = `?token=${ this.storage.token }`;
     this.dataUser = this.storage.onGetItem('dataUser', true);
     this.pkDriver = Number( this.router.snapshot.params.id ) || 0;
+    this.bodyVehicle = new VehicleDriverModel( this.pkDriver );
     this.onGetProfile( this.pkDriver );
     this.bodyMessage = new MessageModel(true);
     this.bodyResponse = new MessageModel( true );
@@ -113,18 +143,25 @@ export class ProfileDriverComponent implements OnInit {
     this.bodyDriverVerif = new DriverVerif();
     this.onGetMessages();
     this.onGetCategory();
+    this.onLoadYears();
     // console.log(this.router.snapshot.data);
   }
 
+  onLoadYears() {
+    for (let index = this.nowYear - 15 ; index <= this.nowYear; index++) {
+      this.dataYears.push( index );
+    }
+  }
+
   onGetProfile( id: number ) {
-    this.driverSvc.onGetProfile( id ).subscribe( (res) => {
+    this.driverSvc.onGetProfile( id ).subscribe( (res: any) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
 
-      this.dataProfile = res.data[0].profile;
-      this.vehicles = res.data[0].vehicles;
-
+      this.dataProfile = res.data.profile;
+      this.vehicles = res.data.vehicles;
+      this.bodyVehicle.fkPerson = this.dataProfile.pkPerson || 0;
       this.onShowPreviewPdf();
     });
   }
@@ -140,8 +177,8 @@ export class ProfileDriverComponent implements OnInit {
     });
   }
 
-  onGetMarca() {
-    this.brandSvc.onGetBrandAll( this.bodyVehicleVerif.fkCategory ).subscribe( (res) => {
+  onGetBrand( fkCategory: number ) {
+    this.brandSvc.onGetBrandAll( fkCategory ).subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
@@ -151,8 +188,8 @@ export class ProfileDriverComponent implements OnInit {
     });
   }
 
-  onGetModel() {
-    this.brandSvc.onGetModelAll( this.bodyVehicleVerif.fkCategory, this.bodyVehicleVerif.fkBrand ).subscribe( (res) => {
+  onGetModel( fkCategory: number , fkBrand: number) {
+    this.brandSvc.onGetModelAll( fkCategory, fkBrand ).subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
@@ -298,7 +335,7 @@ export class ProfileDriverComponent implements OnInit {
     return arrError.join(', ');
   }
 
-  onGetErrorVerhicle( showError: number ) {
+  onGetErrorVehicleVerif( showError: number ) {
     let arrError = showError === 0 ? ['Vehículo habilitado con éxito'] : ['Error'];
 
     // tslint:disable-next-line: no-bitwise
@@ -561,11 +598,20 @@ export class ProfileDriverComponent implements OnInit {
 
     this.bodyVehicleVerif.pkVehicle = data.pkVehicle;
     this.bodyVehicleVerif.pkDriver = this.pkDriver;
+    this.bodyVehicleVerif.fkCategory = data.fkCategory;
+    this.bodyVehicleVerif.fkBrand = data.fkBrand;
+    this.bodyVehicleVerif.fkModel = data.fkModel;
+
     this.bodyVehicleVerif.numberPlate = data.numberPlate;
     this.bodyVehicleVerif.year = data.year;
     this.bodyVehicleVerif.imgFrontal = data.imgTaxiFrontal;
     this.bodyVehicleVerif.color = data.color;
     this.bodyVehicleVerif.observation = `Vehículo verificado por: ${ this.dataUser.nameComplete }.`;
+
+    setTimeout(() => {
+      this.onGetBrand( data.fkCategory );
+      this.onGetModel( data.fkCategory, data.fkBrand );
+    }, 1500);
 
     $('#btnShowVehicleVerif').trigger('click');
   }
@@ -580,14 +626,14 @@ export class ProfileDriverComponent implements OnInit {
 
         this.loadingVehicle = false;
         if (res.showError !== 0) {
-         this.onShowAlert( 'error', 'Alerta', this.onGetErrorVerhicle( res.showError ) );
+         this.onShowAlert( 'error', 'Alerta', this.onGetErrorVehicleVerif( res.showError ) );
          return;
         }
 
         this.onShowAlert( 'success', 'Mensaje al usuaio', 'Vehículo habilitado con éxito' );
         const finded = this.vehicles.find( vehicle => vehicle.pkVehicle === this.bodyVehicleVerif.pkVehicle );
         if (finded) {
-          finded.verified = true;
+          finded.verified = 1;
         }
         $('#btnCloseModalVehicle').trigger('click');
       });
@@ -628,6 +674,165 @@ export class ProfileDriverComponent implements OnInit {
         $('#btnCloseVerifDriver').trigger('click');
       });
     }
+  }
+
+  onSubmitVehicle(frm: NgForm) {
+    if (frm.valid) {
+      console.log(this.bodyVehicle);
+      this.loadingVehicle = true;
+      if (!this.loadDataVehicle) {
+
+        this.vehicleSvc.onAddVehicle( this.bodyVehicle ).subscribe( (res) => {
+          if (!res.ok) {
+            throw new Error( res.error );
+          }
+
+          this.loadingVehicle = false;
+          this.onShowAlert(
+            res.showError === 0 ? 'success' : 'error',
+            this.onGetErrorVehicle( res.showError )
+          );
+
+          if (res.showError !== 0) {
+            return;
+          }
+
+          $('#btnCloseModalVehicleAdd').trigger('click');
+          this.onLoadVehicles( );
+        });
+
+      } else {
+
+        this.vehicleSvc.onUpdateVehicle( this.bodyVehicle ).subscribe( (res) => {
+          if (!res.ok) {
+            throw new Error( res.error );
+          }
+
+          this.loadingVehicle = false;
+          this.onShowAlert(
+            res.showError === 0 ? 'success' : 'error',
+            this.onGetErrorVehicle( res.showError )
+          );
+
+          if (res.showError !== 0) {
+            return;
+          }
+
+          $('#btnCloseModalVehicleAdd').trigger('click');
+          this.onLoadVehicles( );
+        });
+        //
+      }
+    }
+  }
+
+  onEditVehicle( id: number ) {
+    this.titleModalVehicle = 'Editar vehículo';
+    this.textBtnModalVehicle = 'Guardar cambios';
+
+    const findV = this.vehicles.find( vehicle => vehicle.pkVehicle === id );
+    if (!findV) {
+      throw new Error('No se encontró vehículo');
+    }
+
+
+    this.bodyVehicle.fkDriver = this.pkDriver;
+    this.bodyVehicle.fkPerson = this.dataProfile.pkPerson;
+    this.bodyVehicle.pkVehicle = id;
+    this.bodyVehicle.fkCategory = findV.fkCategory;
+    this.bodyVehicle.fkBrand = findV.fkBrand;
+    this.bodyVehicle.fkModel = findV.fkModel;
+
+    this.bodyVehicle.numberPlate = findV.numberPlate;
+    this.bodyVehicle.year = findV.year;
+    this.bodyVehicle.color = findV.color;
+    this.bodyVehicle.isProper = findV.isProper;
+    this.bodyVehicle.verified = findV.verified;
+    this.bodyVehicle.dateSoatExpiration = findV.dateSoatExpiration;
+    setTimeout(() => {
+      this.onGetBrand( findV.fkCategory );
+      this.onGetModel( findV.fkCategory, findV.fkBrand );
+    }, 1500);
+
+    $('#btnShowModalVehicleAdd').trigger('click');
+    this.loadDataVehicle = true;
+  }
+
+  onResetVehicleAdd() {
+    this.bodyVehicle.onReset();
+    this.loadDataVehicle = false;
+    this.titleModalVehicle = 'Nuevo vehículo';
+    this.textBtnModalVehicle = 'Guardar';
+  }
+
+  onCofirmDeleteVehicle( id: number ) {
+    const findedV = this.vehicles.find( vehicle => vehicle.pkVehicle === id );
+    if (!findedV) {
+      throw new Error( 'No se encontró registro de vehículo' );
+    }
+    this.bodyVehicle.pkVehicle = findedV.pkVehicle;
+    this.bodyVehicle.fkDriver = this.pkDriver;
+    this.bodyVehicle.statusRegister = !findedV.statusRegister;
+
+    console.log('abrir confirmación eliminar vehiculo');
+  }
+
+  onDeleteVehicle() {
+    this.loadingVehicle = true;
+    this.vehicleSvc.onDeleteVehicle( this.bodyVehicle ).subscribe( (res) => {
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      this.loadingVehicle = false;
+      this.onShowAlert(
+        res.showError === 0 ? 'success' : 'error',
+        this.onGetErrorVehicle( res.showError, true )
+      );
+
+      if (res.showError !== 0) {
+        return;
+      }
+
+      $('#btnConfirmDelVehicle').trigger('click');
+      this.onLoadVehicles( );
+    });
+  }
+
+  onLoadVehicles() {
+    this.driverSvc.onGetVehicles( this.pkDriver ).subscribe( (res) => {
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      this.vehicles = res.data;
+    });
+  }
+
+  onGetErrorVehicle( showError: number, isdelete = false ) {
+    let action = this.loadDataVehicle ? 'actualizado' : 'registrado';
+    if (isdelete) {
+      action = 'eliminado';
+    }
+
+    let arrError = showError === 0 ? [`Vehículo ${ action } con éxito`] : ['Error'];
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 1) {
+      arrError.push('existe un vehiculo con este número de placa asociado a otro conductor');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 2) {
+      arrError = ['Error', 'no se encontró registro del conductor'];
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 4) {
+      arrError = ['Error', 'el conductor se encuentra inactivo'];
+    }
+
+    return arrError.join(', ');
   }
 
 }

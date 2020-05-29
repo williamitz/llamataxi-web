@@ -35,6 +35,7 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   loadData = false;
   loading = false;
   loadingReniec = false;
+  loadingList = false;
   pathImg = URI_API + `/User/Img/Get/`;
   token = '';
   showInactive = false;
@@ -44,6 +45,7 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   qName = '';
   qUser = '';
   qEmail = '';
+  qRole = '';
 
   dataNationality: INationality[] = [];
   dataTypeDoc: ITypeDocument[] = [];
@@ -99,12 +101,14 @@ export class AccountUserComponent implements OnInit, OnDestroy {
     if (chk) {
       this.showInactive = !this.showInactive;
     }
-    this.userSvc.onGetUser( page, 10, this.qName, this.qEmail, this.qUser, '', this.showInactive ).subscribe( (res) => {
+    this.loadingList = true;
+    this.userSvc.onGetUser( page, 10, this.qName, this.qEmail, this.qUser, this.qRole, this.showInactive ).subscribe( (res) => {
 
       if (!res.ok) {
         throw new Error( res.error );
       }
 
+      this.loadingList = false;
       this.dataUser = res.data;
       this.pagination = this.pagerSvc.getPager(res.total, page, 10);
 

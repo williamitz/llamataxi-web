@@ -1,46 +1,45 @@
 export class VehicleDriverModel {
-  pkVehicleDriver: number;
+  pkVehicle: number;
   fkDriver: number;
+  fkPerson: number;
+  fkCategory: number;
   fkBrand: number;
   fkModel: number;
   isProper: number;
-  imgLease: string;
+  verified: number;
   numberPlate: string;
   year: number;
   color: string;
-  imgSoat: string;
-  dateSoatExpiration: Date;
-  imgPropertyCard: string;
+  dateSoatExpiration: string;
   statusRegister?: boolean;
 
-  constructor() {
-    this.pkVehicleDriver = 0;
-    this.fkDriver = 0;
-    this.fkBrand = 0;
-    this.fkModel = 0;
-    this.isProper = 0;
-    this.imgLease = "";
-    this.numberPlate = "";
-    this.year = 0;
-    this.color = "";
-    this.imgSoat = "";
-    this.dateSoatExpiration = new Date();
-    this.imgPropertyCard = "";
+  constructor(pkDriver: number) {
+    this.pkVehicle = 0;
+    this.fkDriver = pkDriver;
+    this.fkPerson = 0;
+    this.fkCategory = null;
+    this.fkBrand = null;
+    this.fkModel = null;
+    this.isProper = 1;
+    this.verified = 1;
+    this.numberPlate = '';
+    this.year = null;
+    this.color = 'BLACK';
+    this.dateSoatExpiration = '';
     this.statusRegister = true;
   }
 
   onReset() {
-    this.pkVehicleDriver = 0;
-    this.fkDriver = 0;
-    this.fkBrand = 0;
-    this.fkModel = 0;
-    this.isProper = 0;
-    this.imgLease = "";
-    this.numberPlate = "";
-    this.year = 0;
-    this.color = "";
-    this.imgSoat = "";
-    this.dateSoatExpiration = new Date();
-    this.imgPropertyCard = "";
+    this.pkVehicle = 0;
+    this.fkCategory = null;
+    this.fkBrand = null;
+    this.fkModel = null;
+    this.isProper = 1;
+    this.verified = 1;
+    this.numberPlate = '';
+    this.year = null;
+    this.color = 'BLACK';
+
+    this.dateSoatExpiration = '';
   }
 }

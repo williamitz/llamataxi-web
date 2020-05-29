@@ -55,14 +55,14 @@ export class BrandService {
     });
   }
 
-  onGetBrandAll( fkCategory: string ) {
+  onGetBrandAll( fkCategory: number ) {
     this.storageSvc.onLoadToken();
     return this.http.get<IResponse>(URI_API + `/Brand/GetAll?fkCategory=${ fkCategory }`, {
       headers: { Authorization: this.storageSvc.token },
     });
   }
 
-  onGetModelAll( fkCategory: string, fkBrand: string ) {
+  onGetModelAll( fkCategory: number, fkBrand: number ) {
     this.storageSvc.onLoadToken();
 
     return this.http.get<IResponse>(URI_API + `/Model/GetAll?fkCategory=${ fkCategory }&fkBrand=${ fkBrand }`, {

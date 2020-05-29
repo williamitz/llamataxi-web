@@ -19,6 +19,13 @@ export class DriverService {
     return this.http.put<IResponse>( URI_API + `/Driver/Profile/${ id }`, {}, {headers: { Authorization: this.storage.token }} );
   }
 
+  onGetVehicles( id: number ) {
+
+    this.storage.onLoadToken();
+    return this.http.get<IResponse>( URI_API + `/Driver/Vehicle/Get/${ id }`, {headers: { Authorization: this.storage.token }} );
+
+  }
+
   onUploadDriver(entity = 'DRIVER', idEntity: number, document: string, pkDriver = 0, file: File) {
 
     const formData = new FormData();

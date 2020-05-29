@@ -437,48 +437,51 @@
     </div>
     <div class="col-6">
         <h3>Vehiculos</h3>
-        <div class="swiper-container" [swiper]="configSlider" [(index)]="index">
-            <div class="swiper-wrapper">
-                <div class="swiper-slide" *ngFor="let vehicle of vehicles">
-                    <div class="table">
 
-                        <div class="row">
-                            <div class="col-12">
+        <!-- Button trigger modal -->
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#modalAddVehicle" id="btnShowModalVehicleAdd">
+          Nuevo
+        </button>
+        <swiper [config]="configSlider" [(index)]="index">
+            <div *ngFor="let vehicle of vehicles">
+                <div class="table">
 
-                                <div>
-                                    <span class="badge badge-pill " [ngClass]="{'badge-success': vehicle.verified,'badge-danger': !vehicle.verified
-                                    }" (click)="onShowVehicleVerif( vehicle )" [ngStyle]="{'cursor': !vehicle.verified ? 'pointer' : 'default'}">
-                                      {{ vehicle.verified ? 'Verificado' : 'Pendiente' }}
-                                    </span>
-                                </div>
-                                <h4> {{vehicle.numberPlate}} </h4>
-                                <p>
-                                    {{ vehicle.year }}
-                                    <br> {{ vehicle.color | color }}
-                                </p>
+                    <div class="row">
+                        <div class="col-12">
+
+                            <div>
+                                <span class="badge badge-pill " [ngClass]="{'badge-success': vehicle.verified,'badge-danger': !vehicle.verified }" (click)="onShowVehicleVerif( vehicle )" [ngStyle]="{'cursor': !vehicle.verified ? 'pointer' : 'default'}">
+                                {{ vehicle.verified ? 'Verificado' : 'Pendiente' }}
+                              </span>
                             </div>
+                            <h4> {{vehicle.numberPlate}} </h4>
+                            <p>
+                                {{ vehicle.year }}
+                                <br> {{ vehicle.color | color }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <span>
+                          <a [href]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgPropertyCard + token + '&idDriver=' + dataProfile.pkDriver" target="blank" class="btn btn-sm btn-info btnDownLicense" title="Descargar">
+                              <i class="fa fa-download"></i>
+                          </a>
+                          <label class="btn btn-sm btn-primary btnDownLicense" title="Reemplazar" for="fileLicense-{{ vehicle.pkVehicle }}">
+                            <i class="fa fa-upload"></i>
+                          </label>
+                      </span>
+                        <div class="col-12">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgPropertyCard  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px; " class="borderImg">
+
+                            <input type="file" id="fileLicense-{{ vehicle.pkVehicle }}" style="display: none;" (change)="onChangeFile( 'VEHICLE', 'PROPERTY_CARD', $event.target.files, false, vehicle.pkVehicle )">
+                            <p>Tarjeta de propiedad</p>
                         </div>
 
-                        <div class="row">
-                            <span>
-                                <a [href]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgPropertyCard + token + '&idDriver=' + dataProfile.pkDriver" target="blank" class="btn btn-sm btn-info btnDownLicense" title="Descargar">
-                                    <i class="fa fa-download"></i>
-                                </a>
-                                <label class="btn btn-sm btn-primary btnDownLicense" title="Reemplazar" for="fileLicense-{{ vehicle.pkVehicle }}">
-                                  <i class="fa fa-upload"></i>
-                                </label>
-                            </span>
-                            <div class="col-12">
-                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgPropertyCard  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px; " class="borderImg">
+                    </div>
 
-                                <input type="file" id="fileLicense-{{ vehicle.pkVehicle }}" style="display: none;" (change)="onChangeFile( 'VEHICLE', 'PROPERTY_CARD', $event.target.files, false, vehicle.pkVehicle )">
-                                <p>Tarjeta de propiedad</p>
-                            </div>
-
-                        </div>
-
-                        <div class="row">
-                            <span>
+                    <div class="row">
+                        <span>
                             <a [href]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgSoat + token + '&idDriver=' + dataProfile.pkDriver" target="blank" class="btn btn-sm btn-info btnDownLicense" title="Descargar">
                                 <i class="fa fa-download"></i>
                             </a>
@@ -486,33 +489,41 @@
                               <i class="fa fa-upload"></i>
                             </label>
                         </span>
-                            <div class="col-12">
-                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgSoat  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px;" class="borderImg">
-                                <input type="file" id="fileSoat-{{ vehicle.pkVehicle }}" style="display: none;" (change)="onChangeFile( 'VEHICLE', 'SOAT', $event.target.files, false, vehicle.pkVehicle )">
-                                <p>
-                                    Soat <br> Exp. {{ vehicle.dateSoatExpiration | date }}
-                                </p>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-6">
-                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiFrontal  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
-                            </div>
-                            <div class="col-6">
-                                <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiBack  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
-                            </div>
+                        <div class="col-12">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgSoat  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 90%; height: 160px;" class="borderImg">
+                            <input type="file" id="fileSoat-{{ vehicle.pkVehicle }}" style="display: none;" (change)="onChangeFile( 'VEHICLE', 'SOAT', $event.target.files, false, vehicle.pkVehicle )">
+                            <p>
+                                Soat <br> Exp. {{ vehicle.dateSoatExpiration | date }}
+                            </p>
                         </div>
                     </div>
+
+                    <div class="row">
+                        <div class="col-6">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiFrontal  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
+                        </div>
+                        <div class="col-6">
+                            <img [src]="pathDriver + 'vehicle/' + vehicle.pkVehicle + '/' + vehicle.imgTaxiBack  + token + '&idDriver=' + dataProfile.pkDriver " alt="" style="width: 50%; height: 100%;" class="borderImg">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-6"></div>
+                        <div class="col-6">
+                            <button class="btn btn-outline-primary btn-icon" type="button" (click)="onEditVehicle( vehicle.pkVehicle )">
+                            <i class="fa fa-edit"></i>
+                          </button>
+
+                            <button class="btn btn-outline-danger btn-icon" type="button" data-toggle="modal" data-target="#modalConfirmDeleteVehicle" (click)="onCofirmDeleteVehicle( vehicle.pkVehicle )">
+                              <i class="fa fa-trash"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <br>
                 </div>
             </div>
+        </swiper>
 
-            <div class="swiper-scrollbar"></div>
-            <div class="swiper-pagination"></div>
-
-            <div class="swiper-button-prev"></div>
-            <div class="swiper-button-next"></div>
-        </div>
     </div>
 </div>
 
@@ -521,7 +532,7 @@
   Launch demo modal
 </button>
 
-<!-- Modal -->
+<!-- Modal verify vehicle -->
 <div class="modal fade" id="modalVehicle" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
@@ -551,11 +562,11 @@
                                 <div class="col-12">
                                     <div class="form-group">
                                         <label for="cbxCategory">Categoría</label>
-                                        <select class="form-control" id="cbxCategory" name="category" #category="ngModel" [(ngModel)]="bodyVehicleVerif.fkCategory" (change)="onGetMarca()" required [ngClass]="{
+                                        <select class="form-control" id="cbxCategory" name="category" #category="ngModel" [(ngModel)]="bodyVehicleVerif.fkCategory" (change)="onGetBrand( bodyVehicleVerif.fkCategory )" required [ngClass]="{
                                           'is-invalid': category.errors?.required && category.touched,
                                           'is-valid': !category.errors?.required && category.touched
                                         }">
-                                          <option value="" disabled selected="true">-- Seleccione --</option>
+                                          <option value="null" disabled selected="true">-- Seleccione --</option>
                                           <option [value]="category.pkCategory" *ngFor="let category of dataCategory">
                                             {{ category.nameCategory }}
                                           </option>
@@ -569,11 +580,11 @@
                                     <div class="form-group">
 
                                         <label for="cbxBrand">Marca</label>
-                                        <select class="form-control" id="cbxBrand" (change)="onGetModel()" name="brand" #brand="ngModel" [(ngModel)]="bodyVehicleVerif.fkBrand" required [ngClass]="{
+                                        <select class="form-control" id="cbxBrand" (change)="onGetModel( bodyVehicleVerif.fkCategory, bodyVehicleVerif.fkBrand )" name="brand" #brand="ngModel" [(ngModel)]="bodyVehicleVerif.fkBrand" required [ngClass]="{
                                           'is-invalid': brand.errors?.required && brand.touched,
                                           'is-valid': !brand.errors?.required && brand.touched
                                         }">
-                                            <option value=""  disabled selected>-- Seleccione --</option>
+                                            <option value="null"  disabled selected>-- Seleccione --</option>
                                             <option [value]="brand.pkBrand" *ngFor="let brand of dataBrand">
                                               {{ brand.nameBrand }}
                                             </option>
@@ -592,7 +603,7 @@
                                         'is-invalid': model.errors?.required && model.touched,
                                         'is-valid': !model.errors?.required && model.touched
                                       }">
-                                        <option value=""  disabled selected>-- Seleccione --</option>
+                                        <option value="null"  disabled selected>-- Seleccione --</option>
                                         <option [value]="model.pkModel" *ngFor="let model of dataModel">
                                           {{ model.nameModel }}
                                         </option>
@@ -634,7 +645,7 @@
     </div>
 </div>
 
-<!-- Modal -->
+<!-- Modal add message -->
 <div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
@@ -866,3 +877,210 @@
 
         </div>
     </div>
+</div>
+
+
+<!-- Modal add/update vehicle -->
+<div class="modal fade" id="modalAddVehicle" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> {{ titleModalVehicle }} </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onResetVehicleAdd()">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #frmVehicleAdd="ngForm">
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="form-group">
+                                <label for="">Placa Nro. <span class="text-danger">*</span> </label>
+                                <input type="text" style="text-transform: uppercase;" class="form-control" name="numberPlate" #plate="ngModel" [(ngModel)]="bodyVehicle.numberPlate" [ngClass]="{
+                                    'is-invalid': (plate.errors?.required || plate.errors?.pattern) && plate.touched,
+                                    'is-valid': !plate.errors?.required && !plate.errors?.pattern && plate.touched
+                                  }" pattern="^([a-zA-Z0-9]{2,3}-+\d{3,4})$" required>
+                                <span *ngIf="plate.errors?.required && plate.touched">
+                                  <small class="text-danger">*Requerido</small>
+                                </span>
+                                <span *ngIf="plate.errors?.pattern && plate.touched">
+                                  <small class="text-danger">*Formato inv&aacute;lido ejm: ABC-000</small>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">A&ntilde;o <span class="text-danger">*</span> </label>
+
+                                        <select class="form-control" name="yearV" #yearV="ngModel" [(ngModel)]="bodyVehicle.year" [ngClass]="{
+                                          'is-invalid': yearV.errors?.required && yearV.touched,
+                                          'is-valid': !yearV.errors?.required && yearV.touched
+                                        }" required>
+                                          <option value="null" disabled selected> --Selecc--</option>
+                                          <option [value]="year" *ngFor="let year of dataYears">
+                                            {{ year }}
+                                          </option>
+                                        </select>
+
+                                        <span *ngIf="yearV.errors?.required && yearV.touched">
+                                          <small class="text-danger">*Requerido</small>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">Color <span class="text-danger">*</span> </label>
+
+                                        <select class="form-control" name="colorV" #colorV="ngModel" [(ngModel)]="bodyVehicle.color" [ngClass]="{
+                                          'is-invalid': colorV.errors?.required && colorV.touched,
+                                          'is-valid': !colorV.errors?.required && colorV.touched
+                                        }" required>
+                                          <option value="" disabled selected> --Selecc--</option>
+                                          <option [value]="color.code" *ngFor="let color of dataColors">
+                                            {{ color.text }}
+                                          </option>
+                                        </select>
+
+                                        <span *ngIf="colorV.errors?.required && colorV.touched">
+                                          <small class="text-danger">*Requerido</small>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cbxCategoryV">Categoría <span class="text-danger">*</span></label>
+                        <select class="form-control" id="cbxCategoryV" name="categoryV" #categoryV="ngModel" [(ngModel)]="bodyVehicle.fkCategory" (change)="onGetBrand(bodyVehicle.fkCategory)" required [ngClass]="{
+                            'is-invalid': categoryV.errors?.required && categoryV.touched,
+                            'is-valid': !categoryV.errors?.required && categoryV.touched
+                          }">
+                            <option value="" disabled selected="true">-- Seleccione --</option>
+                            <option [value]="category.pkCategory" *ngFor="let category of dataCategory">
+                              {{ category.nameCategory }}
+                            </option>
+                          </select>
+                        <span *ngIf="categoryV.errors?.required && categoryV.touched">
+                            <small class="text-danger">*Requerido</small>
+                          </span>
+                    </div>
+
+                    <div class="form-group">
+
+                        <label for="cbxBrandV">Marca <span class="text-danger">*</span></label>
+                        <select class="form-control" id="cbxBrandV" (change)="onGetModel(bodyVehicle.fkCategory, bodyVehicle.fkBrand)" name="brandV" #brandV="ngModel" [(ngModel)]="bodyVehicle.fkBrand" required [ngClass]="{
+                            'is-invalid': brandV.errors?.required && brandV.touched,
+                            'is-valid': !brandV.errors?.required && brandV.touched
+                          }">
+                              <option value=""  disabled selected>-- Seleccione --</option>
+                              <option [value]="brand.pkBrand" *ngFor="let brand of dataBrand">
+                                {{ brand.nameBrand }}
+                              </option>
+                          </select>
+                        <span *ngIf="brandV.errors?.required && brandV.touched">
+                            <small class="text-danger">*Requerido</small>
+                          </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cbxModelV">Modelo <span class="text-danger">*</span></label>
+                        <select class="form-control" id="cbxModelV" name="modelV" #modelV="ngModel" [(ngModel)]="bodyVehicle.fkModel" required [ngClass]="{
+                              'is-invalid': modelV.errors?.required && modelV.touched,
+                              'is-valid': !modelV.errors?.required && modelV.touched
+                            }">
+                          <option value=""  disabled selected>-- Seleccione --</option>
+                          <option [value]="model.pkModel" *ngFor="let model of dataModel">
+                            {{ model.nameModel }}
+                          </option>
+                        </select>
+                        <span *ngIf="modelV.errors?.required && modelV.touched">
+                          <small class="text-danger">*Requerido</small>
+                        </span>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="form-group">
+                                <label for="">Fecha Exp. soat <span class="text-danger">*</span></label>
+                                <input type="date" class="form-control" name="soatExpiration" #soatExp="ngModel" [(ngModel)]="bodyVehicle.dateSoatExpiration" required [ngClass]="{
+                            'is-invalid': soatExp.errors?.required && soatExp.touched,
+                            'is-valid': !soatExp.errors?.required && soatExp.touched
+                          }">
+                                <span *ngIf="soatExp.errors?.required && soatExp.touched">
+                            <small>*Requerido</small>
+                          </span>
+                            </div>
+                        </div>
+                        <div class="col-7">
+                            <div class="row">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="">¿Es Propio?</label>
+                                        <label class="custom-toggle">
+                                  <input type="checkbox" checked name="chkProper" [(ngModel)]="bodyVehicle.isProper" >
+                                  <span class="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Sí"></span>
+                              </label>
+                                    </div>
+                                </div>
+                                <div *ngIf="!loadDataVehicle" class="col-6">
+                                    <div class="form-group">
+                                        <label for="">¿Habilitar?</label>
+                                        <label class="custom-toggle">
+                                          <input type="checkbox" checked name="chkVerified" [(ngModel)]="bodyVehicle.verified" >
+                                          <span class="custom-toggle-slider rounded-circle" data-label-off="No" data-label-on="Sí"></span>
+                                      </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCloseModalVehicleAdd" (click)="onResetVehicleAdd()">
+                  Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" [disabled]="frmVehicleAdd.invalid" (click)="onSubmitVehicle(frmVehicleAdd)">
+                  {{ textBtnModalVehicle }}
+                  <span *ngIf="loadingVehicle">
+                    <i class="fa fa-spinner fa-pulse "></i>
+                  </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal confirm delete vehicle -->
+<div class="modal fade" id="modalConfirmDeleteVehicle" data-backdrop="static" data-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">¡Confirmaci&oacute;n!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="bodyVehicle.onReset();">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Est&aacute; seguro(a) de <strong class="text-primary">eliminar</strong> este registro ?
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnConfirmDelVehicle" class="btn btn-secondary" data-dismiss="modal" (click)="bodyVehicle.onReset();">
+                  Cerrar
+                </button>
+                <button type="button" class="btn btn-danger" (click)="onDeleteVehicle()">
+                  Eliminar
+                  <span *ngIf="loadingVehicle">
+                    <i class="fa fa-spinner fa-pulse "></i>
+                  </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

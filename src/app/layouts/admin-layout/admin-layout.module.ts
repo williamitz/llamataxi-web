@@ -16,7 +16,6 @@ import { NotificationComponent } from '../../pages/adminPages/notification/notif
 import { ModelComponent } from '../../pages/adminPages/model/model.component';
 import { MenuRoleComponent } from '../../pages/adminPages/menuRole/menuRole.component';
 import { CategoryComponent } from '../../pages/adminPages/category/category.component';
-import { VehicleDriverComponent } from '../../pages/adminPages/vehicleDriver/vehicleDriver.component';
 import { TaxiMapComponent } from './../../pages/adminPages/taxiMap/taxiMap.component';
 import { AgmCoreModule } from '@agm/core';
 import { SwiperModule } from 'ngx-swiper-wrapper';
@@ -38,7 +37,6 @@ import { JournalComponent } from './../../pages/adminPages/journal/journal.compo
     ModelComponent,
     MenuRoleComponent,
     CategoryComponent,
-    VehicleDriverComponent,
     TaxiMapComponent,
     ProfileDriverComponent,
     ProfileUserComponent,

@@ -7,9 +7,9 @@ export class VehicleVerifModel {
   year: number;
   imgFrontal: string;
   color: string;
-  fkCategory: string;
-  fkBrand: string;
-  fkModel: string;
+  fkCategory: number;
+  fkBrand: number;
+  fkModel: number;
 
   constructor() {
     this.pkVehicle = 0;
@@ -19,9 +19,9 @@ export class VehicleVerifModel {
     this.year = 0;
     this.imgFrontal = '';
     this.color = '';
-    this.fkCategory = '';
-    this.fkBrand = '';
-    this.fkModel = '';
+    this.fkCategory = null;
+    this.fkBrand = null;
+    this.fkModel = null;
   }
 
   onReset() {
@@ -32,8 +32,8 @@ export class VehicleVerifModel {
     this.year = 0;
     this.imgFrontal = '';
     this.color = '';
-    this.fkCategory = '';
-    this.fkBrand = '';
-    this.fkModel = '';
+    this.fkCategory = null;
+    this.fkBrand = null;
+    this.fkModel = null;
   }
 }

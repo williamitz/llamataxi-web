@@ -8,8 +8,6 @@ import { BrandComponent } from '../../pages/adminPages/brand/brand.component';
 import { NavChildrenComponent } from '../../pages/adminPages/nav-children/nav-children.component';
 import { ModelComponent } from '../../pages/adminPages/model/model.component';
 import { MenuRoleComponent } from '../../pages/adminPages/menuRole/menuRole.component';
-import { NotificationComponent } from '../../pages/adminPages/notification/notification.component';
-import { VehicleDriverComponent } from '../../pages/adminPages/vehicleDriver/vehicleDriver.component';
 import { CategoryComponent } from '../../pages/adminPages/category/category.component';
 import { ApplicationComponent } from '../../pages/adminPages/application/application.component';
 import { AccountUserComponent } from '../../pages/adminPages/account-user/account-user.component';
@@ -54,11 +52,6 @@ export const ADMIN_ROUTES: Routes = [
     path: 'menuRole',
     component: MenuRoleComponent,
     canActivate: [AllowUrlGuard]
-  },
-
-  {
-    path: 'vehicleDriver',
-    component: VehicleDriverComponent
   },
   {
     path: 'category',

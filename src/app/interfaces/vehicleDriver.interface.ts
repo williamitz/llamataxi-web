@@ -14,3 +14,8 @@ export interface IVehicleDriver {
   statusRegister?: number;
   verified?: boolean;
 }
+
+export interface IColor {
+  code: string;
+  text: string;
+}
