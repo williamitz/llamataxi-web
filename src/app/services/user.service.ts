@@ -3,7 +3,7 @@ import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { StorageService } from './storage.service';
 import { IResponse } from '../interfaces/response.interface';
-import { UserModel } from '../models/user.model';
+import { UserModel, UserProfileModel } from '../models/user.model';
 
 const URI_API = environment.URL_SERVER;
 
@@ -51,6 +51,12 @@ export class UserService {
   onGetProfile( pkUser: number ) {
     this.storage.onLoadToken();
     return this.http.get<IResponse>( URI_API + `/User/Profile/${ pkUser }`, { headers: { Authorization: this.storage.token } } );
+  }
+
+  onUpdateProfile( body: UserProfileModel ) {
+    this.storage.onLoadToken();
+
+    return this.http.put<IResponse>( URI_API + '/User/Profile/Update', body, { headers: { Authorization: this.storage.token } } )
   }
 
 }

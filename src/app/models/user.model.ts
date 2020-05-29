@@ -51,3 +51,25 @@ export class UserModel extends PersonModel {
   }
 
 }
+
+
+export class UserProfileModel {
+
+  pkUser: number;
+  fkTypeDocument: number;
+  document: string;
+
+  constructor() {
+    this.pkUser = 0;
+    this.fkTypeDocument = null;
+    this.document = '';
+  }
+
+  onReset() {
+    this.pkUser = 0;
+    this.fkTypeDocument = null;
+    this.document = '';
+  }
+
+}
+

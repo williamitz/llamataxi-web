@@ -1,6 +1,8 @@
 export interface IUserProfile {
 
   pkUser: number;
+  fkTypeDocument?: number;
+	fkNationality?: number;
   brithDate?: Date;
   dateVerified?: Date;
   document?: string;

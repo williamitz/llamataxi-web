@@ -6,7 +6,7 @@
                 <div class="col-lg-3 order-lg-2">
                     <div class="card-profile-image">
                         <a href="#">
-                            <img src="../assets/img/theme/team-4.jpg" class="rounded-circle">
+                            <img [src]="pathImg" class="rounded-circle">
                         </a>
                     </div>
                 </div>
@@ -38,16 +38,17 @@
                 </div>
                 <div class="text-center">
                     <h5 class="h3">
-                        Jessica Jones<span class="font-weight-light">, 27</span>
+                        {{ dataProfile.nameComplete }}
+                        <span class="font-weight-light">, {{ dataProfile.yearsOld }}</span>
                     </h5>
                     <div class="h5 font-weight-300">
-                        <i class="ni location_pin mr-2"></i>Bucharest, Romania
+                        <i class="fas fa-user"></i> {{ dataProfile.userName }}
                     </div>
                     <div class="h5 mt-4">
-                        <i class="ni business_briefcase-24 mr-2"></i>Solution Manager - Creative Tim Officer
+                        <i class="fas fa-envelope"></i> {{ dataProfile.email }}
                     </div>
                     <div>
-                        <i class="ni education_hat mr-2"></i>University of Computer Science
+                        <i class="fas fa-phone"></i> {{ dataProfile.phone }}
                     </div>
                 </div>
             </div>
@@ -61,7 +62,9 @@
                         <h3 class="mb-0">Edit profile </h3>
                     </div>
                     <div class="col-4 text-right">
-                        <a href="#!" class="btn btn-sm btn-primary">Settings</a>
+                        <button class="btn btn-sm btn-primary" data-toggle="modal" data-target="#exampleModal" (click)="onEditProfile()">
+                          Editar
+                        </button>
                     </div>
                 </div>
             </div>
@@ -72,14 +75,14 @@
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-username">Username</label>
-                                    <input type="text" id="input-username" class="form-control" placeholder="Username" value="lucky.jesse">
+                                    <label class="form-control-label">Documento</label>
+                                    <input type="text" class="form-control" placeholder="Documento" [value]="dataProfile.nameDocument" readonly>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-email">Email address</label>
-                                    <input type="email" id="input-email" class="form-control" placeholder="jesse@example.com">
+                                    <label class="form-control-label" for="input-email">Nro documento</label>
+                                    <input type="text" id="input-email" class="form-control" placeholder="jesse@example.com" [value]="dataProfile.document">
                                 </div>
                             </div>
                         </div>
@@ -141,6 +144,69 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar perfil</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #frmProfileUser="ngForm">
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="cbxTypeDoc">Tipo Documento</label>
+                                <select class="form-control" id="cbxTypeDoc" name="typeDoc" #typedoc="ngModel" [(ngModel)]="bodyUser.fkTypeDocument" [ngClass]="{'is-invalid': typedoc.errors?.required && typedoc.touched,
+                      'is-valid': !typedoc.errors?.required && typedoc.touched}" required>
+                            <option value="null" disabled selected>--Seleccione--</option>
+                            <option [value]="td.pkTypeDocument" *ngFor="let td of dataTypeDoc">
+                              {{ td.prefix }}
+                            </option>
+                          </select>
+
+                                <span *ngIf="typedoc.errors?.required && typedoc.touched">
+                            <small class="text-danger">*Requerido</small>
+                          </span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label for="ndoc">Nro Documento</label>
+                                <input type="text" id="ndoc" name="ndoc" #ndoc="ngModel" [(ngModel)]="bodyUser.document" class="form-control" [ngClass]="{'is-invalid': (ndoc.errors?.required || ndoc.errors?.minlength) && ndoc.touched,
+                          'is-valid': !ndoc.errors?.required && !ndoc.errors?.minlength && ndoc.touched}" required minlength="8">
+
+                                <span *ngIf="ndoc.errors?.required && ndoc.touched">
+                                  <small class="text-danger">*Requerido</small>
+                                </span>
+
+                                <span *ngIf="ndoc.errors?.minlength && ndoc.touched">
+                                  <small class="text-danger">*Minimo 8 caracteres</small>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCloseModalUser" class="btn btn-secondary" data-dismiss="modal">
+                  Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" [disabled]="frmProfileUser.invalid" (click)="onSubmitProfile( frmProfileUser )">
+                  Guardar cambios
+                </button>
             </div>
         </div>
     </div>
