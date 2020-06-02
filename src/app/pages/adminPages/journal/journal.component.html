@@ -148,7 +148,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-6">
+                        <div class="col-5">
                             <div class="form-group">
                                 <label for="cbxCode" class="form-control-label">Codigo</label>
                                 <select class="form-control" id="cbxCode" name="codeJournal" #codeJournal="ngModel" [(ngModel)]="bodyJournal.codeJournal" [ngClass]="{'is-invalid': (codeJournal.errors?.required || codeJournal.errors?.minlength ) && codeJournal.touched,
@@ -169,26 +169,31 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label for="txtHourStart" class="form-control-label">Inicio</label>
-                                <input class="form-control text-right" type="number" id="txtHourStart" name="hourStart" #hourStart="ngModel" [(ngModel)]="bodyJournal.hourStart" [ngClass]="{'is-invalid': (hourStart.errors?.required || hourStart.errors?.minlength ) && hourStart.touched,
-                            'is-valid': !hourStart.errors?.required && !hourStart.errors?.minlength && hourStart.touched}" required minlength="1">
+                        <div class="col-7">
+                            <div class="row">
 
-                                <span *ngIf="hourStart.errors?.required && hourStart.touched">
-                                    <small class="text-danger">*Requerido</small>
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-group">
-                                <label for="txtHourEnd" class="form-control-label">Fin</label>
-                                <input class="form-control text-right" type="number" id="txtHourEnd" name="hourEnd" #hourEnd="ngModel" [(ngModel)]="bodyJournal.hourEnd" [ngClass]="{'is-invalid': (hourEnd.errors?.required || hourEnd.errors?.minlength ) && hourEnd.touched,
-                            'is-valid': !hourEnd.errors?.required && !hourEnd.errors?.minlength && hourEnd.touched}" required minlength="1">
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="txtHourStart" class="form-control-label">Inicio</label>
+                                        <input class="form-control text-right" type="time" id="txtHourStart" name="hourStart" #hStart="ngModel" [(ngModel)]="bodyJournal.hourStart" [ngClass]="{'is-invalid': hStart.errors?.required && hStart.touched,
+                                'is-valid': !hStart.errors?.required && !hStart.errors?.minlength && hStart.touched}" required>
 
-                                <span *ngIf="hourEnd.errors?.required && hourEnd.touched">
-                                    <small class="text-danger">*Requerido</small>
-                                </span>
+                                        <span *ngIf="hStart.errors?.required && hStart.touched">
+                                        <small class="text-danger">*Requerido</small>
+                                    </span>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="form-group">
+                                        <label for="txtHourEnd" class="form-control-label">Fin</label>
+                                        <input class="form-control text-right" type="time" id="txtHourEnd" name="hourEnd" #hEnd="ngModel" [(ngModel)]="bodyJournal.hourEnd" [ngClass]="{'is-invalid': hEnd.errors?.required  && hEnd.touched,
+                                'is-valid': !hEnd.errors?.required && !hEnd.errors?.minlength && hEnd.touched}" required minlength="1">
+
+                                        <span *ngIf="hEnd.errors?.required && hEnd.touched">
+                                        <small class="text-danger">*Requerido</small>
+                                    </span>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>

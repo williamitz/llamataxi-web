@@ -36,7 +36,7 @@
                                     {{ rate.nameCategory }}
                                 </td>
                                 <td>
-                                    {{ rate.nameJournal }} - {{ rate.hourStart }}:00 , {{ rate.hourEnd }}:00
+                                    {{ rate.nameJournal }} - {{ rate.hourStart }} , {{ rate.hourEnd }}
                                 </td>
                                 <td>
                                     {{ rate.priceRate | number: '.2-2' }}
@@ -163,7 +163,8 @@
                             'is-valid': !fkJournal.errors?.required && fkJournal.touched}">
                                       <option value="" disabled selected>--Seleccione--</option>
                                       <option [value]="item.pkJournal" *ngFor="let item of dataJournal">
-                                        {{item.nameJournal}} - {{ item.hourStart }}:00 , {{ item.hourEnd }}:00
+                                        {{item.nameJournal}}
+                                        <!-- - {{ item.hourStart }}:00 , {{ item.hourEnd }}:00 -->
                                     </option>
                                 </select>
 
