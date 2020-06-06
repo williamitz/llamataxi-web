@@ -239,3 +239,9 @@ i-bell-55::before {
     bottom: -5px;
     right: -100%;
 }
+
+.spinReniec {
+    position: relative;
+    right: -87.5%;
+    top: -35px;
+}

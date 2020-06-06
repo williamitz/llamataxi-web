@@ -1,14 +1,25 @@
 import { Injectable } from '@angular/core';
+import { IUserStorage } from '../interfaces/user-profile.interface';
 
 @Injectable({
   providedIn: 'root'
 })
 export class StorageService {
   public token = '';
-  constructor() { }
+  public dataUser: IUserStorage = {
+    pkUser: 0,
+    userName: '',
+    nameComplete: '',
+    email: '',
+    phone: '',
+    img: '',
+    role: '',
+  };
+  constructor( ) { }
 
-  onSaveCredentials( token: string, data: any[] ) {
+  onSaveCredentials( token: string, data: any ) {
     this.token = token;
+    this.dataUser = data;
     localStorage.setItem('token', token);
     localStorage.setItem('dataUser', JSON.stringify( data ));
   }
@@ -21,10 +32,23 @@ export class StorageService {
     this.token = localStorage.getItem('token') || '';
   }
 
+  onLoadData() {
+    this.dataUser = JSON.parse( localStorage.getItem('dataUser') ) ;
+  }
+
   onClear() {
-    localStorage.removeItem('token');
     localStorage.removeItem('dataUser');
+    localStorage.removeItem('token');
 
     this.token = '';
+    this.dataUser = {
+      pkUser: 0,
+      userName: '',
+      nameComplete: '',
+      email: '',
+      phone: '',
+      img: '',
+      role: '',
+    };
   }
 }

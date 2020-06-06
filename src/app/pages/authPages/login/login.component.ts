@@ -6,6 +6,7 @@ import { AuthService } from '../../../services/auth.service';
 import { StorageService } from '../../../services/storage.service';
 import { Router } from '@angular/router';
 import swal from 'sweetalert2';
+import { SocketService } from '../../../services/socket.service';
 
 @Component({
   selector: 'app-login',
@@ -17,7 +18,7 @@ export class LoginComponent implements OnInit {
   bodyLogin: LoginModel;
   loading = false;
 
-  constructor(private authSvc: AuthService, private storageSvc: StorageService, private router: Router) { }
+  constructor(private authSvc: AuthService, private storageSvc: StorageService, private router: Router, private io: SocketService) { }
 
   ngOnInit() {
     this.bodyLogin = new LoginModel();
@@ -31,7 +32,7 @@ export class LoginComponent implements OnInit {
           throw new Error( res.error );
         }
 
-        this.loading = true;
+        this.loading = false;
         if (res.showError !== 0) {
           const { css, msg } = this.onGetError( res.showError );
           swal.fire({
@@ -46,8 +47,14 @@ export class LoginComponent implements OnInit {
         }
 
         this.storageSvc.onSaveCredentials( res.token, res.data );
+        this.io.onSingUserSocket().then( () => {
 
-        this.router.navigateByUrl('/admin');
+          // console.log('usuario socket configurado' );
+          this.router.navigateByUrl('/admin');
+
+        }).catch(e => {
+          console.error('Error al configurar usuario socket', e);
+        });
 
         console.log(res);
       });

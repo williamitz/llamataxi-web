@@ -4,6 +4,7 @@ import { StorageService } from '../../services/storage.service';
 import { environment } from '../../../environments/environment';
 import { INotification } from '../../interfaces/notification.interface';
 import { NotificationService } from '../../services/notification.service';
+import { SocketService } from '../../services/socket.service';
 
 @Component({
   selector: 'app-navbar',
@@ -20,7 +21,7 @@ export class NavbarComponent implements OnInit {
   token = '';
 
   // tslint:disable-next-line: max-line-length
-  constructor( private routerActive: ActivatedRoute, private storageSbvc: StorageService, private router: Router, private notiSvc: NotificationService ) { }
+  constructor( private routerActive: ActivatedRoute, private storageSbvc: StorageService, private router: Router, private notiSvc: NotificationService, private ioSvc: SocketService ) { }
 
   ngOnInit() {
 
@@ -55,8 +56,19 @@ export class NavbarComponent implements OnInit {
   }
 
   onLogOut() {
-    this.storageSbvc.onClear();
-    this.router.navigateByUrl('/login');
+    console.log('cerrando sesión =====================');
+    this.ioSvc.onLogOutSocket().then( () => {
+
+      // console.log('Se deconecto usuario socket con éxito');
+      this.storageSbvc.onClear();
+      this.router.navigateByUrl('/login');
+
+    }).catch( (e) => {
+
+      console.error('Error al desconectar socket', e);
+
+    });
+
   }
 
 }

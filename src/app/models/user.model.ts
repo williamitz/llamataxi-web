@@ -52,14 +52,12 @@ export class UserModel extends PersonModel {
 
 }
 
-
-export class UserProfileModel {
+export class UserProfileModel extends PersonModel {
 
   pkUser: number;
-  fkTypeDocument: number;
-  document: string;
 
   constructor() {
+    super();
     this.pkUser = 0;
     this.fkTypeDocument = null;
     this.document = '';
@@ -73,3 +71,31 @@ export class UserProfileModel {
 
 }
 
+export class DriverProfileModel extends PersonModel {
+
+  pkUser: number;
+  pkDriver: number;
+
+  dateLicenseExpiration: string;
+  isEmployee: number;
+
+  constructor() {
+    super();
+    this.pkUser = 0;
+    this.pkDriver = 0;
+    this.fkTypeDocument = null;
+    this.document = '';
+    this.dateLicenseExpiration = '';
+    this.isEmployee = 0;
+  }
+
+  onReset() {
+    this.pkUser = 0;
+    this.pkDriver = 0;
+    this.fkTypeDocument = null;
+    this.document = '';
+    this.dateLicenseExpiration = '';
+    this.isEmployee = 0;
+  }
+
+}

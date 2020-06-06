@@ -3,7 +3,7 @@ export interface IUserProfile {
   pkUser: number;
   fkTypeDocument?: number;
 	fkNationality?: number;
-  brithDate?: Date;
+  brithDate?: string;
   dateVerified?: Date;
   document?: string;
   email?: string;
@@ -24,5 +24,16 @@ export interface IUserProfile {
   verified?: number;
   verifyReniec?: number;
   yearsOld?: number;
+  osId?: string;
+  statusRegister?: boolean;
+}
 
+export interface IUserStorage {
+  pkUser: number;
+  userName: string;
+  nameComplete: string;
+  email: string;
+  phone: string;
+  img: string;
+  role: string;
 }

@@ -5,6 +5,12 @@ var proxyConfig = [{
     secure: false,
     logLevel: "debug",
     changeOrigin: true
+}, {
+    context: '/v1/*',
+    target: 'https://onesignal.com/api',
+    secure: false,
+    logLevel: "debug",
+    changeOrigin: true
 }];
 
 function setupForCorporateProxy(proxyConfig) {

@@ -5,6 +5,7 @@ import { StorageService } from './storage.service';
 import { IResponse } from '../interfaces/response.interface';
 import { VehicleVerifModel } from '../models/vehicleVerif.model';
 import { DriverVerif } from '../models/driverVerif.model';
+import { DriverProfileModel } from '../models/user.model';
 
 const URI_API = environment.URL_SERVER;
 @Injectable({
@@ -47,6 +48,22 @@ export class DriverService {
     // tslint:disable-next-line: max-line-length
     return this.http.put<IResponse>( URI_API + `/Driver/verify/${ body.pkDriver }`, body, {headers: { Authorization: this.storage.token } } );
 
+  }
+
+  onUpdateProfile( body: DriverProfileModel ) {
+    body.img = '';
+    this.storage.onLoadToken();
+    // tslint:disable-next-line: max-line-length
+    return this.http.put<IResponse>( URI_API + `/Driver/Profile/Update/${ body.pkDriver }`, body, {headers: { Authorization: this.storage.token }} );
+
+  }
+
+  onDeleteDriver( pkUser: number, pkDriver: number, status: boolean, obs: string ) {
+
+    this.storage.onLoadToken();
+    const params = `?obs=${ obs }`;
+    // tslint:disable-next-line: max-line-length
+    return this.http.delete<IResponse>( URI_API + `/Driver/${ pkUser }/${ pkDriver }/${ status }${ params }`, {headers: { Authorization: this.storage.token }} );
   }
 
 }

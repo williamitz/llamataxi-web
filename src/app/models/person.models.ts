@@ -5,7 +5,7 @@ export abstract class PersonModel {
   name: string;
   surname: string;
   document: string;
-  brithDate?: string;
+  birthDate?: string;
   email: string;
   phone: string;
   sex: string;

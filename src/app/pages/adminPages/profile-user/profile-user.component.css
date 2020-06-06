@@ -1,0 +1,247 @@
+.timeline-content {
+    position: relative;
+    position: relative;
+    top: -6px;
+    margin-left: 60px;
+    padding-top: .5rem;
+}
+
+[data-timeline-axis-style=dashed]:before {
+    border-right-style: dashed!important;
+}
+
+.timeline {
+    position: relative;
+}
+
+.timeline-step {
+    font-size: 1rem;
+    font-weight: 600;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    display: inline-flex;
+    width: 33px;
+    height: 33px;
+    transform: translateX(-50%);
+    text-align: center;
+    border-radius: 50%;
+    align-items: center;
+    justify-content: center;
+}
+
+.timeline-step i,
+.timeline-step svg {
+    line-height: 1.4;
+}
+
+.ni {
+    display: inline-block;
+    font: normal normal normal 14px/1 NucleoIcons;
+    font-size: inherit;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.timeline-block:first-child {
+    margin-top: 0;
+}
+
+.timeline-one-side .timeline-step {
+    left: 1rem;
+}
+
+@media (min-width: 992px) .timeline-step {
+    left: 50%;
+}
+
+.timeline-block {
+    position: relative;
+    margin: 2em 0;
+}
+
+.timeline:before {
+    position: absolute;
+    top: 0;
+    left: 0.9rem;
+    height: 100%;
+    content: '';
+    border-right: 2px solid #e9ecef;
+}
+
+.timeline-block:after {
+    display: table;
+    clear: both;
+    content: '';
+}
+
+.timeline-one-side .timeline-content {
+    max-width: 30rem;
+}
+
+.timeline-one-side .timeline-content {
+    width: auto;
+}
+
+.timeline-content {
+    width: 38%;
+}
+
+.timeline-content {
+    position: relative;
+    position: relative;
+    top: -6px;
+    margin-left: 60px;
+    padding-top: .5rem;
+}
+
+.timeline-content:after {
+    display: table;
+    clear: both;
+    content: '';
+}
+
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+*,
+::after,
+::before {
+    box-sizing: border-box;
+}
+
+i-bell-55::before {
+    content: "\ea0e";
+}
+
+.badge-success {
+    color: #1aae6f;
+    background-color: #b0eed3;
+}
+
+.swiper-container {
+    width: 99%;
+    height: 100%;
+}
+
+.swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+    /* Center slide text vertically */
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    -webkit-align-items: center;
+    align-items: center;
+}
+
+.containerTime {
+    max-height: 750px;
+    overflow-y: scroll;
+    margin-bottom: 30px;
+}
+
+.borderImg {
+    border: 1px solid royalblue;
+}
+
+.msgLength {
+    position: relative;
+    left: 85%;
+}
+
+.list-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 0;
+    padding-left: 0;
+}
+
+.list-group-flush .list-group-item:first-child {
+    border-top-width: 0;
+}
+
+.list-group-flush .list-group-item {
+    border-right-width: 0;
+    border-left-width: 0;
+    border-radius: 0;
+}
+
+.checklist-item-success:before {
+    background-color: #2dce89 !important;
+}
+
+.checklist-item-warning:before {
+    background-color: #fb6340 !important;
+}
+
+.checklist-item-info:before {
+    background-color: #11cdef !important;
+}
+
+.checklist-item-danger:before {
+    background-color: #f5365c !important;
+}
+
+.checklist-item:before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 3px;
+    height: 100%;
+    content: '';
+    border-radius: 8px;
+    background-color: #5e72e4;
+}
+
+.checklist-item {
+    position: relative;
+    display: flex;
+    padding-left: .75rem;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+}
+
+.subject-border {
+    padding: 20px;
+    border: 1px solid #11cdef;
+}
+
+.card-pd {
+    padding: 15px;
+}
+
+.btnOpt {
+    position: relative;
+}
+
+.btnDownLicense {
+    position: relative;
+    bottom: -5px;
+    right: -100%;
+}
+
+.spinReniec {
+    position: relative;
+    right: -87.5%;
+    top: -35px;
+}

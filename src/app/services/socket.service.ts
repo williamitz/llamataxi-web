@@ -45,9 +45,9 @@ export class SocketService {
 
   onLoadUserSocket() {
     const dataUser = this.storageSvc.onGetItem('dataUser', true);
-    this.userSocket.pkUser = dataUser.pkUser;
-    this.userSocket.userName = dataUser.userName;
-    this.userSocket.role = dataUser.role;
+    this.userSocket.pkUser = dataUser.pkUser || 0;
+    this.userSocket.userName = dataUser.userName || '';
+    this.userSocket.role = dataUser.role || '';
   }
 
   onSingUserSocket(): Promise<IResponse> {
@@ -55,6 +55,8 @@ export class SocketService {
 
     return new Promise( (resolve, reject) => {
       this.onEmit( 'sing-user', this.userSocket, ( res: IResponse ) => {
+
+        console.log('respuesta sing socket', res);
         if (!res.ok) {
           reject( res.error );
         }
@@ -62,6 +64,22 @@ export class SocketService {
       });
     });
 
+  }
+
+  onLogOutSocket(): Promise<IResponse> {
+    this.onLoadUserSocket();
+
+    return new Promise( (resolve, reject) => {
+
+      this.onEmit('logout-user', this.userSocket, ( res: IResponse ) => {
+        console.log('respuesta logout socket ', res);
+        if (!res.ok) {
+          reject( res.error );
+        }
+        resolve( res );
+      });
+
+    });
   }
 
 }

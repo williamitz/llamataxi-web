@@ -22,6 +22,11 @@ import { VehicleDriverModel } from '../../../models/vehicleDriver.model';
 import * as moment from 'moment';
 import { IColor } from '../../../interfaces/vehicleDriver.interface';
 import { VehicleDriverService } from '../../../services/vehicleDriver.service';
+import { DriverProfileModel } from 'src/app/models/user.model';
+import { INationality } from '../../../interfaces/nationality.interface';
+import { ITypeDocument } from '../../../interfaces/type-document.interface';
+import { UserService } from '../../../services/user.service';
+import { IRespReniec } from '../../../interfaces/reniec.interface';
 
 const URI_API = environment.URL_SERVER;
 declare var pdfjsLib: any;
@@ -68,8 +73,10 @@ export class ProfileDriverComponent implements OnInit {
   bodyMessage: MessageModel;
   bodyResponse: MessageModel;
   bodyVehicleVerif: VehicleVerifModel;
+  bodyDriver: DriverProfileModel;
   criminalIsPdf = false;
   policialIsPdf = false;
+  fileProfile: File;
 
   dataProfile: IProfileDriver = {
     img: ''
@@ -106,14 +113,30 @@ export class ProfileDriverComponent implements OnInit {
   loadingResponse = false;
   loadingVehicle = false;
   loadingDriver = false;
+  loadingReniec = false;
+  loadingImg = false;
 
-  replaceFile: File;
+  replaceFile: File = null;
   bodyVehicle: VehicleDriverModel;
   filesValid = ['PNG', 'JPG', 'JPEG', 'PDF'];
   imgValid = ['PNG', 'JPG', 'JPEG'];
   titleModalVehicle = 'Nuevo vehículo';
   textBtnModalVehicle = 'Guardar';
   loadDataVehicle = false;
+  bodyDisabled = {
+    status: true,
+    observation: ''
+  };
+  txtBtnDisabled = 'Deshabilitar';
+  actionDisabled = 'deshabilitada';
+  cssBtnDisabled = 'danger';
+  iconBtnDisabled = 'fa-user-times'; // fa-user-chec
+  loadingDisabled = false;
+
+  dataNationality: INationality[] = [];
+  longitudeTD = 8;
+
+  dataTypeDoc: ITypeDocument[] = [];
   /**
    * 'LICENSE'
    * ,'PHOTO_CHECK'
@@ -127,11 +150,12 @@ export class ProfileDriverComponent implements OnInit {
    */
 
   // tslint:disable-next-line: max-line-length
-  constructor(private router: ActivatedRoute, private driverSvc: DriverService, private storage: StorageService, private msgSvc: MessageService, private brandSvc: BrandService, private vehicleSvc: VehicleDriverService) { }
+  constructor(private router: ActivatedRoute, private driverSvc: DriverService, private storage: StorageService, private msgSvc: MessageService, private brandSvc: BrandService, private vehicleSvc: VehicleDriverService, private userSvc: UserService) { }
 
   ngOnInit() {
     // $('.toot').trigger('tooltip');
     this.storage.onLoadToken();
+    this.storage.onLoadData();
     this.token = `?token=${ this.storage.token }`;
     this.dataUser = this.storage.onGetItem('dataUser', true);
     this.pkDriver = Number( this.router.snapshot.params.id ) || 0;
@@ -141,9 +165,12 @@ export class ProfileDriverComponent implements OnInit {
     this.bodyResponse = new MessageModel( true );
     this.bodyVehicleVerif = new VehicleVerifModel();
     this.bodyDriverVerif = new DriverVerif();
-    this.onGetMessages();
+    this.bodyDriver = new DriverProfileModel();
+
     this.onGetCategory();
     this.onLoadYears();
+    this.onLoadTypeDoc();
+    this.onLoadNationality();
     // console.log(this.router.snapshot.data);
   }
 
@@ -153,7 +180,28 @@ export class ProfileDriverComponent implements OnInit {
     }
   }
 
+  onChangeDocument() {
+
+    if ( this.bodyDriver.fkTypeDocument === 1 && this.bodyDriver.document.length === 8 ) {
+      this.loadingReniec = true;
+      this.userSvc.onGetReniec( this.bodyDriver.document ).subscribe( (res: IRespReniec) => {
+        this.loadingReniec = false;
+        if (!res) {
+          console.log(' no encontrado');
+          this.bodyDriver.verifyReniec = false;
+          return;
+        }
+        console.log(res);
+        this.bodyDriver.verifyReniec = true;
+        this.bodyDriver.name = res.nombres,
+        this.bodyDriver.surname = `${ res.apellido_paterno } ${ res.apellido_materno }`;
+      });
+    }
+  }
+
   onGetProfile( id: number ) {
+    Swal.fire({title: 'Espere...'});
+    Swal.showLoading();
     this.driverSvc.onGetProfile( id ).subscribe( (res: any) => {
       if (!res.ok) {
         throw new Error( res.error );
@@ -162,8 +210,52 @@ export class ProfileDriverComponent implements OnInit {
       this.dataProfile = res.data.profile;
       this.vehicles = res.data.vehicles;
       this.bodyVehicle.fkPerson = this.dataProfile.pkPerson || 0;
+      // this.bodyDriver.img = URI_API + `/User/Img/Get/${ this.dataProfile.img }${ this.token }`;
+      this.txtBtnDisabled = this.dataProfile.statusRegister ? 'Deshabilitar' : 'Habilitar';
+      this.cssBtnDisabled = this.dataProfile.statusRegister ? 'danger' : 'success';
+      this.iconBtnDisabled = this.dataProfile.statusRegister ? 'fa-user-times' : 'fa-user-check';
       this.onShowPreviewPdf();
+      Swal.close();
+      this.onGetMessages();
     });
+  }
+
+  onDisabledUser() {
+    this.bodyDisabled.status = !this.dataProfile.statusRegister;
+    this.actionDisabled = this.bodyDisabled.status ? 'habilitado' : 'des-habilitado';
+    this.bodyDisabled.observation = `Conductor ${ this.actionDisabled } por ${ this.storage.dataUser.nameComplete }`;
+  }
+
+  onSubmitDeleteUser() {
+    this.loadingDisabled = true;
+    // tslint:disable-next-line: max-line-length
+    this.driverSvc.onDeleteDriver( this.dataProfile.pkUser, this.dataProfile.pkDriver, this.bodyDisabled.status, this.bodyDisabled.observation ).subscribe( (res) => {
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      this.loadingDisabled = false;
+      if (res.showError === 0) {
+        this.dataProfile.statusRegister = !this.dataProfile.statusRegister;
+        this.txtBtnDisabled = this.dataProfile.statusRegister ? 'Deshabilitar' : 'Habilitar';
+        this.cssBtnDisabled = this.dataProfile.statusRegister ? 'danger' : 'success';
+        this.iconBtnDisabled = this.dataProfile.statusRegister ? 'fa-user-times' : 'fa-user-check';
+      }
+
+      this.onShowAlert( res.showError === 0 ? 'success' : 'error', this.onGetErrorDelete( res.showError ) );
+      $('#btnCloseConfirmUser').trigger('click');
+    });
+  }
+
+  onGetErrorDelete( showError: number ) {
+    const arrError = showError === 0 ? [`Conductor ${ this.actionDisabled } con éxito`] : ['Error'];
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 1) {
+      arrError.push('no se encontró registro del conductors');
+    }
+
+    return arrError.join(', ');
   }
 
   onGetCategory() {
@@ -173,7 +265,6 @@ export class ProfileDriverComponent implements OnInit {
       }
 
       this.dataCategory = res.data;
-      console.log(res);
     });
   }
 
@@ -184,7 +275,6 @@ export class ProfileDriverComponent implements OnInit {
       }
 
       this.dataBrand = res.data;
-      console.log(res);
     });
   }
 
@@ -195,19 +285,17 @@ export class ProfileDriverComponent implements OnInit {
       }
 
       this.dataModel = res.data;
-      console.log(res);
     });
 
   }
 
   onGetMessages() {
-    this.msgSvc.onGetMessages( this.pkDriver, 1, 10, true ).subscribe( (res) => {
+    this.msgSvc.onGetMessages( this.dataProfile.pkUser, 1, 10, true ).subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
 
       this.dataMsg = res.data;
-      console.log(res);
     });
   }
 
@@ -216,13 +304,12 @@ export class ProfileDriverComponent implements OnInit {
     this.policialIsPdf = false;
     if (!this.dataProfile.isEmployee) {
 
-      const arrCriminal: string[] = this.dataProfile.imgCriminalRecord.split('.');
+      const arrCriminal: string[] = !this.dataProfile.imgCriminalRecord ? [''] :  this.dataProfile.imgCriminalRecord.split('.');
       const extCriminal = arrCriminal[ arrCriminal.length - 1 ];
 
-      const arrPolicial: string[] = this.dataProfile.imgPolicialRecord.split('.');
+      const arrPolicial: string[] = !this.dataProfile.imgPolicialRecord ? [''] : this.dataProfile.imgPolicialRecord.split('.');
       const extPolicial = arrPolicial[ arrPolicial.length - 1 ];
-      console.log(arrPolicial);
-      console.log(this.dataProfile.imgPolicialRecord);
+
       if (extCriminal.toUpperCase() === 'PDF') {
         this.criminalIsPdf = true;
 
@@ -249,7 +336,7 @@ export class ProfileDriverComponent implements OnInit {
         });
 
       }
-      console.log(extPolicial.toUpperCase());
+
 
       if (extPolicial.toUpperCase() === 'PDF') {
         this.policialIsPdf = true;
@@ -407,8 +494,28 @@ export class ProfileDriverComponent implements OnInit {
     return arrError.join(', ');
   }
 
+  onGetErrorDriverPF( showError: number ) {
+    const arrError = showError === 0 ? ['Perfil actualizado con éxito'] : ['Error'];
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 1) {
+      arrError.push('no se encontró registro del conductor');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 2) {
+      arrError.push('este usuario no es un conductor');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 4) {
+      arrError.push('ya existe un usuario con este email');
+    }
+
+    return arrError.join(', ');
+  }
+
   onShowViewMsg( pkMessage: number ) {
-    console.log('mensaje', pkMessage);
     this.dataViewMsg = this.dataMsg.find( msg => msg.pkMessage === pkMessage );
     this.bodyResponse.pkMessage = this.dataViewMsg.pkMessage;
     this.bodyResponse.fkUserReceptor = this.dataProfile.pkUser;
@@ -418,14 +525,14 @@ export class ProfileDriverComponent implements OnInit {
       }
 
       this.dataMsgRes = res.data;
-      console.log(res);
+
     });
     $('#btnShowViewMsgModal').trigger('click');
   }
 
   onSubmitMsgRes(frmMsgRes: NgForm) {
     if (frmMsgRes.valid) {
-      console.log(this.bodyResponse);
+
       this.loadingResponse = true;
 
       this.msgSvc.onAddMsgRes( this.bodyResponse ).subscribe( (res) => {
@@ -456,7 +563,7 @@ export class ProfileDriverComponent implements OnInit {
 
         this.newResponse = false;
         this.bodyResponse.message = '';
-        console.log(res);
+
       });
     }
   }
@@ -591,6 +698,7 @@ export class ProfileDriverComponent implements OnInit {
     reader.readAsDataURL(this.replaceFile);
   }
 
+
   onShowVehicleVerif( data: IVehicle ) {
     if (data.verified) {
       return;
@@ -678,7 +786,7 @@ export class ProfileDriverComponent implements OnInit {
 
   onSubmitVehicle(frm: NgForm) {
     if (frm.valid) {
-      console.log(this.bodyVehicle);
+
       this.loadingVehicle = true;
       if (!this.loadDataVehicle) {
 
@@ -735,7 +843,6 @@ export class ProfileDriverComponent implements OnInit {
       throw new Error('No se encontró vehículo');
     }
 
-
     this.bodyVehicle.fkDriver = this.pkDriver;
     this.bodyVehicle.fkPerson = this.dataProfile.pkPerson;
     this.bodyVehicle.pkVehicle = id;
@@ -773,8 +880,6 @@ export class ProfileDriverComponent implements OnInit {
     this.bodyVehicle.pkVehicle = findedV.pkVehicle;
     this.bodyVehicle.fkDriver = this.pkDriver;
     this.bodyVehicle.statusRegister = !findedV.statusRegister;
-
-    console.log('abrir confirmación eliminar vehiculo');
   }
 
   onDeleteVehicle() {
@@ -833,6 +938,131 @@ export class ProfileDriverComponent implements OnInit {
     }
 
     return arrError.join(', ');
+  }
+
+  onEditProfile() {
+    this.bodyDriver.pkDriver = this.pkDriver;
+    this.bodyDriver.pkUser = this.dataProfile.pkUser;
+    this.bodyDriver.pkPerson = this.dataProfile.pkPerson;
+    this.bodyDriver.img = URI_API + `/User/Img/Get/${ this.dataProfile.img }${ this.token }`;
+    this.bodyDriver.fkTypeDocument = this.dataProfile.fkTypeDocument;
+    this.bodyDriver.fkNationality = this.dataProfile.fkNationality;
+    this.bodyDriver.document = this.dataProfile.document;
+    this.bodyDriver.birthDate = this.dataProfile.brithDate;
+    this.bodyDriver.name = this.dataProfile.name;
+    this.bodyDriver.surname = this.dataProfile.surname;
+    this.bodyDriver.email = this.dataProfile.email;
+    this.bodyDriver.phone = this.dataProfile.phone;
+    this.bodyDriver.sex = this.dataProfile.sex || 'M';
+
+    // console.table({
+    //   'expiration date': this.dataProfile.dateLicenseExpiration.replace('T', ' '),
+    //   'moment date': moment( this.dataProfile.dateLicenseExpiration.replace('T', ' ') ).format('MM-DD-YYYY'),
+    // });
+    this.bodyDriver.dateLicenseExpiration = moment( this.dataProfile.dateLicenseExpiration.replace('T', ' ') ).format('YYYY-MM-DD') || '';
+    this.bodyDriver.isEmployee = this.dataProfile.isEmployee;
+  }
+
+  onChangeFileProfile(file: FileList) {
+
+    this.fileProfile = file.item(0);
+    const nombre = (file.item(0).name).toUpperCase();
+    const arrNombre = nombre.split('.');
+    const extension =  arrNombre[ arrNombre.length - 1 ] ;
+    let msg = '';
+    let verifyFile = true;
+    console.log('ext img', extension);
+    if ( !this.filesValid.includes( extension ) ) {
+        msg = `Solo se aceptan archivos de tipo ${ this.filesValid.join(', ') }`;
+        verifyFile = false;
+    }
+
+    if ( (file.item(0).size / 1000000 ) > 1 ) {
+      msg = 'Solo se aceptar archivos con un tamaño máximo de 1 mb';
+      verifyFile = false;
+    }
+
+    if (!verifyFile) {
+      this.onShowAlert('warning', 'Alerta', msg);
+      return;
+    }
+
+    console.log('cambiando imagen', file.item(0));
+    this.loadingImg = true;
+    const reader = new FileReader();
+    reader.onload = (event: any) => {
+      this.bodyDriver.img = event.target.result;
+      this.loadingImg = false;
+    };
+    reader.readAsDataURL(this.fileProfile);
+  }
+
+
+  onSubmitEditProfile( frm: NgForm ) {
+    if (frm.valid) {
+      this.loadingDriver = true;
+
+      this.driverSvc.onUpdateProfile( this.bodyDriver ).subscribe( (res) => {
+        if (!res.ok) {
+          throw new Error( res.error );
+        }
+
+        this.onShowAlert( res.showError === 0 ? 'success' : 'error',
+                        'Mensaje al usuario',
+                        this.onGetErrorDriverPF( res.showError ) );
+        if (res.showError !== 0) {
+          return;
+        }
+
+        if (this.fileProfile) {
+          this.userSvc.onUpload( this.bodyDriver.pkUser, this.fileProfile ).subscribe( (resUpload) => {
+            if (!resUpload.ok) {
+              throw new Error( resUpload.error );
+            }
+
+            this.loadingDriver = false;
+            this.dataProfile.img = resUpload.data[0].nameFile || '';
+            this.fileProfile = null;
+          });
+        }
+        this.loadingDriver = false;
+        this.onGetProfile( this.pkDriver );
+        this.fileProfile = null;
+        $('#btnCloseModalProfile').trigger('click');
+
+      });
+    }
+  }
+
+  onLoadNationality() {
+    this.userSvc.onGetNationalityAll().subscribe( (res) => {
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      this.dataNationality = res.data;
+
+    });
+  }
+
+  onLoadTypeDoc() {
+    this.userSvc.onGetTypeDocumentAll().subscribe( (res) => {
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      this.dataTypeDoc = res.data;
+
+    });
+  }
+
+  onChangeTypeDoc( fkTypeDoc: number ) {
+    const finded = this.dataTypeDoc.find( td => Number( td.pkTypeDocument ) === Number( fkTypeDoc ) );
+    if (!finded) {
+      throw new Error( 'No se encontró registro ' );
+    }
+
+    this.longitudeTD = finded.longitude;
   }
 
 }

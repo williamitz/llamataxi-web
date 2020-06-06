@@ -39,7 +39,7 @@ export class UserService {
   }
 
   onGetTypeDocumentAll() {
-    // this.storage.onLoadToken();
+    this.storage.onLoadToken();
     return this.http.get<IResponse>( URI_API + `/typeDocument/GetAll`, { headers: { Authorization: this.storage.token } } );
   }
 
@@ -54,9 +54,27 @@ export class UserService {
   }
 
   onUpdateProfile( body: UserProfileModel ) {
+    body.img = '';
     this.storage.onLoadToken();
 
     return this.http.put<IResponse>( URI_API + '/User/Profile/Update', body, { headers: { Authorization: this.storage.token } } )
+  }
+
+  onDeleteUser( pkUser: number, status: boolean, observation: string ) {
+    this.storage.onLoadToken();
+    const params = `?observation=${ observation }`;
+    // tslint:disable-next-line: max-line-length
+    return this.http.delete<IResponse>( URI_API + `/User/${ pkUser }/${ status }${ params }` , { headers: { Authorization: this.storage.token } } );
+  }
+
+  onUpload( pkUser: number, file: File ) {
+    this.storage.onLoadToken();
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // tslint:disable-next-line: max-line-length
+    return this.http.put<IResponse>(URI_API + `/upload/user/${ pkUser }/`, formData, {headers: { Authorization: this.storage.token } });
+
   }
 
 }

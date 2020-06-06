@@ -6,7 +6,7 @@
                 <div class="col-lg-3 order-lg-2">
                     <div class="card-profile-image">
                         <a href="#">
-                            <img [src]="pathImg" class="rounded-circle">
+                            <img [src]="pathImg + dataProfile.img + '?token=' + token" class="rounded-circle">
                         </a>
                     </div>
                 </div>
@@ -14,7 +14,9 @@
             <div class="card-header text-center border-0 pt-8 pt-md-4 pb-0 pb-md-4">
                 <div class="d-flex justify-content-between">
                     <a href="#" class="btn btn-sm btn-info  mr-4 ">Connect</a>
-                    <a href="#" class="btn btn-sm btn-default float-right">Message</a>
+                    <button class="btn btn-sm btn-default float-right" data-toggle="modal" data-target="#modalMessage">
+                      Mensaje
+                    </button>
                 </div>
             </div>
             <div class="card-body pt-0">
@@ -50,7 +52,51 @@
                     <div>
                         <i class="fas fa-phone"></i> {{ dataProfile.phone }}
                     </div>
+                    <hr>
+                    <div>
+                        <button class="btn btn-{{ cssBtnDisabled }}" data-toggle="modal" data-target="#modalConfirmUser" (click)="onDisabledUser()">
+                        {{ txtBtnDisabled }}
+                        <i class="fas {{ iconBtnDisabled }}"></i>
+                      </button>
+                    </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h4>Mensajería</h4>
+            </div>
+            <div class="card-body">
+                <ul class="list-group list-group-flush" data-toggle="checklist">
+
+                    <li *ngFor="let msg of dataMsg" class="checklist-entry list-group-item flex-column align-items-start py-4 px-4" style="cursor: pointer;" (click)="onShowViewMsg( msg.pkMessage )">
+                        <!--  -->
+
+                        <div class="checklist-item checklist-item-checked">
+                            <div class="checklist-info">
+                                <div class="row">
+                                    <div class="col-3">
+                                        <img class="avatar avatar-64 img-circle" [src]="pathImg + msg.imgEmisor + '?token=' + token" />
+                                    </div>
+                                    <div class="col-9">
+                                        <h5 class="checklist-title mb-0">{{ msg.subject }}</h5>
+                                    </div>
+                                </div>
+
+                                <small>{{ msg.dateRegister | moment }}</small>
+                            </div>
+                            <div>
+                                <!-- <div class="custom-control custom-checkbox custom-checkbox-success">
+                                  <input class="custom-control-input" id="chk-msg-{{ msg.pkMessage }}" type="checkbox" checked="">
+                                  <label class="custom-control-label" for="chk-msg-{{ msg.pkMessage }}"></label>
+                              </div> -->
+                                <span *ngIf="msg.totalResponses > 0" class="badge badge-pill badge-success">+{{ msg.totalResponses }}</span>
+                            </div>
+                        </div>
+                    </li>
+
+                </ul>
             </div>
         </div>
     </div>
@@ -70,79 +116,126 @@
             </div>
             <div class="card-body">
                 <form>
-                    <h6 class="heading-small text-muted mb-4">User information</h6>
+                    <h6 class="heading-small text-muted mb-4">Datos personales</h6>
                     <div class="pl-lg-4">
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-5">
                                 <div class="form-group">
-                                    <label class="form-control-label">Documento</label>
-                                    <input type="text" class="form-control" placeholder="Documento" [value]="dataProfile.nameDocument" readonly>
+                                    <label>Documento</label>
+                                    <div class="form-control">
+                                        {{ dataProfile.prefix }}
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-lg-6">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-email">Nro documento</label>
-                                    <input type="text" id="input-email" class="form-control" placeholder="jesse@example.com" [value]="dataProfile.document">
+                            <div class="col-7">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Nro documento</label>
+                                            <div class="form-control">
+                                                {{ dataProfile.document }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Verif. reniec</label>
+                                            <div class="form-control">
+                                                {{ dataProfile.verifyReniec | yesno }}
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <div class="form-group">
+                                    <label>F. nacimiento</label>
+                                    <div class="form-control">
+                                        {{ dataProfile.brithDate }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Sexo</label>
+                                            <div class="form-control">
+                                                {{ dataProfile.sex | sex }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="form-group">
+                                            <label class="form-control-label">Edad</label>
+                                            <div class="form-control">
+                                                {{ dataProfile.yearsOld }}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="row">
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-first-name">First name</label>
-                                    <input type="text" id="input-first-name" class="form-control" placeholder="First name" value="Lucky">
+                                    <label class="form-control-label">Nombres</label>
+                                    <div class="form-control">
+                                        {{ dataProfile.name }}
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-6">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-last-name">Last name</label>
-                                    <input type="text" id="input-last-name" class="form-control" placeholder="Last name" value="Jesse">
+                                    <label class="form-control-label">Apellidos</label>
+                                    <div class="form-control">
+                                        {{ dataProfile.surname }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <hr class="my-4" />
                     <!-- Address -->
-                    <h6 class="heading-small text-muted mb-4">Contact information</h6>
+                    <h6 class="heading-small text-muted mb-4">Información de contacto</h6>
                     <div class="pl-lg-4">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-address">Address</label>
-                                    <input id="input-address" class="form-control" placeholder="Home Address" value="Bld Mihail Kogalniceanu, nr. 8 Bl 1, Sc 1, Ap 09" type="text">
+                                    <label class="form-control-label" for="input-address">Correo electrónico</label>
+                                    <div class="form-control">
+                                        {{ dataProfile.email }}
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-city">City</label>
-                                    <input type="text" id="input-city" class="form-control" placeholder="City" value="New York">
+                                    <label class="form-control-label" for="input-city">Tel&eacute;fono</label>
+                                    <div class="form-control">
+                                        {{ dataProfile.prefixPhone }} {{ dataProfile.phone }}
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-4">
                                 <div class="form-group">
-                                    <label class="form-control-label" for="input-country">Country</label>
-                                    <input type="text" id="input-country" class="form-control" placeholder="Country" value="United States">
+                                    <label class="form-control-label" for="input-country">Nacionalidad</label>
+                                    <div class="form-control">
+                                        {{ dataProfile.nameCountry }}
+                                    </div>
                                 </div>
                             </div>
                             <div class="col-lg-4">
-                                <div class="form-group">
-                                    <label class="form-control-label" for="input-country">Postal code</label>
-                                    <input type="number" id="input-postal-code" class="form-control" placeholder="Postal code">
-                                </div>
+
                             </div>
                         </div>
                     </div>
-                    <hr class="my-4" />
-                    <!-- Description -->
-                    <h6 class="heading-small text-muted mb-4">About me</h6>
-                    <div class="pl-lg-4">
-                        <div class="form-group">
-                            <label class="form-control-label">About Me</label>
-                            <textarea rows="4" class="form-control" placeholder="A few words about you ...">A beautiful Dashboard for Bootstrap 4. It is Free and Open Source.</textarea>
-                        </div>
-                    </div>
+
                 </form>
             </div>
         </div>
@@ -152,7 +245,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalLabel">Editar perfil</h5>
@@ -162,37 +255,211 @@
             </div>
             <div class="modal-body">
                 <form #frmProfileUser="ngForm">
-
                     <div class="row">
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="cbxTypeDoc">Tipo Documento</label>
-                                <select class="form-control" id="cbxTypeDoc" name="typeDoc" #typedoc="ngModel" [(ngModel)]="bodyUser.fkTypeDocument" [ngClass]="{'is-invalid': typedoc.errors?.required && typedoc.touched,
-                      'is-valid': !typedoc.errors?.required && typedoc.touched}" required>
-                            <option value="null" disabled selected>--Seleccione--</option>
-                            <option [value]="td.pkTypeDocument" *ngFor="let td of dataTypeDoc">
-                              {{ td.prefix }}
-                            </option>
-                          </select>
+                        <div class="col-9">
+                            <div class="row">
+                                <div class="col-7">
 
-                                <span *ngIf="typedoc.errors?.required && typedoc.touched">
-                            <small class="text-danger">*Requerido</small>
-                          </span>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="cbxTypeDoc">Tipo Documento</label>
+                                                <select class="form-control" id="cbxTypeDoc" name="typeDoc" #typedoc="ngModel" [(ngModel)]="bodyUser.fkTypeDocument" [ngClass]="{'is-invalid': typedoc.errors?.required && typedoc.touched,
+                                            'is-valid': !typedoc.errors?.required && typedoc.touched}" required (change)="onChangeTypeDoc( this.bodyUser.fkTypeDocument )">
+                                            <option value="null" disabled selected>--Seleccione--</option>
+                                            <option [value]="td.pkTypeDocument" *ngFor="let td of dataTypeDoc">
+                                              {{ td.prefix }}
+                                            </option>
+                                          </select>
+
+                                                <span *ngIf="typedoc.errors?.required && typedoc.touched">
+                                            <small class="text-danger">*Requerido</small>
+                                          </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="ndoc">Nro Documento</label>
+                                                <input type="text" id="ndoc" name="ndoc" #ndoc="ngModel" [(ngModel)]="bodyUser.document" class="form-control" (change)="onChangeDocument()" [ngClass]="{'is-invalid': (ndoc.errors?.required || ndoc.errors?.minlength) && ndoc.touched,
+                                          'is-valid': !ndoc.errors?.required && !ndoc.errors?.minlength && ndoc.touched}" required minlength="{{ longitudeTD }}">
+                                                <span *ngIf="loadingReniec" class="spinReniec text-primary">
+                                            <i class="fa fa-spinner fa-pulse"></i>
+                                          </span>
+                                                <span *ngIf="ndoc.errors?.required && ndoc.touched">
+                                            <small class="text-danger">*Requerido</small>
+                                          </span>
+
+                                                <span *ngIf="ndoc.errors?.minlength && ndoc.touched">
+                                            <small class="text-danger">*Minimo {{ longitudeTD }} caracteres</small>
+                                          </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-5">
+                                    <div class="form-group">
+
+                                        <label class="form-control-label"> Nacionalidad </label>
+                                        <!-- (change)="onChangeCountry($event)" -->
+                                        <ng-select [items]="dataNationality" bindValue="pkNationality" bindLabel="nameCountry" [(ngModel)]="bodyUser.fkNationality" name="country" #country="ngModel" required="true" class=" is-invalid" [ngClass]="{
+                                    'is-invalid': country.errors?.required ,
+                                    'is-valid': !country.errors?.required
+                                  }">
+
+                                        </ng-select>
+                                        <span *ngIf="country.errors?.required ">
+                                    <small class="text-danger">*Requerido</small>
+                                  </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-7">
+                                    <label>Nombres y apellidos</label>
+                                    <div class="row">
+
+                                        <div class="col-6">
+                                            <div class="form-group">
+
+                                                <input type="text" class="form-control" name="names" #names="ngModel" [(ngModel)]="bodyUser.name" placeholder="Nombres" required minlength="2" [ngClass]="{
+                                                'is-invalid': (names.errors?.required || names.errors?.minlength) && names.touched,
+                                                'is-valid': !names.errors?.required && !names.errors?.minlength && names.touched
+                                              }">
+
+                                                <span *ngIf="names.errors?.required && names.touched">
+                                                <small class="text-danger">*Requerido</small>
+                                              </span>
+
+                                                <span *ngIf="names.errors?.minlength && names.touched">
+                                                <small class="text-danger">*Minimo 2 caracteres</small>
+                                              </span>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" name="surname" #surname="ngModel" [(ngModel)]="bodyUser.surname" placeholder="Apellidos" required minlength="2" [ngClass]="{
+                                                'is-invalid': (surname.errors?.required || surname.errors?.minlength) && surname.touched,
+                                                'is-valid': !surname.errors?.required && !surname.errors?.minlength && surname.touched
+                                              }">
+
+                                                <span *ngIf="surname.errors?.required && surname.touched">
+                                                <small class="text-danger">*Requerido</small>
+                                              </span>
+
+                                                <span *ngIf="surname.errors?.minlength && surname.touched">
+                                                <small class="text-danger">*Minimo 2 caracteres</small>
+                                              </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="form-group">
+                                        <label for="">F. Nacimiento</label>
+                                        <input type="date" class="form-control" name="birthDate" [(ngModel)]="bodyUser.birthDate">
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-3">
+                            <div class="text-center">
+                                <h3>Foto</h3>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
+                            <div class="card">
+                                <!-- {{ bodyDriver.img }} -->
+                                <div class="card-profile-image">
+                                    <img [src]="bodyUser.img" class="rounded-circle" style="height: 150px;">
+                                </div>
+
+                            </div>
+                            <br>
+                            <br>
+                            <div class="text-center">
+                                <label class="btn btn-sm btn-primary " title="Subir" for="fileProfile">
+                            <i class="fa fa-upload"></i>
+                          </label>
+                                <input type="file" id="fileProfile" style="display: none;" (change)="onChangeFileProfile( $event.target.files )">
+                                <span *ngIf="loadingImg" class="text-primary">
+                              <i class="fa fa-spinner fa-pulse "></i>
+                            </span>
                             </div>
                         </div>
-                        <div class="col-6">
-                            <div class="form-group">
-                                <label for="ndoc">Nro Documento</label>
-                                <input type="text" id="ndoc" name="ndoc" #ndoc="ngModel" [(ngModel)]="bodyUser.document" class="form-control" [ngClass]="{'is-invalid': (ndoc.errors?.required || ndoc.errors?.minlength) && ndoc.touched,
-                          'is-valid': !ndoc.errors?.required && !ndoc.errors?.minlength && ndoc.touched}" required minlength="8">
+                    </div>
 
-                                <span *ngIf="ndoc.errors?.required && ndoc.touched">
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" name="email" placeholder="Correo electrónico" [(ngModel)]="bodyUser.email" #email="ngModel" pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" required [ngClass]="{
+                                  'is-invalid': (email.errors?.required || email.errors?.pattern ) && email.touched,
+                                  'is-valid': (!email.errors?.required || !email.errors?.pattern ) && email.touched
+                                }">
+
+                                <span *ngIf="email.errors?.required && email.touched">
                                   <small class="text-danger">*Requerido</small>
                                 </span>
 
-                                <span *ngIf="ndoc.errors?.minlength && ndoc.touched">
-                                  <small class="text-danger">*Minimo 8 caracteres</small>
+                                <span *ngIf="email.errors?.pattern && email.touched">
+                                  <small class="text-danger">*Email inv&aacute;lido</small>
                                 </span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <label class="form-control-label" for="">Tel&eacute;fono</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">
+                                  +51
+                                </span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="000000000" name="phone" [(ngModel)]="bodyUser.phone" #phone="ngModel" [ngClass]="{
+                                  'is-invalid': phone.errors?.required && phone.touched,
+                                  'is-valid': !phone.errors?.required && phone.touched
+                                }" required>
+
+                            </div>
+                            <span *ngIf="phone.errors?.required && phone.touched">
+                              <small class="text-danger">*Requerido</small>
+                            </span>
+                        </div>
+
+                        <div class="col-3">
+                            <div class="form-group">
+                                <label for="">Sexo</label>
+
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="rbtM" name="rbtSex" class="custom-control-input" [(ngModel)]="bodyUser.sex" value="M">
+                                    <label class="custom-control-label" for="rbtM">
+                                      Masculino
+                                    </label>
+                                </div>
+
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="rbtW" name="rbtSex" class="custom-control-input" [(ngModel)]="bodyUser.sex" value="F">
+                                    <label class="custom-control-label" for="rbtW">
+                                      Femenino
+                                    </label>
+                                </div>
+
+                                <div class="custom-control custom-radio">
+                                    <input type="radio" id="rbtO" name="rbtSex" class="custom-control-input" [(ngModel)]="bodyUser.sex" value="O">
+                                    <label class="custom-control-label" for="rbtO">
+                                      Otro
+                                    </label>
+                                </div>
+
                             </div>
                         </div>
                     </div>
@@ -204,8 +471,231 @@
                 <button type="button" id="btnCloseModalUser" class="btn btn-secondary" data-dismiss="modal">
                   Cerrar
                 </button>
-                <button type="button" class="btn btn-primary" [disabled]="frmProfileUser.invalid" (click)="onSubmitProfile( frmProfileUser )">
+                <button type="button" class="btn btn-primary" [disabled]="frmProfileUser.invalid || loading" (click)="onSubmitProfile( frmProfileUser )">
                   Guardar cambios
+                  <span *ngIf="loading" >
+                    <i class="fa fa-spinner fa-pulse"></i>
+                  </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal add message -->
+<div class="modal fade" id="modalMessage" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nuevo mensaje</h5>
+                <button type="button" id="btnCloseModalMg" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #frmMessage="ngForm">
+                    <div class="form-group">
+                        <label for="txtSubject">Asunto</label>
+                        <input id="txtSubject" type="text" class="form-control " name="subject" [(ngModel)]="bodyMessage.subject" #subject="ngModel" required maxlength="50" [ngClass]="{
+                        'is-invalid': (subject.errors?.required || subject.errors?.maxlength ) && subject.touched,
+                        'is-valid': !subject.errors?.required && !subject.errors?.maxlength && subject.touched }">
+                        <span *ngIf="subject.errors?.required && subject.touched">
+                        <small class="text-danger">*Requerido</small>
+                      </span>
+                        <span *ngIf="subject.errors?.maxlength && subject.touched">
+                        <small class="text-danger">*M&aacute;ximo 50 caracteres</small>
+                      </span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="txtMessage">
+                        Asunto
+                      </label>
+                        <span class="msgLength">
+                            <small>{{ bodyMessage.message.length }}</small>
+                          </span>
+                        <textarea id="txtMessage" class="form-control" rows="10" name="message" [(ngModel)]="bodyMessage.message" #message="ngModel" required maxlength="255" [ngClass]="{
+                        'is-invalid': (message.errors?.required || message.errors?.maxlength ) && message.touched,
+                        'is-valid': !message.errors?.required && !message.errors?.maxlength && message.touched }">
+                    </textarea>
+
+                        <span *ngIf="message.errors?.required && message.touched">
+                        <small class="text-danger">*Requerido</small>
+                      </span>
+                        <span *ngIf="message.errors?.maxlength && message.touched">
+                        <small class="text-danger">*M&aacute;ximo 255 caracteres</small>
+                      </span>
+
+
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" [disabled]="frmMessage.invalid || loading" (click)="onSendMessage(frmMessage)">
+
+                <i class="ni ni-send"></i>
+                Enviar
+                <span *ngIf="loading">
+                  <i class="fa fa-spinner fa-pulse"></i>
+                </span>
+              </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<button type="button" style="display: none;" class="btn btn-primary" data-toggle="modal" data-target="#modalViewMessage" id="btnShowViewMsgModal">
+  Launch demo modal
+</button>
+<div class="modal fade" id="modalViewMessage" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ dataViewMsg.subject }}</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-2">
+
+                        <img class="avatar avatar-64 img-circle" [src]="pathImg + dataViewMsg.imgEmisor + '?token=' + token" />
+
+                    </div>
+                    <div class="col-10">
+                        <div class="row">
+                            <div class="col-7">
+                                <span>
+                                    <h5>
+                                      De: {{ dataViewMsg.nameEmisor }}
+                                  </h5>
+                                  </span>
+
+                                <small>
+                                        {{ dataViewMsg.userEmisor }}
+                                        <br>
+                                        {{ dataViewMsg.dateRegister | moment }}
+                                  </small>
+                            </div>
+                            <div class="col-5 text-center">
+                                <button class="btn btn-sm btn-primary " (click)="newResponse = true">
+                                    Responder
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12 ">
+                        <div class="form-group subject-border">
+                            {{ dataViewMsg.message }}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <!--Accordion wrapper-->
+                        <div class="accordion md-accordion" id="accordionEx" role="tablist" aria-multiselectable="true">
+
+                            <!-- Accordion card -->
+                            <div class="card-pd" *ngFor="let msgRes of dataMsgRes">
+
+                                <!-- Card header -->
+                                <div class="" role="tab" id="headingOne1">
+                                    <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseRes{{ msgRes.pkMessage }}" aria-expanded="true">
+                                        <div class="row">
+                                            <div class="col-8">
+                                                <h5 class="mb-0">
+                                                    {{ msgRes.nameEmisor }} &nbsp;&nbsp;-&nbsp;&nbsp; {{ msgRes.dateRegister | moment }}
+                                                </h5>
+                                            </div>
+                                            <div class="col-4 text-right">
+                                                <i class="fas fa-angle-down rotate-icon"></i>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
+                                <!-- Card body -->
+                                <div id="collapseRes{{ msgRes.pkMessage }}" class="collapse show" role="tabpanel" aria-labelledby="headingOne1" data-parent="#accordionEx">
+                                    <div class="">
+                                        <p>
+                                            {{ msgRes.message }}
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                        <!-- Accordion wrapper -->
+                    </div>
+                </div>
+
+                <div *ngIf="newResponse" class="row">
+                    <div class="col-10">
+                        <form #frmMsgRes="ngForm">
+
+                            <textarea class="form-control" name="messageRes" [(ngModel)]="bodyResponse.message" #msgResponse="ngModel" rows="3" placeholder="Escriba una respuesta" required [ngClass]="{
+                          'is-invalid': msgResponse.errors?.required && msgResponse.touched,
+                          'is-valid': !msgResponse.errors?.required && msgResponse.touched
+                        }">
+                        </textarea>
+                            <span *ngIf="msgResponse.errors?.required && msgResponse.touched">
+                              <small class="text-danger">*Requerido</small>
+                            </span>
+                        </form>
+                    </div>
+                    <div class="col-2 text-center" style="padding-top: 10px;">
+                        <button class="btn btn-sm btn-danger" (click)="newResponse = false">
+                          Cerrar
+                        </button>
+                        <button class="btn btn-sm btn-success" style="margin-top: 10px;" [disabled]="frmMsgRes.invalid || loadingResponse" (click)="onSubmitMsgRes(frmMsgRes)">
+                          Enviar
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal confirm delete user -->
+<div class="modal fade" id="modalConfirmUser" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">¡Confirmaci&oacute;n!</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" id="btnCloseConfirmUser">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Est&aacute; seguro(a) de <strong class="text-primary"> {{ txtBtnDisabled.toLowerCase() }} </strong> a este usuario?
+                <br>
+                <br>
+                <div class="form-group">
+                    <label>Observaci&oacute;n</label>
+                    <textarea class="form-control" name="obsDisabled" [(ngModel)]="bodyDisabled.observation" rows="3"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-{{cssBtnDisabled}}" (click)="onSubmitDeleteUser()">
+                  {{ txtBtnDisabled }}
+                  <span *ngIf="loadingDisabled">
+                    <i class="fa fa-spinner fa-pulse "></i>
+                  </span>
                 </button>
             </div>
         </div>
