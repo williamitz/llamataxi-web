@@ -1,24 +1,24 @@
-import { Component, OnInit } from "@angular/core";
-import { JournalModel } from "src/app/models/journal.model";
-import { IJournal } from "src/app/interfaces/journal.interface";
-import { JournalService } from "src/app/services/journal.service";
-import { PagerService } from "src/app/services/pager.service";
-import { NgForm } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { JournalModel } from 'src/app/models/journal.model';
+import { IJournal } from 'src/app/interfaces/journal.interface';
+import { JournalService } from 'src/app/services/journal.service';
+import { PagerService } from 'src/app/services/pager.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: "app-Journal",
-  templateUrl: "./Journal.component.html",
+  selector: 'app-journal',
+  templateUrl: './Journal.component.html',
   styleUrls: [],
 })
 export class JournalComponent implements OnInit {
   bodyJournal: JournalModel;
   dataJournal: IJournal[] = [];
-  titleModal = "Nuevo Jornada";
-  textButton = "Guardar";
-  actionConfirm = "eliminar";
+  titleModal = 'Nuevo Jornada';
+  textButton = 'Guardar';
+  actionConfirm = 'eliminar';
   showInactive = false;
 
-  infoPagination = "Mostrando 0 de 0 registros.";
+  infoPagination = 'Mostrando 0 de 0 registros.';
   pagination = {
     currentPage: 0,
     pages: [],
@@ -72,13 +72,13 @@ export class JournalComponent implements OnInit {
           this.loading = false;
           const { css, icon, msg } = this.onGetError(res.showError);
           if (res.showError !== 0) {
-            this.onShowAlert("alertJournalModal", css, icon, msg);
+            this.onShowAlert('alertJournalModal', css, icon, msg);
             return;
           } else {
-            this.onShowAlert("alertJournal", css, icon, msg);
+            this.onShowAlert('alertJournal', css, icon, msg);
           }
 
-          $("#btnCloseModal").trigger("click");
+          $('#btnCloseModal').trigger('click');
           this.onGetJournal(1);
         });
 
@@ -94,13 +94,13 @@ export class JournalComponent implements OnInit {
         const { css, icon, msg } = this.onGetError(res.showError);
 
         if (res.showError !== 0) {
-          this.onShowAlert("alertJournalModal", css, icon, msg);
+          this.onShowAlert('alertJournalModal', css, icon, msg);
           return;
         } else {
-          this.onShowAlert("alertJournal", css, icon, msg);
+          this.onShowAlert('alertJournal', css, icon, msg);
         }
 
-        $("#btnCloseModal").trigger("click");
+        $('#btnCloseModal').trigger('click');
         this.onGetJournal(1);
       });
     }
@@ -111,7 +111,7 @@ export class JournalComponent implements OnInit {
       (Journal) => Journal.pkJournal === id
     );
     if (!finded) {
-      console.error("No se encontro registro!!!");
+      console.error('No se encontro registro!!!');
       return;
     }
 
@@ -121,8 +121,8 @@ export class JournalComponent implements OnInit {
     this.bodyJournal.hourStart = finded.hourStart;
     this.bodyJournal.hourEnd = finded.hourEnd;
 
-    this.titleModal = "Editar Jornada";
-    this.textButton = "Guardar cambios";
+    this.titleModal = 'Editar Jornada';
+    this.textButton = 'Guardar cambios';
 
     this.loadData = true;
   }
@@ -138,21 +138,21 @@ export class JournalComponent implements OnInit {
       this.loading = false;
       const { css, icon, msg } = this.onGetError(res.showError);
       const action = this.bodyJournal.statusRegister
-        ? "restaurado"
-        : "eliminado";
+        ? 'restaurado'
+        : 'eliminado';
       this.onShowAlert(
-        "alertJournal",
+        'alertJournal',
         css,
         icon,
         `Se ha ${action} una jornada con éxito`
       );
 
       if (res.showError !== 0) {
-        this.onShowAlert("alertJournalModal", css, icon, msg);
+        this.onShowAlert('alertJournalModal', css, icon, msg);
         return;
       }
 
-      $("#btnCloseConfirm").trigger("click");
+      $('#btnCloseConfirm').trigger('click');
       this.onGetJournal(1);
     });
   }
@@ -162,13 +162,13 @@ export class JournalComponent implements OnInit {
       (Journal) => Journal.pkJournal === id
     );
     if (!finded) {
-      console.error("No se encontro registro!!!");
+      console.error('No se encontro registro!!!');
       return;
     }
 
     this.bodyJournal.pkJournal = finded.pkJournal;
     this.bodyJournal.statusRegister = !finded.statusRegister;
-    this.actionConfirm = finded.statusRegister ? "eliminar" : "restaurar";
+    this.actionConfirm = finded.statusRegister ? 'eliminar' : 'restaurar';
   }
 
   onShowAlert(idAlert: string, css: string, icon: string, msg: string) {
@@ -184,35 +184,37 @@ export class JournalComponent implements OnInit {
   }
 
   onGetError(showError: number) {
-    const css = showError === 0 ? "success" : "danger";
-    const icon = showError === 0 ? "check" : "exclamation-circle";
-    const action = this.loadData ? "actualizado" : "creado";
+    const css = showError === 0 ? 'success' : 'danger';
+    const icon = showError === 0 ? 'check' : 'exclamation-circle';
+    const action = this.loadData ? 'actualizado' : 'creado';
     const arrErr =
       showError === 0
         ? [`Se ha ${action} una jornada con éxito`]
-        : ["Error, ya existe un registro"];
+        : ['Error, ya existe un registro'];
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 1) {
-      arrErr.push("con este nombre");
+      arrErr.push('con este nombre');
     }
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 2) {
-      arrErr.push("con este codigo");
-    }
-    if (showError & 4) {
-      arrErr.push("se encuentra inactivo");
+      arrErr.push('con este codigo');
     }
 
-    return { css, icon, msg: arrErr.join(", ") };
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 4) {
+      arrErr.push('se encuentra inactivo');
+    }
+
+    return { css, icon, msg: arrErr.join(', ') };
   }
 
   onReset() {
-    $("#frmJournal").trigger("reset");
+    $('#frmJournal').trigger('reset');
     this.bodyJournal.onReset();
-    this.titleModal = "Nueva jornada";
-    this.textButton = "Guardar";
+    this.titleModal = 'Nueva jornada';
+    this.textButton = 'Guardar';
     this.loadData = false;
   }
 }
