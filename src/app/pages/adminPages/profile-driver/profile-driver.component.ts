@@ -79,7 +79,8 @@ export class ProfileDriverComponent implements OnInit {
   fileProfile: File;
 
   dataProfile: IProfileDriver = {
-    img: ''
+    img: '',
+    pkUser: 0
   };
 
   loading = false;

@@ -245,6 +245,11 @@ export class AccountUserComponent implements OnInit, OnDestroy {
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 8) {
+      arrError.push('ya existe un usuario con el nro de documento y rol');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 16) {
       arrError = ['No se encontró tipo de documento'];
     }
 

@@ -4,7 +4,10 @@ var proxyConfig = [{
     target: 'https://api.reniec.cloud',
     secure: false,
     logLevel: "debug",
-    changeOrigin: true
+    changeOrigin: true,
+    // pathRewrite: {
+    //   "^/api": ""
+    // },
 }, {
     context: '/v1/*',
     target: 'https://onesignal.com/api',
@@ -25,4 +28,5 @@ function setupForCorporateProxy(proxyConfig) {
     return proxyConfig;
 }
 
-module.exports = setupForCorporateProxy(proxyConfig);
+// module.exports = setupForCorporateProxy(proxyConfig);
+module.exports = proxyConfig;

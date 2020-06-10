@@ -15,7 +15,7 @@ export interface IProfileDriver {
   sex?: string;
   isEmployee?: 0;
   dateLicenseExpiration?: string;
-  img?: string;
+  img: string;
   dateVerified?: string;
   fkUserVerified?: number;
   imgCriminalRecord?: string;

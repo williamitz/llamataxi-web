@@ -385,22 +385,25 @@
 
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-control-label" for="">Tel&eacute;fono</label>
-                            <div class="input-group mb-3">
-                                <div class="input-group-prepend">
-                                    <span class="input-group-text" id="basic-addon1">
+                            <div class="form-group">
+
+                                <label class="form-control-label" for="">Tel&eacute;fono</label>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1">
                                       {{ prefix }}
                                     </span>
-                                </div>
-                                <input type="text" class="form-control" placeholder="000000000" name="phone" [(ngModel)]="bodyUser.phone" #phone="ngModel" [ngClass]="{
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="000000000" name="phone" [(ngModel)]="bodyUser.phone" #phone="ngModel" [ngClass]="{
                                   'is-invalid': phone.errors?.required && phone.touched,
                                   'is-valid': !phone.errors?.required && phone.touched
                                 }" required>
 
+                                </div>
+                                <span *ngIf="phone.errors?.required && phone.touched">
+                              <small class="text-danger">*Requerido</small>
+                            </span>
                             </div>
-                            <span *ngIf="phone.errors?.required && phone.touched">
-                                <small class="text-danger">*Requerido</small>
-                              </span>
                         </div>
 
                         <div class="col-6">
@@ -412,6 +415,7 @@
                             <option value="" disabled> --Seleccione--</option>
                             <option value="ADMIN_ROLE" >Administrador</option>
                             <option value="ATTENTION_DOLE" >Atenci&oacute;n al cliente</option>
+                            <option value="DRIVER_ROLE" >Conductor</option>
                           </select>
 
                             <span *ngIf="role.errors?.required && role.touched">
@@ -419,6 +423,36 @@
                             </span>
                         </div>
 
+                    </div>
+
+                    <div class="row" *ngIf="bodyUser.role === 'DRIVER_ROLE'">
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-control-label" for="licenseExp">Fecha exp. licencia</label>
+                                <input type="date" id="licenseExp" class="form-control" placeholder="Día/Mes/Año" name="licenseExp" #licenseExp="ngModel" [(ngModel)]="bodyUser.dateLicenseExpiration" required [ngClass]="{'is-invalid': licenseExp.errors?.required && licenseExp.touched,
+                          'is-valid': !licenseExp.errors?.required && licenseExp.touched}">
+
+                                <span *ngIf="licenseExp.errors?.required && licenseExp.touched">
+                                <small class="text-danger">*Requerido</small>
+                              </span>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="form-group">
+                                <label class="form-control-label">Es taxista certificado</label>
+                                <br>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="rbtY" name="isEmployeeD" class="custom-control-input" [(ngModel)]="bodyUser.isEmployee" [value]="true">
+                                    <label class="custom-control-label" for="rbtY">
+                              S&iacute;
+                            </label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="rbtN" name="isEmployeeD" class="custom-control-input" [(ngModel)]="bodyUser.isEmployee" [value]="false">
+                                    <label class="custom-control-label" for="rbtN">No</label>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
                     <div class="row">

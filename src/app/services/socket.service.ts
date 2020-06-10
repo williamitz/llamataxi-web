@@ -45,9 +45,12 @@ export class SocketService {
 
   onLoadUserSocket() {
     const dataUser = this.storageSvc.onGetItem('dataUser', true);
-    this.userSocket.pkUser = dataUser.pkUser || 0;
-    this.userSocket.userName = dataUser.userName || '';
-    this.userSocket.role = dataUser.role || '';
+    if (dataUser) {
+
+      this.userSocket.pkUser = dataUser.pkUser || 0;
+      this.userSocket.userName = dataUser.userName || '';
+      this.userSocket.role = dataUser.role || '';
+    }
   }
 
   onSingUserSocket(): Promise<IResponse> {

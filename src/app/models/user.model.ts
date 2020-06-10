@@ -6,6 +6,11 @@ export class UserModel extends PersonModel {
   userPassword: string;
   userPassRepit: string;
 
+  // driver params
+
+  dateLicenseExpiration: string;
+  isEmployee: boolean;
+
   constructor() {
     super();
     this.pkPerson = 0;
@@ -26,6 +31,8 @@ export class UserModel extends PersonModel {
     this.userName = '';
     this.userPassword = '';
     this.userPassRepit = '';
+    this.dateLicenseExpiration = '';
+    this.isEmployee = false;
 
   }
 
@@ -48,6 +55,9 @@ export class UserModel extends PersonModel {
     this.userName = '';
     this.userPassword = '';
     this.userPassRepit = '';
+
+    this.dateLicenseExpiration = '';
+    this.isEmployee = false;
   }
 
 }
