@@ -22,9 +22,10 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     // this.title = this.router.data;
-    console.log(this.router.snapshot.data);
+    // console.log(this.router.snapshot.data);
     this.onListenNofify();
     this.onGetNotify();
+    this.io.onStatusSocket();
   }
 
   onTitle(title) {

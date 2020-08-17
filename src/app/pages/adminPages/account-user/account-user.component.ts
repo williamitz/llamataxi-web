@@ -12,6 +12,7 @@ import * as $ from 'jquery';
 import { Options } from 'select2';
 import { NgForm } from '@angular/forms';
 import { SocketService } from '../../../services/socket.service';
+import { IResponse } from 'src/app/interfaces/response.interface';
 
 const URI_API = environment.URL_SERVER;
 @Component({
@@ -46,6 +47,8 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   qUser = '';
   qEmail = '';
   qRole = '';
+  qVerified = 2;
+  qConnect = 2;
 
   dataNationality: INationality[] = [];
   dataTypeDoc: ITypeDocument[] = [];
@@ -102,7 +105,15 @@ export class AccountUserComponent implements OnInit, OnDestroy {
       this.showInactive = !this.showInactive;
     }
     this.loadingList = true;
-    this.userSvc.onGetUser( page, 10, this.qName, this.qEmail, this.qUser, this.qRole, this.showInactive ).subscribe( (res) => {
+    this.userSvc.onGetUser( page,
+                              10,
+                              this.qName,
+                              this.qEmail,
+                              this.qUser,
+                              this.qRole,
+                              this.qVerified,
+                              this.qConnect,
+                              this.showInactive ).subscribe( (res) => {
 
       if (!res.ok) {
         throw new Error( res.error );
@@ -131,17 +142,22 @@ export class AccountUserComponent implements OnInit, OnDestroy {
     console.log('cambio', this.bodyUser.document.length);
     if ( this.bodyUser.fkTypeDocument === 1 && this.bodyUser.document.length === 8 ) {
       this.loadingReniec = true;
-      this.userSvc.onGetReniec( this.bodyUser.document ).subscribe( (res: IRespReniec) => {
+      this.userSvc.onGetReniec( this.bodyUser.document ).subscribe( (res: IResponse) => {
         this.loadingReniec = false;
-        if (!res) {
+        if (!res.ok) {
           console.log(' no encontrado');
           this.bodyUser.verifyReniec = false;
           return;
         }
         console.log(res);
+        const dataReniec: any = res.data;
+        if (dataReniec.dni === '') {
+          this.bodyUser.verifyReniec = false;
+          return;
+        }
         this.bodyUser.verifyReniec = true;
-        this.bodyUser.name = res.nombres,
-        this.bodyUser.surname = `${ res.apellido_paterno } ${ res.apellido_materno }`;
+        this.bodyUser.name = dataReniec.nombres,
+        this.bodyUser.surname = `${ dataReniec.apellido_paterno } ${ dataReniec.apellido_materno }`;
       });
     }
   }

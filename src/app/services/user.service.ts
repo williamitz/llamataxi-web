@@ -14,7 +14,8 @@ export class UserService {
 
   constructor(private http: HttpClient, private storage: StorageService) { }
 
-  onGetUser( page: number, rowsForPage: number, qName = '', qEmail = '', qUser = '', qRole = '', showInactive: boolean ) {
+  // tslint:disable-next-line: max-line-length
+  onGetUser( page: number, rowsForPage: number, qName = '', qEmail = '', qUser = '', qRole = '', qVerified = 2, qConnect = 2, showInactive: boolean ) {
 
     showInactive = showInactive ? false : true;
 
@@ -24,6 +25,8 @@ export class UserService {
     params += `&qEmail=${qEmail}`;
     params += `&qUser=${qUser}`;
     params += `&qRole=${qRole}`;
+    params += `&qVerified=${qVerified}`;
+    params += `&qConnect=${qConnect}`;
     params += `&showInactive=${showInactive}`;
     this.storage.onLoadToken();
     return this.http.get<IResponse>( URI_API + `/User/Get${ params }`, { headers: { Authorization: this.storage.token } } );
@@ -44,7 +47,7 @@ export class UserService {
   }
 
   onGetReniec( document: string ) {
-    return this.http.get( `/dni/${ document }` );
+    return this.http.get( URI_API + `/dni?q=${ document }` );
   }
 
 

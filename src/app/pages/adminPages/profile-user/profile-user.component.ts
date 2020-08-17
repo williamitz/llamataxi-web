@@ -17,6 +17,7 @@ import { MessageModel } from '../../../models/message.model';
 import { SweetAlertIcon } from 'sweetalert2';
 import Swal from 'sweetalert2';
 import { OsService } from '../../../services/os.service';
+import { IResponse } from '../../../interfaces/response.interface';
 
 const URL_BAK = environment.URL_SERVER;
 
@@ -147,17 +148,24 @@ export class ProfileUserComponent implements OnInit, OnDestroy {
 
     if ( this.bodyUser.fkTypeDocument === 1 && this.bodyUser.document.length === 8 ) {
       this.loadingReniec = true;
-      this.userSvc.onGetReniec( this.bodyUser.document ).subscribe( (res: IRespReniec) => {
+      this.userSvc.onGetReniec( this.bodyUser.document ).subscribe( (res: IResponse) => {
         this.loadingReniec = false;
-        if (!res) {
+        if (!res.ok) {
           console.log(' no encontrado');
+          this.bodyUser.verifyReniec = false;
+          return;
+        }
+
+        const dataReniec: any = res.data;
+
+        if (dataReniec.dni === '') {
           this.bodyUser.verifyReniec = false;
           return;
         }
         console.log(res);
         this.bodyUser.verifyReniec = true;
-        this.bodyUser.name = res.nombres,
-        this.bodyUser.surname = `${ res.apellido_paterno } ${ res.apellido_materno }`;
+        this.bodyUser.name = dataReniec.nombres,
+        this.bodyUser.surname = `${ dataReniec.apellido_paterno } ${ dataReniec.apellido_materno }`;
       });
     }
   }

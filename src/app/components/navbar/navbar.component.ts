@@ -19,6 +19,7 @@ export class NavbarComponent implements OnInit {
   dataUser: any = {};
   urlImg = environment.URL_SERVER + '/User/Img/Get/';
   token = '';
+  loading = false;
 
   // tslint:disable-next-line: max-line-length
   constructor( private routerActive: ActivatedRoute, private storageSbvc: StorageService, private router: Router, private notiSvc: NotificationService, private ioSvc: SocketService ) { }
@@ -56,10 +57,10 @@ export class NavbarComponent implements OnInit {
   }
 
   onLogOut() {
+    this.loading = true;
     console.log('cerrando sesión =====================');
     this.ioSvc.onLogOutSocket().then( () => {
-
-      // console.log('Se deconecto usuario socket con éxito');
+      this.loading = false;
       this.storageSbvc.onClear();
       this.router.navigateByUrl('/login');
 

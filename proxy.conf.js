@@ -1,14 +1,5 @@
 var HttpsProxyAgent = require('https-proxy-agent');
 var proxyConfig = [{
-    context: '/dni/*',
-    target: 'https://api.reniec.cloud',
-    secure: false,
-    logLevel: "debug",
-    changeOrigin: true,
-    // pathRewrite: {
-    //   "^/api": ""
-    // },
-}, {
     context: '/v1/*',
     target: 'https://onesignal.com/api',
     secure: false,
@@ -28,5 +19,5 @@ function setupForCorporateProxy(proxyConfig) {
     return proxyConfig;
 }
 
-// module.exports = setupForCorporateProxy(proxyConfig);
-module.exports = proxyConfig;
+module.exports = setupForCorporateProxy(proxyConfig);
+// module.exports = proxyConfig;

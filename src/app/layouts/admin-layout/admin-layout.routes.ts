@@ -15,6 +15,7 @@ import { ProfileUserComponent } from '../../pages/adminPages/profile-user/profil
 import { AllowUrlGuard } from '../../guards/allow-url.guard';
 import { JournalComponent } from '../../pages/adminPages/journal/journal.component';
 import { RateComponent } from '../../pages/adminPages/rate/rate.component';
+import { MonitorDriversComponent } from '../../pages/adminPages/monitor-drivers/monitor-drivers.component';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -95,6 +96,11 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'rate',
     component: RateComponent,
+    canActivate: [AllowUrlGuard]
+  },
+  {
+    path: 'monitorDrivers',
+    component: MonitorDriversComponent,
     canActivate: [AllowUrlGuard]
   },
 

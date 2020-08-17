@@ -32,7 +32,7 @@ export class LoginComponent implements OnInit {
           throw new Error( res.error );
         }
 
-        this.loading = false;
+
         if (res.showError !== 0) {
           const { css, msg } = this.onGetError( res.showError );
           swal.fire({
@@ -41,14 +41,14 @@ export class LoginComponent implements OnInit {
             icon: 'warning',
             // buttons: ['Ok']
           });
-
+          this.loading = false;
           return;
 
         }
 
         this.storageSvc.onSaveCredentials( res.token, res.data );
         this.io.onSingUserSocket().then( () => {
-
+          this.loading = false;
           // console.log('usuario socket configurado' );
           this.router.navigateByUrl('/admin');
 

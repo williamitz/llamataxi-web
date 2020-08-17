@@ -1,13 +1,14 @@
-import { Component, OnInit } from "@angular/core";
-import { ModelModel } from "src/app/models/model.model";
-import { IModel } from "src/app/interfaces/model.interface";
-import { ModelService } from "src/app/services/model.service";
-import { PagerService } from "src/app/services/pager.service";
-import { NgForm } from "@angular/forms";
+import { Component, OnInit } from '@angular/core';
+import { ModelModel } from 'src/app/models/model.model';
+import { IModel } from 'src/app/interfaces/model.interface';
+import { ModelService } from 'src/app/services/model.service';
+import { PagerService } from 'src/app/services/pager.service';
+import { NgForm } from '@angular/forms';
 
 @Component({
-  selector: "app-Model",
-  templateUrl: "./model.component.html",
+  // tslint:disable-next-line: component-selector
+  selector: 'app-Model',
+  templateUrl: './model.component.html',
   styleUrls: [],
 })
 export class ModelComponent implements OnInit {
@@ -15,12 +16,12 @@ export class ModelComponent implements OnInit {
   dataModel: IModel[] = [];
   dataCategory: any[];
   dataBrand: any[];
-  titleModal = "Nuevo Modelo";
-  textButton = "Guardar";
-  actionConfirm = "eliminar";
+  titleModal = 'Nuevo Modelo';
+  textButton = 'Guardar';
+  actionConfirm = 'eliminar';
   showInactive = false;
 
-  infoPagination = "Mostrando 0 de 0 registros.";
+  infoPagination = 'Mostrando 0 de 0 registros.';
   pagination = {
     currentPage: 0,
     pages: [],
@@ -34,27 +35,34 @@ export class ModelComponent implements OnInit {
 
   ngOnInit() {
     this.bodyModel = new ModelModel();
-    this.onGetModel(1);
     this.onGetAllCategory();
-    this.onGetAllBrand();
-    console.log(this.onGetAllBrand());
+    this.onGetModel(1);
+    // this.onGetAllBrand();
   }
   onGetAllCategory() {
     this.ModelSvc.onGetListAllCategory().subscribe((res) => {
       if (!res.ok) {
         throw new Error(res.error);
       }
+
+      console.log('categories', res);
       this.dataCategory = res.data;
     });
   }
   onGetAllBrand() {
-    this.ModelSvc.onGetListAllBrand().subscribe((res) => {
+    this.ModelSvc.onGetListAllBrand( this.bodyModel.fkCategory ).subscribe((res) => {
       if (!res.ok) {
         throw new Error(res.error);
       }
       this.dataBrand = res.data;
     });
   }
+
+  onChangueCategory() {
+    this.onGetAllBrand();
+  }
+
+
   onGetModel(page: number, chk = false) {
     if (chk) {
       this.showInactive = !this.showInactive;
@@ -90,13 +98,13 @@ export class ModelComponent implements OnInit {
           this.loading = false;
           const { css, icon, msg } = this.onGetError(res.showError);
           if (res.showError !== 0) {
-            this.onShowAlert("alertModelModal", css, icon, msg);
+            this.onShowAlert('alertModelModal', css, icon, msg);
             return;
           } else {
-            this.onShowAlert("alertModel", css, icon, msg);
+            this.onShowAlert('alertModel', css, icon, msg);
           }
 
-          $("#btnCloseModal").trigger("click");
+          $('#btnCloseModal').trigger('click');
           this.onGetModel(1);
         });
 
@@ -112,13 +120,13 @@ export class ModelComponent implements OnInit {
         const { css, icon, msg } = this.onGetError(res.showError);
 
         if (res.showError !== 0) {
-          this.onShowAlert("alertModelModal", css, icon, msg);
+          this.onShowAlert('alertModelModal', css, icon, msg);
           return;
         } else {
-          this.onShowAlert("alertModel", css, icon, msg);
+          this.onShowAlert('alertModel', css, icon, msg);
         }
 
-        $("#btnCloseModal").trigger("click");
+        $('#btnCloseModal').trigger('click');
         this.onGetModel(1);
       });
     }
@@ -127,7 +135,7 @@ export class ModelComponent implements OnInit {
   onEdit(id: number) {
     const finded = this.dataModel.find((Model) => Model.pkModel === id);
     if (!finded) {
-      console.error("No se encontro registro!!!");
+      console.error('No se encontro registro!!!');
       return;
     }
 
@@ -136,8 +144,10 @@ export class ModelComponent implements OnInit {
     this.bodyModel.fkBrand = finded.fkBrand;
     this.bodyModel.nameModel = finded.nameModel;
 
-    this.titleModal = "Editar Modelo";
-    this.textButton = "Guardar cambios";
+    this.onGetAllBrand();
+
+    this.titleModal = 'Editar Modelo';
+    this.textButton = 'Guardar cambios';
 
     this.loadData = true;
   }
@@ -152,20 +162,20 @@ export class ModelComponent implements OnInit {
 
       this.loading = false;
       const { css, icon, msg } = this.onGetError(res.showError);
-      const action = this.bodyModel.statusRegister ? "restaurado" : "eliminado";
+      const action = this.bodyModel.statusRegister ? 'restaurado' : 'eliminado';
       this.onShowAlert(
-        "alertModel",
+        'alertModel',
         css,
         icon,
         `Se ha ${action} un modelo con éxito`
       );
 
       if (res.showError !== 0) {
-        this.onShowAlert("alertModelModal", css, icon, msg);
+        this.onShowAlert('alertModelModal', css, icon, msg);
         return;
       }
 
-      $("#btnCloseConfirm").trigger("click");
+      $('#btnCloseConfirm').trigger('click');
       this.onGetModel(1);
     });
   }
@@ -173,13 +183,13 @@ export class ModelComponent implements OnInit {
   onConfirm(id: number) {
     const finded = this.dataModel.find((Model) => Model.pkModel === id);
     if (!finded) {
-      console.error("No se encontro registro!!!");
+      console.error('No se encontro registro!!!');
       return;
     }
 
     this.bodyModel.pkModel = finded.pkModel;
     this.bodyModel.statusRegister = !finded.statusRegister;
-    this.actionConfirm = finded.statusRegister ? "eliminar" : "restaurar";
+    this.actionConfirm = finded.statusRegister ? 'eliminar' : 'restaurar';
   }
 
   onShowAlert(idAlert: string, css: string, icon: string, msg: string) {
@@ -195,32 +205,37 @@ export class ModelComponent implements OnInit {
   }
 
   onGetError(showError: number) {
-    const css = showError === 0 ? "success" : "danger";
-    const icon = showError === 0 ? "check" : "exclamation-circle";
-    const action = this.loadData ? "actualizado" : "creado";
+    const css = showError === 0 ? 'success' : 'danger';
+    const icon = showError === 0 ? 'check' : 'exclamation-circle';
+    const action = this.loadData ? 'actualizado' : 'creado';
     const arrErr =
       showError === 0
         ? [`Se ha ${action} un Modelo con éxito`]
-        : ["Error, ya existe un registro"];
+        : ['Error, ya existe un registro'];
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 1) {
-      arrErr.push("con este nombre");
+      arrErr.push('con este nombre');
     }
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 2) {
-      arrErr.push("se encuentra inactivo");
+      arrErr.push('se encuentra inactivo');
     }
 
-    return { css, icon, msg: arrErr.join(", ") };
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 4) {
+      arrErr.push('no se encontró registro');
+    }
+
+    return { css, icon, msg: arrErr.join(', ') };
   }
 
   onReset() {
-    $("#frmModel").trigger("reset");
+    $('#frmModel').trigger('reset');
     this.bodyModel.onReset();
-    this.titleModal = "Nuevo Modelo";
-    this.textButton = "Guardar";
+    this.titleModal = 'Nuevo Modelo';
+    this.textButton = 'Guardar';
     this.loadData = false;
   }
 }

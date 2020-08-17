@@ -27,6 +27,7 @@ import { INationality } from '../../../interfaces/nationality.interface';
 import { ITypeDocument } from '../../../interfaces/type-document.interface';
 import { UserService } from '../../../services/user.service';
 import { IRespReniec } from '../../../interfaces/reniec.interface';
+import { IResponse } from '../../../interfaces/response.interface';
 
 const URI_API = environment.URL_SERVER;
 declare var pdfjsLib: any;
@@ -172,7 +173,6 @@ export class ProfileDriverComponent implements OnInit {
     this.onLoadYears();
     this.onLoadTypeDoc();
     this.onLoadNationality();
-    // console.log(this.router.snapshot.data);
   }
 
   onLoadYears() {
@@ -185,17 +185,24 @@ export class ProfileDriverComponent implements OnInit {
 
     if ( this.bodyDriver.fkTypeDocument === 1 && this.bodyDriver.document.length === 8 ) {
       this.loadingReniec = true;
-      this.userSvc.onGetReniec( this.bodyDriver.document ).subscribe( (res: IRespReniec) => {
+      this.userSvc.onGetReniec( this.bodyDriver.document ).subscribe( (res: IResponse) => {
         this.loadingReniec = false;
-        if (!res) {
+        if (!res.ok) {
           console.log(' no encontrado');
+          this.bodyDriver.verifyReniec = false;
+          return;
+        }
+
+        const dataReniec: any = res.data;
+
+        if (dataReniec.dni === '') {
           this.bodyDriver.verifyReniec = false;
           return;
         }
         console.log(res);
         this.bodyDriver.verifyReniec = true;
-        this.bodyDriver.name = res.nombres,
-        this.bodyDriver.surname = `${ res.apellido_paterno } ${ res.apellido_materno }`;
+        this.bodyDriver.name = dataReniec.nombres,
+        this.bodyDriver.surname = `${ dataReniec.apellido_paterno } ${ dataReniec.apellido_materno }`;
       });
     }
   }

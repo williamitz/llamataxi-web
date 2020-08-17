@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { ModelModel } from "../models/model.model";
-import { IResponse } from "../interfaces/response.interface";
-import { environment } from "../../environments/environment";
-import { StorageService } from "./storage.service";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { ModelModel } from '../models/model.model';
+import { IResponse } from '../interfaces/response.interface';
+import { environment } from '../../environments/environment';
+import { StorageService } from './storage.service';
 
 const URI_API = environment.URL_SERVER;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class ModelService {
   constructor(private http: HttpClient, private storageSvc: StorageService) {}
@@ -54,9 +54,9 @@ export class ModelService {
       headers: { Authorization: this.storageSvc.token },
     });
   }
-  onGetListAllBrand() {
+  onGetListAllBrand( fkCategory = 0 ) {
     this.storageSvc.onLoadToken();
-    return this.http.get<IResponse>(URI_API + `/Brand/GetAll`, {
+    return this.http.get<IResponse>(URI_API + `/Brand/GetAll?fkCategory=${ fkCategory }`, {
       headers: { Authorization: this.storageSvc.token },
     });
   }

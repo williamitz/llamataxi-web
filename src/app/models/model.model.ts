@@ -7,16 +7,16 @@ export class ModelModel {
 
   constructor() {
     this.pkModel = 0;
-    this.fkCategory = 0;
-    this.fkBrand = 0;
+    // this.fkCategory = 0;
+    // this.fkBrand = 0;
     this.nameModel = "";
     this.statusRegister = true;
   }
 
   onReset() {
     this.pkModel = 0;
-    this.fkCategory = 0;
-    this.fkBrand = 0;
-    this.nameModel = "";
+    // this.fkCategory = 0;
+    // this.fkBrand = 0;
+    this.nameModel = '';
   }
 }

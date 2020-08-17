@@ -25,6 +25,10 @@ export class RolesPipe implements PipeTransform {
           role = 'Administrador';
           break;
 
+      case 'ATTENTION_ROLE':
+          role = 'Att. al cliente';
+          break;
+
       default:
         role = 'Cliente';
         break;

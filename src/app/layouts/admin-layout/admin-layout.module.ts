@@ -24,6 +24,7 @@ import { ProfileDriverComponent } from '../../pages/adminPages/profile-driver/pr
 import { ProfileUserComponent } from '../../pages/adminPages/profile-user/profile-user.component';
 import { RateComponent } from './../../pages/adminPages/rate/rate.component';
 import { JournalComponent } from './../../pages/adminPages/journal/journal.component';
+import { ChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import { JournalComponent } from './../../pages/adminPages/journal/journal.compo
     CommonModule,
     ComponentsModule,
     PipesModule,
+    ChartsModule,
     FormsModule,
     NgSelectModule,
     SwiperModule,

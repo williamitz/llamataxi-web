@@ -171,7 +171,11 @@
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" style="cursor: pointer;" (click)="onLogOut()">
                             <i class="ni ni-user-run"></i>
-                            <span>Cerrar sesi&oacute;n</span>
+                            <span>
+                              Cerrar sesi&oacute;n
+                              &nbsp;
+                              <i *ngIf="loading" class="fa fa-spinner fa-pulse"></i>
+                            </span>
                         </a>
                     </div>
                 </li>

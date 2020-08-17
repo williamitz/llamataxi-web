@@ -13,7 +13,7 @@
                                       Nuevo
                                     </button>
                                 </th>
-                                <th colspan="3" id="alertUser">
+                                <th colspan="4" id="alertUser">
 
                                 </th>
                             </tr>
@@ -62,8 +62,8 @@
                                     Rol
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                      <i class="fas fa-search"></i>
-                                    </button>
+                                          <i class="fas fa-search"></i>
+                                        </button>
                                         <div class="dropdown-menu">
                                             <div class="px-4 py-3">
 
@@ -106,9 +106,75 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th>Verificado</th>
-                                <th>Conectado</th>
-                                <!-- <th></th> -->
+                                <th>
+                                    Verificado
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <i class="fas fa-search"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+
+                                                <div class="custom-control custom-radio mb-3">
+                                                    <input type="radio" id="rbtAllV" name="qVerified" class="custom-control-input" [value]="2" [(ngModel)]="qVerified" (change)="onGetListUser(1)">
+                                                    <label class="custom-control-label" for="rbtAllV">
+                                                      Todos
+                                                    </label>
+                                                </div>
+
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="rbtYesV" name="qVerified" class="custom-control-input" [value]="1" [(ngModel)]="qVerified" (change)="onGetListUser(1)">
+                                                    <label class="custom-control-label" for="rbtYesV">
+                                                      S&iacute;
+                                                    </label>
+                                                </div>
+
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="rbtNotV" name="qVerified" class="custom-control-input" [value]="0" [(ngModel)]="qVerified" (change)="onGetListUser(1)">
+                                                    <label class="custom-control-label" for="rbtNotV">
+                                                      No
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>
+                                    Conectado
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <i class="fas fa-search"></i>
+                                    </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+
+                                                <div class="custom-control custom-radio mb-3">
+                                                    <input type="radio" id="rbtAllIO" name="qConnect" class="custom-control-input" [value]="2" [(ngModel)]="qConnect" (change)="onGetListUser(1)">
+                                                    <label class="custom-control-label" for="rbtAllIO">
+                                                  Todos
+                                                </label>
+                                                </div>
+
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="rbtYesIO" name="qConnect" class="custom-control-input" [value]="1" [(ngModel)]="qConnect" (change)="onGetListUser(1)">
+                                                    <label class="custom-control-label" for="rbtYesIO">
+                                                  S&iacute;
+                                                </label>
+                                                </div>
+
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="rbtNotIO" name="qConnect" class="custom-control-input" [value]="0" [(ngModel)]="qConnect" (change)="onGetListUser(1)">
+                                                    <label class="custom-control-label" for="rbtNotIO">
+                                                  No
+                                                </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th>F. Registro </th>
                             </tr>
                         </thead>
                         <tr *ngIf="loadingList">
@@ -122,7 +188,7 @@
                                 <td>
                                     {{ user.rowIndex }}
                                 </td>
-                                <th scope="row">
+                                <th scope="row" style="width: 35px;">
                                     <div class="media align-items-center">
                                         <a [href]=" user.role | userUrl: user.pkUser: user.pkDriver " target="_blank" class="avatar rounded-circle mr-3">
                                             <img alt="Image placeholder" [src]="pathImg + user.img + token">
@@ -140,28 +206,24 @@
                                 <!-- <td>
                                     {{ user.email }}
                                 </td> -->
-                                <td>
+                                <td class="text-center" style="width: 30px !important; ">
                                     {{ user.role | roles }}
                                 </td>
-                                <td>
+                                <td class="text-center" style="width: 10px !important; ">
                                     <span class="badge badge-dot">
-                                    <i  [ngClass]="{'bg-success': user.verified, 'bg-danger': !user.verified}">
-
-                                    </i>
-                                    <span class="status">
-                                      {{ user.verified | yesno }}
-                                    </span>
+                                      <i [ngClass]="{'bg-success': user.verified, 'bg-danger': !user.verified}"> </i>
+                                      <span class="status">
+                                        {{ user.verified | yesno }}
+                                      </span>
                                     </span>
                                 </td>
 
-                                <td>
+                                <td class="text-center" style="width: 10px !important; ">
                                     <span class="badge badge-dot">
-                                  <i  [ngClass]="{'bg-success': user.statusSocket, 'bg-danger': !user.statusSocket}">
-
-                                  </i>
-                                  <span class="status">
-                                    {{ user.statusSocket | yesno }}
-                                  </span>
+                                      <i [ngClass]="{'bg-success': user.statusSocket, 'bg-danger': !user.statusSocket}"> </i>
+                                      <span class="status">
+                                        {{ user.statusSocket | yesno }}
+                                      </span>
                                     </span>
                                 </td>
                                 <!-- <td class="text-right">
@@ -176,6 +238,9 @@
                                         </div>
                                     </div>
                                 </td> -->
+                                <td style="width: 20px !important; ">
+                                    {{ user.dateRegister | date }}
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -196,7 +261,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th colspan="3">
+                                <th colspan="4">
 
                                     <div *ngIf="pagination.currentPage" class="text-right">
 
@@ -255,7 +320,10 @@
                             <div class="form-group">
 
                                 <label class="form-control-label" for="cbxTypeDoc"> Tipo Documento </label>
-                                <select class="form-control" name="cbxTypeDoc" id="cbxTypeDoc" (change)="onChangeTypeDoc()">
+                                <select class="form-control" name="cbxTypeDoc" #typeDoc="ngModel" [(ngModel)]="bodyUser.fkTypeDocument" id="cbxTypeDoc" (change)="onChangeTypeDoc()" required [ngClass]="{
+                                  'is-invalid': typeDoc.errors?.required && typeDoc.touched,
+                                  'is-valid': !typeDoc.errors?.required && typeDoc.touched
+                                }">
                                   <option value="" disabled>-- Seleccione --</option>
                                   <option *ngFor="let doc of dataTypeDoc" [value]=" doc.pkTypeDocument " >
                                     {{ doc.nameDocument }}
@@ -288,6 +356,7 @@
                                     *M&aacute;ximo {{ docLong }} caracteres
                                   </small>
                                 </span>
+
                                 <span *ngIf="loadingReniec" class="spinReniec text-primary">
                                   <i class="fa fa-spinner fa-pulse"></i>
                                 </span>
@@ -414,7 +483,7 @@
                             }">
                             <option value="" disabled> --Seleccione--</option>
                             <option value="ADMIN_ROLE" >Administrador</option>
-                            <option value="ATTENTION_DOLE" >Atenci&oacute;n al cliente</option>
+                            <option value="ATTENTION_ROLE" >Atenci&oacute;n al cliente</option>
                             <option value="DRIVER_ROLE" >Conductor</option>
                           </select>
 

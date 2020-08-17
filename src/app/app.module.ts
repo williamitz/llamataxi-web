@@ -16,6 +16,7 @@ import { ComponentsModule } from './components/components.module';
 import { FormsModule } from '@angular/forms';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
+import { MonitorDriversComponent } from './pages/adminPages/monitor-drivers/monitor-drivers.component';
 
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
   direction: 'horizontal',
@@ -31,6 +32,7 @@ const socketConfig: SocketIoConfig = { url: environment.URL_SERVER, options: {} 
     AuthLayoutComponent,
     AdminLayoutComponent,
     NotFoundComponent,
+    MonitorDriversComponent,
   ],
   imports: [
     BrowserModule,

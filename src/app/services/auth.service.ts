@@ -17,7 +17,7 @@ export class AuthService {
   onLogin( body: LoginModel ) {
     return this.http.post<IResponse>( URI_API + `/Login/Web`, body );
   }
-
+  // <i class="fas fa-globe-europe"></i>
   onGetMenu() {
     this.st.onLoadToken();
     return this.http.get<IResponse>( URI_API + `/MenuRole/Get/Web`,  { headers: { Authorization: this.st.token } });
