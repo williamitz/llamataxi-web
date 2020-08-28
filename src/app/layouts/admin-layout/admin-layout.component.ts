@@ -1,10 +1,11 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { SocketService } from '../../services/socket.service';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../services/notification.service';
 import { INotification, INotiSocket } from '../../interfaces/notification.interface';
 import { UiService } from '../../services/ui.service';
+import * as $ from 'jquery';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-admin-layout',
@@ -14,18 +15,21 @@ import { UiService } from '../../services/ui.service';
 export class AdminLayoutComponent implements OnInit, OnDestroy {
 
   title = '';
-  notySbc: Subscription;
+  ioNotify: Subscription;
+  ioPanic: Subscription;
   dataNoti: INotification[] = [];
   totalNews = 0;
+
+  msgPanic = '';
+  urlPanic = '';
   // tslint:disable-next-line: max-line-length
-  constructor( private router: ActivatedRoute, private io: SocketService, private notiSbc: NotificationService, private uiSbc: UiService ) { }
+  constructor( private router: Router, private io: SocketService, private notiSbc: NotificationService, private uiSbc: UiService ) { }
 
   ngOnInit() {
-    // this.title = this.router.data;
-    // console.log(this.router.snapshot.data);
-    this.onListenNofify();
     this.onGetNotify();
     this.io.onStatusSocket();
+    this.onListenNofify();
+    this.onListenAlertPanic();
   }
 
   onTitle(title) {
@@ -33,11 +37,24 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   onListenNofify() {
-    this.notySbc = this.io.onListen( 'new-notify-web' ).subscribe( (res: INotiSocket) => {
+    this.ioNotify = this.io.onListen( 'new-notify-web' ).subscribe( (res: INotiSocket) => {
       console.log(res);
       this.onGetNotify();
       this.uiSbc.onShowNotification( res.title, res.message, '', res.urlShow );
     });
+  }
+
+  onListenAlertPanic() {
+    this.ioPanic = this.io.onListen( 'new-alert-service' ).subscribe( (res: any) => {
+      console.log(res);
+      this.msgPanic = res.msg;
+      this.urlPanic = res.url;
+      $('#btnShowModalPanic').trigger('click');
+    });
+  }
+
+  onRedirectPanic() {
+    this.router.navigateByUrl( this.urlPanic );
   }
 
   onGetNotify() {
@@ -53,7 +70,8 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.notySbc.unsubscribe();
+    this.ioNotify.unsubscribe();
+    this.ioPanic.unsubscribe();
   }
 
 }

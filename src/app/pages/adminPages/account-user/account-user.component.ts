@@ -13,6 +13,10 @@ import { Options } from 'select2';
 import { NgForm } from '@angular/forms';
 import { SocketService } from '../../../services/socket.service';
 import { IResponse } from 'src/app/interfaces/response.interface';
+import { IUser } from 'src/app/interfaces/users.interface';
+import { ChangePassModel } from '../../../models/changePass.model';
+import swal from 'sweetalert2';
+import { SweetAlertIcon } from 'sweetalert2';
 
 const URI_API = environment.URL_SERVER;
 @Component({
@@ -24,7 +28,8 @@ export class AccountUserComponent implements OnInit, OnDestroy {
 
   userCnnSbc: Subscription;
   userDiscnnSbc: Subscription;
-  dataUser: any[] = [];
+  passwordSbc: Subscription;
+  dataUser: IUser[] = [];
 
   infoPagination = 'Mostrando 0 de 0 registros.';
   pagination = {
@@ -37,6 +42,7 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   loading = false;
   loadingReniec = false;
   loadingList = false;
+  loadingPass = false;
   pathImg = URI_API + `/User/Img/Get/`;
   token = '';
   showInactive = false;
@@ -56,8 +62,10 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   nationalitySbc: Subscription;
   typeDocSbc: Subscription;
   docLong = 8;
+  showPassChange = false;
 
   bodyUser: UserModel;
+  bodyChangePass: ChangePassModel;
   optCbx: Options = {
     theme: 'classic',
     closeOnSelect: false,
@@ -73,6 +81,7 @@ export class AccountUserComponent implements OnInit, OnDestroy {
     this.storage.onLoadToken();
     this.token = `?token=${ this.storage.token }`;
     this.bodyUser = new UserModel();
+    this.bodyChangePass = new ChangePassModel();
     this.onGetListUser( 1 );
     this.onLoadTypeDoc();
     this.onLoadNationality();
@@ -239,6 +248,41 @@ export class AccountUserComponent implements OnInit, OnDestroy {
     this.docLong = finded.longitude;
   }
 
+  onShowChangePassword( user: IUser ) {
+    this.bodyChangePass.password = '';
+    this.bodyChangePass.pkUser = user.pkUser;
+    this.bodyChangePass.nameComplete = user.nameComplete;
+    this.bodyChangePass.img = user.img;
+    $('#btnShowModalPassword').trigger('click');
+  }
+
+  onSubmitChangePass() {
+    if ( this.passwordSbc ) {
+      this.passwordSbc.unsubscribe();
+    }
+
+    swal.showLoading();
+    this.passwordSbc = this.userSvc.onChangePass( this.bodyChangePass ).subscribe( (res) => {
+      if ( !res.ok ) {
+        throw new Error( res.error );
+      }
+
+      swal.hideLoading();
+      const { text, icon } = this.onGetErrorPass( res.showError );
+      swal.fire({
+        title: 'Mensaje al usuario',
+        text,
+        icon
+      });
+
+      if (res.showError === 0) {
+        this.bodyChangePass.onReset();
+        $('#btnCloseModalPass').trigger('click');
+      }
+
+    });
+  }
+
   onGetError( showError: number ) {
     let arrError = showError === 0 ? ['Se ha creado un nuevo usuario con éxito'] : ['Ya existe un registro'];
     const css = showError === 0 ? 'success' : 'danger';
@@ -278,11 +322,28 @@ export class AccountUserComponent implements OnInit, OnDestroy {
 
   }
 
+  onGetErrorPass( showError: number ) {
+    const arrError = showError === 0 ? ['Se ha cambiado la contraseña exitosamente'] : ['Error'];
+    const icon: SweetAlertIcon = showError === 0 ? 'success' : 'error';
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 1) {
+      arrError.push('no se encontró usuario');
+    }
+
+    return { text: arrError.join(', '), icon };
+
+  }
+
   ngOnDestroy() {
     this.nationalitySbc.unsubscribe();
     this.typeDocSbc.unsubscribe();
     this.userCnnSbc.unsubscribe();
     this.userDiscnnSbc.unsubscribe();
+
+    if ( this.passwordSbc ) {
+      this.passwordSbc.unsubscribe();
+    }
 
   }
 

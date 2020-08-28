@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { StorageService } from './storage.service';
 import { IResponse } from '../interfaces/response.interface';
 import { UserModel, UserProfileModel } from '../models/user.model';
+import { ChangePassModel } from '../models/changePass.model';
 
 const URI_API = environment.URL_SERVER;
 
@@ -60,9 +61,9 @@ export class UserService {
     body.img = '';
     this.storage.onLoadToken();
 
-    return this.http.put<IResponse>( URI_API + '/User/Profile/Update', body, { headers: { Authorization: this.storage.token } } )
+    return this.http.put<IResponse>( URI_API + '/User/Profile/Update', body, { headers: { Authorization: this.storage.token } } );
   }
-
+  
   onDeleteUser( pkUser: number, status: boolean, observation: string ) {
     this.storage.onLoadToken();
     const params = `?observation=${ observation }`;
@@ -78,6 +79,11 @@ export class UserService {
     // tslint:disable-next-line: max-line-length
     return this.http.put<IResponse>(URI_API + `/upload/user/${ pkUser }/`, formData, {headers: { Authorization: this.storage.token } });
 
+  }
+
+  onChangePass( body: ChangePassModel ) {
+    this.storage.onLoadToken();
+    return this.http.put<IResponse>( URI_API + '/User/ChangePass/Web', body, { headers: { Authorization: this.storage.token } } );
   }
 
 }

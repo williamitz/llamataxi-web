@@ -1,6 +1,37 @@
 <div class="container" style="padding-right: 50px;">
     <div #mapMonitor class="mapMonitor">
         lorem ipsum
+
+        <div #infoPolygon>
+            <div class="">
+                <h4 class="card-title">Zonas calientes</h4>
+                <h6 class="card-subtitle mb-2 text-muted">Oferta y demanda</h6>
+                <p class="card-text">
+                    <b class="text-primary"> {{ totalServicesZone }} </b> servicios pendientes y <b class="text-success"> {{ totalDriverZone }} </b> conductores cercanos.
+                </p>
+                <!-- <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a> -->
+            </div>
+        </div>
+
+        <div #infoDriver style="width: 270px;">
+            <div class="">
+                <h4 class="card-title">{{ currentDriver.codeCategory | categoryDriver}}
+
+                    <span class="badge badge-pill badge-lg " [ngClass]="{'badge-success': !currentDriver.occupied, 'badge-warning': currentDriver.occupied}">
+                        {{ currentDriver.occupied | occupied }}
+                    </span>
+                </h4>
+
+                <p class="card-text text-center">
+                    <b>
+                        {{ currentDriver.nameComplete }}
+                    </b>
+                </p>
+                <!-- <a href="#" class="card-link">Card link</a>
+              <a href="#" class="card-link">Another link</a> -->
+            </div>
+        </div>
     </div>
 </div>
 <br>

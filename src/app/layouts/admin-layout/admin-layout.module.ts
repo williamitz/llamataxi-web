@@ -25,6 +25,8 @@ import { ProfileUserComponent } from '../../pages/adminPages/profile-user/profil
 import { RateComponent } from './../../pages/adminPages/rate/rate.component';
 import { JournalComponent } from './../../pages/adminPages/journal/journal.component';
 import { ChartsModule } from 'ng2-charts';
+import { MonitorDriversComponent } from '../../pages/adminPages/monitor-drivers/monitor-drivers.component';
+import { AlertServiceComponent } from '../../pages/adminPages/alert-service/alert-service.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +44,9 @@ import { ChartsModule } from 'ng2-charts';
     ProfileDriverComponent,
     ProfileUserComponent,
     RateComponent,
-    JournalComponent
+    JournalComponent,
+    MonitorDriversComponent,
+    AlertServiceComponent,
   ],
   imports: [
     CommonModule,
@@ -54,7 +58,7 @@ import { ChartsModule } from 'ng2-charts';
     SwiperModule,
     RouterModule.forChild(ADMIN_ROUTES),
     AgmCoreModule.forRoot({
-      apiKey: "AIzaSyDhxiGsJaQ7nBYRxhgc-qNI9KaGY9pwj0g",
+      apiKey: 'AIzaSyDhxiGsJaQ7nBYRxhgc-qNI9KaGY9pwj0g',
     }),
   ],
 })

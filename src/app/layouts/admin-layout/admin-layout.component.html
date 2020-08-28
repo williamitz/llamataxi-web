@@ -16,3 +16,40 @@
     </div>
 
 </div>
+
+<button type="button" class="btn btn-block btn-warning mb-3" data-toggle="modal" data-target="#modalPanic" id="btnShowModalPanic">
+    Notification
+</button>
+
+<div class="modal fade" data-backdrop="static" id="modalPanic" tabindex="-1" role="dialog" aria-labelledby="modalPanic" aria-hidden="true">
+    <div class="modal-dialog modal-danger modal-dialog-centered modal-" role="document">
+        <div class="modal-content bg-gradient-danger">
+
+            <div class="modal-header">
+                <h6 class="modal-title" id="modal-title-notification">Your attention is required</h6>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="modal-body">
+
+                <div class="py-3 text-center">
+                    <i class="ni ni-bell-55 ni-3x"></i>
+                    <h4 class="heading mt-4">Alguien podría necesitar ayuda!</h4>
+                    <p>
+                        {{ msgPanic }}
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-white" (click)="onRedirectPanic()">
+                    Ok, ver alerta
+                </button>
+                <button type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Cerrar</button>
+            </div>
+
+        </div>
+    </div>

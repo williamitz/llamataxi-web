@@ -8,6 +8,8 @@ import { MomentPipe } from './moment.pipe';
 import { ReplacePipe } from './replace.pipe';
 import { SexPipe } from './sex.pipe';
 import { UserUrlPipe } from './user-url.pipe';
+import { CategoryDriverPipe } from './category-driver.pipe';
+import { OccupiedPipe } from './occupied.pipe';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { UserUrlPipe } from './user-url.pipe';
     MomentPipe,
     ReplacePipe,
     SexPipe,
-    UserUrlPipe
+    UserUrlPipe,
+    CategoryDriverPipe,
+    OccupiedPipe
   ],
   exports: [
     RowIndexPipe,
@@ -28,7 +32,9 @@ import { UserUrlPipe } from './user-url.pipe';
     MomentPipe,
     ReplacePipe,
     SexPipe,
-    UserUrlPipe
+    UserUrlPipe,
+    CategoryDriverPipe,
+    OccupiedPipe
   ],
   imports: [
     CommonModule

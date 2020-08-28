@@ -13,13 +13,13 @@
                                       Nuevo
                                     </button>
                                 </th>
-                                <th colspan="4" id="alertUser">
+                                <th colspan="5" id="alertUser">
 
                                 </th>
                             </tr>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">
+                                <th scope="col" style="width: 35px;">
                                     Apellidos y nombres
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -32,7 +32,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th scope="col">
+                                <th scope="col" style="width: 30px !important; ">
                                     Usuario
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -58,7 +58,7 @@
                                         </div>
                                     </div>
                                 </th> -->
-                                <th>
+                                <th style="width: 30px !important; ">
                                     Rol
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -106,7 +106,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th>
+                                <th style="width: 10px !important; ">
                                     Verificado
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -140,7 +140,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th>
+                                <th style="width: 10px !important; ">
                                     Conectado
                                     <div class="btn-group">
                                         <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -175,6 +175,7 @@
                                     </div>
                                 </th>
                                 <th>F. Registro </th>
+                                <th style="width: 10px !important; "></th>
                             </tr>
                         </thead>
                         <tr *ngIf="loadingList">
@@ -188,7 +189,7 @@
                                 <td>
                                     {{ user.rowIndex }}
                                 </td>
-                                <th scope="row" style="width: 35px;">
+                                <th scope="row">
                                     <div class="media align-items-center">
                                         <a [href]=" user.role | userUrl: user.pkUser: user.pkDriver " target="_blank" class="avatar rounded-circle mr-3">
                                             <img alt="Image placeholder" [src]="pathImg + user.img + token">
@@ -200,16 +201,16 @@
                                         </div>
                                     </div>
                                 </th>
-                                <td class="budget">
+                                <td>
                                     {{ user.userName }}
                                 </td>
                                 <!-- <td>
                                     {{ user.email }}
                                 </td> -->
-                                <td class="text-center" style="width: 30px !important; ">
+                                <td class="text-center">
                                     {{ user.role | roles }}
                                 </td>
-                                <td class="text-center" style="width: 10px !important; ">
+                                <td class="text-center">
                                     <span class="badge badge-dot">
                                       <i [ngClass]="{'bg-success': user.verified, 'bg-danger': !user.verified}"> </i>
                                       <span class="status">
@@ -218,7 +219,7 @@
                                     </span>
                                 </td>
 
-                                <td class="text-center" style="width: 10px !important; ">
+                                <td class="text-center">
                                     <span class="badge badge-dot">
                                       <i [ngClass]="{'bg-success': user.statusSocket, 'bg-danger': !user.statusSocket}"> </i>
                                       <span class="status">
@@ -241,6 +242,11 @@
                                 <td style="width: 20px !important; ">
                                     {{ user.dateRegister | date }}
                                 </td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-default" data-toggle="tooltip" data-placement="top" title="Cambiar clave" (click)="onShowChangePassword( user )">                                        
+                                        <i class="fas fa-key"></i>
+                                    </button>
+                                </td>
                             </tr>
                         </tbody>
                         <tfoot>
@@ -261,7 +267,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th colspan="4">
+                                <th colspan="5">
 
                                     <div *ngIf="pagination.currentPage" class="text-right">
 
@@ -554,18 +560,18 @@
                             'is-valid': !pass.errors?.required && !pass.errors?.minlength && pass.touched}" pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*" required minlength="6">
 
                                 <span *ngIf="pass.errors?.required && pass.touched">
-                                <small class="text-danger">*Requerido</small>
-                              </span>
+                                    <small class="text-danger">*Requerido</small>
+                                </span>
 
                                 <span *ngIf="pass.errors?.pattern && pass.touched">
-                                <small class="text-danger">
-                                  *Una mayuscula, minuscula y un n&uacute;mero
-                                </small>
-                              </span>
+                                    <small class="text-danger">
+                                    *Una mayuscula, minuscula y un n&uacute;mero
+                                    </small>
+                                </span>
 
                                 <span *ngIf="pass.errors?.minlength && pass.touched">
-                                <small class="text-danger">*M&iacute;nimo 9 caracteres</small>
-                              </span>
+                                    <small class="text-danger">*M&iacute;nimo 9 caracteres</small>
+                                </span>
                             </div>
 
                         </div>
@@ -590,6 +596,127 @@
                   </span>
                 </button>
             </div>
+        </div>
+    </div>
+</div>
+
+<button type="button" class="btn btn-block btn-default" id="btnShowModalPassword" data-toggle="modal" data-target="#modalChangePass" style="display: none;">
+    change password
+</button>
+
+<!-- Modal cambiar clave -->
+
+<div class="modal fade" id="modalChangePass" tabindex="-1" role="dialog" aria-labelledby="modal-form" aria-hidden="true">
+    <div class="modal-dialog modal- modal-dialog-centered modal-sm" role="document">
+        <div class="modal-content">
+
+            <div class="modal-body p-0">
+
+
+                <div class="card bg-secondary border-0 mb-0">
+                    <!-- <div class="card-header bg-transparent pb-5">
+                        <div class="text-muted text-center mt-2 mb-3"><small>Sign in with</small></div>
+
+
+                        <div class="btn-wrapper text-center">
+                            <a href="#" class="btn btn-neutral btn-icon">
+                                <span class="btn-inner--icon"><img src="../../assets/img/icons/common/github.svg"></span>
+                                <span class="btn-inner--text">Github</span>
+                            </a>
+                            <a href="#" class="btn btn-neutral btn-icon">
+                                <span class="btn-inner--icon"><img src="../../assets/img/icons/common/google.svg"></span>
+                                <span class="btn-inner--text">Google</span>
+                            </a>
+                        </div>
+
+
+                    </div> -->
+                    <div class="card-body px-lg-5 py-lg-5">
+                        <div class="text-center text-muted mb-4">
+                            <small>Cambiar contrase&ntilde;a</small>
+                        </div>
+                        <form role="form" #frmChangePass="ngForm">
+                            <!-- <div class="form-group mb-3">
+                                <div class="input-group input-group-merge input-group-alternative">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text"><i class="ni ni-email-83"></i></span>
+                                    </div>
+                                    <input class="form-control" placeholder="Email" type="email">
+                                </div>
+                            </div> -->
+
+                            <div class="row mb-3">
+                                <div class="col-3">
+                                    <img class="avatar rounded-circle mr-3" alt="Imagen" [src]="pathImg + bodyChangePass.img + token">
+                                </div>
+                                <div class="col-9">
+
+
+                                    <div class="media-body ">
+                                        <p class="text-sm ">
+                                            {{ bodyChangePass.nameComplete }}
+                                        </p>
+                                    </div>
+
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <div class="input-group input-group-merge input-group-alternative">
+
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <!-- <i class="ni ni-lock-circle-open"></i> -->
+                                            <i class="fas fa-key"></i>
+                                        </span>
+                                    </div>
+
+                                    <input class="form-control" placeholder="Nueva contrase&ntilde;a" [type]=" showPassChange ? 'text' : 'password' " name="passchange" #passChange="ngModel" [(ngModel)]="bodyChangePass.password" [ngClass]="{'is-invalid': (passChange.errors?.required || passChange.errors?.minlength ) && passChange.touched,
+                                    'is-valid': !passChange.errors?.required && !passChange.errors?.minlength && passChange.touched}" pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*" required minlength="6">
+
+                                    <div class="input-group-append" (click)=" showPassChange = !showPassChange; ">
+                                        <span class="input-group-text">
+                                            <!-- <i class="ni ni-lock-circle-open"></i> -->
+                                            <i class="fas fa-eye" [ngClass]="{'text-danger': showPassChange, 'text-default': !showPassChange}"></i>
+                                        </span>
+                                    </div>
+
+
+
+                                </div>
+
+                                <span *ngIf="passChange.errors?.required && passChange.touched">
+                                    <small class="text-danger">*Requerido</small>
+                                </span>
+
+                                <span *ngIf="passChange.errors?.pattern && passChange.touched">
+                                    <small class="text-danger">
+                                    *Una mayuscula, minuscula y un n&uacute;mero
+                                    </small>
+                                </span>
+
+                                <span *ngIf="passChange.errors?.minlength && passChange.touched">
+                                    <small class="text-danger">*M&iacute;nimo 9 caracteres</small>
+                                </span>
+                            </div>
+                            <div class="text-center">
+                                <button type="button" class="btn btn-secondary" id="btnCloseModalPass" data-dismiss="modal">
+                                    Cerrar
+                                </button>
+                                <button type="button" class="btn btn-primary my-4" (click)="onSubmitChangePass()" [disabled]="loadingPass || frmChangePass.invalid">
+                                    Guardar cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+
+
+
+
+            </div>
+
         </div>
     </div>
 </div>

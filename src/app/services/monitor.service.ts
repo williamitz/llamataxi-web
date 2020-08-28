@@ -14,9 +14,13 @@ export class MonitorService {
   onGetDrivers() {
     // console.log('llamando ');
     this.st.onLoadToken();
-
     return this.http.post<IResponse>( URI_API + `/Monitor/Drivers`, {}, {headers: { Authorization: this.st.token }} );
+  }
 
+  onGetZonesDemand() {
+    // console.log('llamando ');
+    this.st.onLoadToken();
+    return this.http.get<IResponse>( URI_API + `/Monitor/GetZones`, {headers: { Authorization: this.st.token }} );
   }
 
 }
