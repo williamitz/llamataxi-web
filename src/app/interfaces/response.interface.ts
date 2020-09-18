@@ -1,7 +1,7 @@
 export interface IResponse {
 
   ok: boolean;
-  data?: any[];
+  data?: any;
   total?: number;
   error?: any;
   showError?: number;

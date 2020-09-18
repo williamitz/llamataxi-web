@@ -80,7 +80,6 @@
                                         <img class="avatar avatar-64 img-circle" [src]="pathImg + msg.imgEmisor + token" />
                                     </div>
                                     <div class="col-9">
-
                                         <h5 class="checklist-title mb-0">{{ msg.subject }}</h5>
                                     </div>
                                 </div>
@@ -92,7 +91,7 @@
                                     <input class="custom-control-input" id="chk-msg-{{ msg.pkMessage }}" type="checkbox" checked="">
                                     <label class="custom-control-label" for="chk-msg-{{ msg.pkMessage }}"></label>
                                 </div> -->
-                                <span *ngIf="msg.totalResponses > 0" class="badge badge-pill badge-success">+{{ msg.totalResponses }}</span>
+                                <span *ngIf="msg.totalResponseNoReaded > 0" class="badge badge-pill badge-success">+{{ msg.totalResponseNoReaded }}</span>
                             </div>
                         </div>
                     </li>
@@ -779,12 +778,12 @@
                                 <div class="" role="tab" id="headingOne1">
                                     <a data-toggle="collapse" data-parent="#accordionEx" href="#collapseRes{{ msgRes.pkMessage }}" aria-expanded="true">
                                         <div class="row">
-                                            <div class="col-8">
+                                            <div class="col-9">
                                                 <h5 class="mb-0">
-                                                    {{ msgRes.nameEmisor }} &nbsp;&nbsp;-&nbsp;&nbsp; {{ msgRes.dateRegister | moment }}
+                                                    {{ msgRes.nameEmisor }} &nbsp;-&nbsp; {{ msgRes.dateRegister | moment: '': true }}
                                                 </h5>
                                             </div>
-                                            <div class="col-4 text-right">
+                                            <div class="col-3 text-right">
                                                 <i class="fas fa-angle-down rotate-icon"></i>
                                             </div>
                                         </div>

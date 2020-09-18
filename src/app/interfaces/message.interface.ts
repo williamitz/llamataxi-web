@@ -12,4 +12,5 @@ export interface IMsg {
   subject?: string;
   tags?: string;
   totalResponses?: number;
+  totalResponseNoReaded?: number;
 }

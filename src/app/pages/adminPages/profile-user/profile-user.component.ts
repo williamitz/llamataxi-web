@@ -18,6 +18,8 @@ import { SweetAlertIcon } from 'sweetalert2';
 import Swal from 'sweetalert2';
 import { OsService } from '../../../services/os.service';
 import { IResponse } from '../../../interfaces/response.interface';
+import { SocketService } from '../../../services/socket.service';
+import * as moment from 'moment';
 
 const URL_BAK = environment.URL_SERVER;
 
@@ -28,7 +30,11 @@ const URL_BAK = environment.URL_SERVER;
 })
 export class ProfileUserComponent implements OnInit, OnDestroy {
   typeDocSbc: Subscription;
+  countrySbc: Subscription;
   osSbc: Subscription;
+  msgSbc: Subscription;
+  osResponseMsg: Subscription;
+
   pkUser = 0;
   filesValid = ['PNG', 'JPG', 'JPEG'];
   dataProfile: IUserProfile = {
@@ -67,7 +73,7 @@ export class ProfileUserComponent implements OnInit, OnDestroy {
   loadingImg = false;
 
   // tslint:disable-next-line: max-line-length
-  constructor(private router: ActivatedRoute, private userSvc: UserService, private st: StorageService, private msgSvc: MessageService, private os: OsService) { }
+  constructor(private router: ActivatedRoute, private userSvc: UserService, private st: StorageService, private msgSvc: MessageService, private os: OsService, private io: SocketService) { }
 
   ngOnInit() {
     this.bodyUser = new UserProfileModel();
@@ -85,7 +91,7 @@ export class ProfileUserComponent implements OnInit, OnDestroy {
   }
 
   onLoadNationality() {
-    this.typeDocSbc = this.userSvc.onGetNationalityAll().subscribe( (res) => {
+    this.countrySbc = this.userSvc.onGetNationalityAll().subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
@@ -95,7 +101,7 @@ export class ProfileUserComponent implements OnInit, OnDestroy {
   }
 
   onLoadTypeDoc() {
-    this.userSvc.onGetTypeDocumentAll().subscribe( (res) => {
+    this.typeDocSbc = this.userSvc.onGetTypeDocumentAll().subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
@@ -215,14 +221,25 @@ export class ProfileUserComponent implements OnInit, OnDestroy {
   }
 
   onGetMessages() {
-    this.msgSvc.onGetMessages( this.pkUser, 1, 10, true ).subscribe( (res) => {
+    this.msgSbc = this.msgSvc.onGetMessages( this.pkUser, 1, 5, true ).subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
 
       this.dataMsg = res.data;
-      console.log(res);
+      this.onListenNewResponse();
     });
+  }
+
+  onListenNewResponse() {
+
+    this.osResponseMsg = this.io.onListen( 'new-response-msg' ).subscribe( (res: any) => {
+      const finded = this.dataMsg.find( msg => msg.pkMessage === Number( res.pkMessage ) );
+      if (finded) {
+        finded.totalResponseNoReaded += 1;
+      }
+    });
+
   }
 
   onGetError( showError: number ) {
@@ -262,24 +279,60 @@ export class ProfileUserComponent implements OnInit, OnDestroy {
 
           return;
         }
+
+        this.bodyMessage.pkMessage = res.data.pkMessage;
+        this.bodyMessage.fkUserEmisor = this.st.dataUser.pkUser;
+        this.bodyMessage.nameEmisor = this.st.dataUser.nameComplete;
+        this.bodyMessage.nameReceptor = this.dataProfile.nameComplete;
+        this.bodyMessage.imgEmisor = this.st.dataUser.img;
+        this.bodyMessage.imgReceptor = this.dataProfile.img;
+        this.bodyMessage.dateRegister = moment().format( 'DD/MM/YY' );
+
+        const payload = {
+          pkReceptor: this.dataProfile.pkUser,
+          data: this.bodyMessage
+        };
+        this.io.onEmit('send-msg-web', payload, (resIO) => {
+          console.log('Se envio mensaje socket', resIO);
+        });
+
         $('#btnCloseModalMg').trigger('click');
         this.onShowAlert('success', 'Mensaje al usuario', 'Mensaje enviado exitosamente');
         this.onGetMessages();
+
         if ( this.dataProfile.osId && this.dataProfile.osId !== '' ) {
-          this.onSendPush( 'Nuevo mensaje', this.bodyMessage.message );
+          this.onSendPush( this.bodyMessage.message );
         }
+
         this.bodyMessage.onReset();
       });
     }
   }
 
-  onSendPush( title = 'Mensaje al usuario', msg: string ) {
-    this.osSbc = this.os.onSendPushUser( this.dataProfile.osId, title, msg ).subscribe( (res) => {
-      console.log('respuesta one signal', res);
+  onSendPush( msg: string ) {
+    if (this.osSbc) {
+      this.osSbc.unsubscribe();
+    }
+    const title = `${ this.st.dataUser.nameComplete } te ha enviado un mensaje - llamataxi app`;
+    this.osSbc = this.os.onSendPushUser( [ this.dataProfile.osId ], title, msg ).subscribe( (res) => {
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      console.log('notificación enviada', res);
+
     });
   }
 
   onShowViewMsg( pkMessage: number ) {
+
+    const finded = this.dataMsg.find( msg => msg.pkMessage === pkMessage );
+    if (finded) {
+      this.dataViewMsg = finded;
+      if (finded.totalResponseNoReaded > 0) {
+        finded.totalResponseNoReaded -= 1;
+      }
+    }
 
     this.dataViewMsg = this.dataMsg.find( msg => msg.pkMessage === pkMessage );
     this.bodyResponse.pkMessage = this.dataViewMsg.pkMessage;
@@ -310,6 +363,14 @@ export class ProfileUserComponent implements OnInit, OnDestroy {
           return;
         }
 
+        const payload = {
+          pkMessage: this.bodyResponse.pkMessage,
+          pkReceptor: this.bodyResponse.fkUserReceptor
+        };
+        this.io.onEmit('new-response-to-app', payload, (resIO) => {
+          console.log('notificando a user mediante socket', resIO);
+        });
+
         const finded = this.dataMsg.find( msg => msg.pkMessage === this.bodyResponse.pkMessage );
         finded.totalResponses += 1;
         const resRes: any = res.data;
@@ -328,7 +389,7 @@ export class ProfileUserComponent implements OnInit, OnDestroy {
         this.newResponse = false;
         this.bodyResponse.message = '';
         if ( this.dataProfile.osId && this.dataProfile.osId !== '' ) {
-          this.onSendPush( 'Nuevo mensaje', this.bodyResponse.message );
+          // this.onSendPush( 'Nuevo mensaje', this.bodyResponse.message );
         }
 
       });
@@ -464,9 +525,15 @@ export class ProfileUserComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.msgSbc.unsubscribe();
+    this.countrySbc.unsubscribe();
     this.typeDocSbc.unsubscribe();
     if (this.osSbc) {
       this.osSbc.unsubscribe();
+    }
+
+    if (this.osResponseMsg) {
+      this.osResponseMsg.unsubscribe();
     }
   }
 

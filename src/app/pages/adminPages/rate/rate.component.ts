@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { RateModel } from 'src/app/models/rate.model';
 import { IRate } from 'src/app/interfaces/rate.interface';
 import { RateService } from 'src/app/services/rate.service';
 import { PagerService } from 'src/app/services/pager.service';
 import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -11,7 +12,7 @@ import { NgForm } from '@angular/forms';
   templateUrl: './Rate.component.html',
   styleUrls: [],
 })
-export class RateComponent implements OnInit {
+export class RateComponent implements OnInit, OnDestroy {
   bodyRate: RateModel;
   dataRate: IRate[] = [];
   dataJournal: any[];
@@ -20,6 +21,9 @@ export class RateComponent implements OnInit {
   textButton = 'Guardar';
   actionConfirm = 'eliminar';
   showInactive = false;
+  rateSbc: Subscription;
+  categorySbc: Subscription;
+  journalSbc: Subscription;
 
   infoPagination = 'Mostrando 0 de 0 registros.';
   pagination = {
@@ -31,6 +35,9 @@ export class RateComponent implements OnInit {
   loadData = false;
   loading = false;
 
+  qCategory = '';
+  qJournal = '';
+
   constructor(private RateSvc: RateService, private pagerSvc: PagerService) {}
 
   ngOnInit() {
@@ -39,27 +46,32 @@ export class RateComponent implements OnInit {
     this.onGetAllCategory();
     this.onGetAllJournal();
   }
+
   onGetAllCategory() {
-    this.RateSvc.onGetListAllCategory().subscribe((res) => {
+    this.categorySbc = this.RateSvc.onGetListAllCategory().subscribe((res) => {
       if (!res.ok) {
         throw new Error(res.error);
       }
       this.dataCategory = res.data;
     });
   }
+
   onGetAllJournal() {
-    this.RateSvc.onGetListAllJournal().subscribe((res) => {
+    this.journalSbc = this.RateSvc.onGetListAllJournal().subscribe((res) => {
       if (!res.ok) {
         throw new Error(res.error);
       }
       this.dataJournal = res.data;
     });
   }
+
   onGetRate(page: number, chk = false) {
+
     if (chk) {
       this.showInactive = !this.showInactive;
     }
-    this.RateSvc.onGetListRate(page, 0, this.showInactive).subscribe(
+
+    this.rateSbc = this.RateSvc.onGetListRate(page, this.qCategory, this.qJournal, this.showInactive).subscribe(
       (res) => {
         if (!res.ok) {
           throw new Error(res.error);
@@ -226,5 +238,11 @@ export class RateComponent implements OnInit {
     this.titleModal = 'Nuevo precio';
     this.textButton = 'Guardar';
     this.loadData = false;
+  }
+
+  ngOnDestroy() {
+    this.rateSbc.unsubscribe();
+    this.categorySbc.unsubscribe();
+    this.journalSbc.unsubscribe();
   }
 }

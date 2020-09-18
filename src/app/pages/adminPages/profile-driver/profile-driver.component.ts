@@ -1,4 +1,4 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DriverService } from '../../../services/driver.service';
 import { environment } from '../../../../environments/environment';
@@ -28,6 +28,9 @@ import { ITypeDocument } from '../../../interfaces/type-document.interface';
 import { UserService } from '../../../services/user.service';
 import { IRespReniec } from '../../../interfaces/reniec.interface';
 import { IResponse } from '../../../interfaces/response.interface';
+import { Subscription } from 'rxjs';
+import { OsService } from '../../../services/os.service';
+import { SocketService } from '../../../services/socket.service';
 
 const URI_API = environment.URL_SERVER;
 declare var pdfjsLib: any;
@@ -36,36 +39,34 @@ declare var pdfjsLib: any;
   templateUrl: './profile-driver.component.html',
   styleUrls: ['./profile-driver.component.css']
 })
-export class ProfileDriverComponent implements OnInit {
+export class ProfileDriverComponent implements OnInit, OnDestroy {
   // :entity/:idEntity/:fileName
   @ViewChild('canvasCriminal') canvasCriminal: ElementRef;
   @ViewChild('canvasPolicial') canvasPolicial: ElementRef;
 
+  vehicleSbc: Subscription;
+  typeDocSbc: Subscription;
+  countrySbc: Subscription;
+  profileSbc: Subscription;
+  categorySbc: Subscription;
+  msgSbc: Subscription;
+  osSbc: Subscription;
+  osResponseMsg: Subscription;
+
   pkDriver = 0;
   nowYear = moment().year();
   dataYears: number[] = [];
-  dataColors: IColor[] = [{
-    code: 'BLACK',
-    text: 'NEGRO'
-  }, {
-    code: 'WHITE',
-    text: 'BLANCO'
-  }, {
-    code: 'YELLOW',
-    text: 'AMARILLO'
-  }, {
-    code: 'BROWN',
-    text: 'MARRÓN'
-  }, {
-    code: 'BLUE',
-    text: 'AZUL'
-  }, {
-    code: 'RED',
-    text: 'ROJO'
-  }, {
-    code: 'GREEN',
-    text: 'VERDE'
-  }];
+  dataColors: IColor[] = [
+    { code: 'BLACK', text: 'NEGRO' },
+    { code: 'WHITE', text: 'BLANCO' },
+    { code: 'YELLOW', text: 'AMARILLO' },
+    { code: 'BROWN', text: 'MARRÓN' },
+    { code: 'BLUE', text: 'AZUL' },
+    { code: 'RED',  text: 'ROJO' },
+    { code: 'GREEN', text: 'VERDE' },
+    { code: 'GRAY', text: 'GRIS' },
+    { code: 'BEIGE', text: 'BEIGE' },
+  ];
 
   pathDriver = URI_API + `/Driver/Img/Get/`;
   pathImg = URI_API + `/User/Img/Get/`;
@@ -152,14 +153,14 @@ export class ProfileDriverComponent implements OnInit {
    */
 
   // tslint:disable-next-line: max-line-length
-  constructor(private router: ActivatedRoute, private driverSvc: DriverService, private storage: StorageService, private msgSvc: MessageService, private brandSvc: BrandService, private vehicleSvc: VehicleDriverService, private userSvc: UserService) { }
+  constructor(private router: ActivatedRoute, private driverSvc: DriverService, private st: StorageService, private msgSvc: MessageService, private brandSvc: BrandService, private vehicleSvc: VehicleDriverService, private userSvc: UserService, private os: OsService, private io: SocketService) { }
 
   ngOnInit() {
     // $('.toot').trigger('tooltip');
-    this.storage.onLoadToken();
-    this.storage.onLoadData();
-    this.token = `?token=${ this.storage.token }`;
-    this.dataUser = this.storage.onGetItem('dataUser', true);
+    this.st.onLoadToken();
+    this.st.onLoadData();
+    this.token = `?token=${ this.st.token }`;
+    this.dataUser = this.st.onGetItem('dataUser', true);
     this.pkDriver = Number( this.router.snapshot.params.id ) || 0;
     this.bodyVehicle = new VehicleDriverModel( this.pkDriver );
     this.onGetProfile( this.pkDriver );
@@ -210,7 +211,7 @@ export class ProfileDriverComponent implements OnInit {
   onGetProfile( id: number ) {
     Swal.fire({title: 'Espere...'});
     Swal.showLoading();
-    this.driverSvc.onGetProfile( id ).subscribe( (res: any) => {
+    this.profileSbc = this.driverSvc.onGetProfile( id ).subscribe( (res: any) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
@@ -231,7 +232,7 @@ export class ProfileDriverComponent implements OnInit {
   onDisabledUser() {
     this.bodyDisabled.status = !this.dataProfile.statusRegister;
     this.actionDisabled = this.bodyDisabled.status ? 'habilitado' : 'des-habilitado';
-    this.bodyDisabled.observation = `Conductor ${ this.actionDisabled } por ${ this.storage.dataUser.nameComplete }`;
+    this.bodyDisabled.observation = `Conductor ${ this.actionDisabled } por ${ this.st.dataUser.nameComplete }`;
   }
 
   onSubmitDeleteUser() {
@@ -267,7 +268,7 @@ export class ProfileDriverComponent implements OnInit {
   }
 
   onGetCategory() {
-    this.brandSvc.onGetListAllCategory().subscribe( (res) => {
+    this.categorySbc = this.brandSvc.onGetListAllCategory().subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
@@ -298,12 +299,13 @@ export class ProfileDriverComponent implements OnInit {
   }
 
   onGetMessages() {
-    this.msgSvc.onGetMessages( this.dataProfile.pkUser, 1, 10, true ).subscribe( (res) => {
+    this.msgSvc.onGetMessages( this.dataProfile.pkUser, 1, 5, true ).subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
 
       this.dataMsg = res.data;
+      this.onListenNewResponse();
     });
   }
 
@@ -385,7 +387,7 @@ export class ProfileDriverComponent implements OnInit {
       this.loading = true;
       this.bodyMessage.fkUserReceptor = this.dataProfile.pkUser;
 
-      this.msgSvc.onAddMessage( this.bodyMessage ).subscribe( (res) => {
+      this.msgSbc = this.msgSvc.onAddMessage( this.bodyMessage ).subscribe( (res) => {
         if (!res.ok) {
           throw new Error( res.error );
         }
@@ -396,13 +398,58 @@ export class ProfileDriverComponent implements OnInit {
 
           return;
         }
-        $('#btnCloseModalMg').trigger('click');
-        this.onShowAlert('success', 'Mensaje al usuario', 'Mensaje enviado exitosamente');
 
+        $('#btnCloseModalMg').trigger('click');
+        this.bodyMessage.pkMessage = res.data.pkMessage;
+        this.bodyMessage.fkUserEmisor = this.st.dataUser.pkUser;
+        this.bodyMessage.nameEmisor = this.st.dataUser.nameComplete;
+        this.bodyMessage.nameReceptor = this.dataProfile.nameComplete;
+        this.bodyMessage.imgEmisor = this.st.dataUser.img;
+        this.bodyMessage.imgReceptor = this.dataProfile.img;
+        this.bodyMessage.dateRegister = moment().format( 'DD/MM/YY' );
+
+        const payload = {
+          pkReceptor: this.dataProfile.pkUser,
+          data: this.bodyMessage
+        };
+        this.io.onEmit('send-msg-web', payload, (resIO) => {
+          console.log('Se envio mensaje socket', resIO);
+        });
+
+        this.onShowAlert('success', 'Mensaje al usuario', 'Mensaje enviado exitosamente');
+        this.onSendPush( this.bodyMessage.subject );
         this.onGetMessages();
+        this.bodyMessage.onReset();
       });
     }
   }
+
+  onSendPush( msg: string ) {
+    if (this.osSbc) {
+      this.osSbc.unsubscribe();
+    }
+    const title = `${ this.st.dataUser.nameComplete } te ha enviado un mensaje - llamataxi app`;
+    this.osSbc = this.os.onSendPushUser( [ this.dataProfile.osId ], title, msg ).subscribe( (res) => {
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      console.log('notificación enviada', res);
+
+    });
+  }
+
+  onListenNewResponse() {
+
+    this.osResponseMsg = this.io.onListen( 'new-response-msg' ).subscribe( (res: any) => {
+      const finded = this.dataMsg.find( msg => msg.pkMessage === Number( res.pkMessage ) );
+      if (finded) {
+        finded.totalResponseNoReaded += 1;
+      }
+    });
+
+  }
+
 
   onGetErrorMsg( showError: number ) {
     let arrError = showError === 0 ? ['Mensaje enviado con éxito'] : ['Error'];
@@ -524,8 +571,14 @@ export class ProfileDriverComponent implements OnInit {
   }
 
   onShowViewMsg( pkMessage: number ) {
-    this.dataViewMsg = this.dataMsg.find( msg => msg.pkMessage === pkMessage );
-    this.bodyResponse.pkMessage = this.dataViewMsg.pkMessage;
+    const finded = this.dataMsg.find( msg => msg.pkMessage === pkMessage );
+    if (finded) {
+      this.dataViewMsg = finded;
+      if (finded.totalResponseNoReaded > 0) {
+        finded.totalResponseNoReaded -= 1;
+      }
+    }
+    this.bodyResponse.pkMessage = finded.pkMessage;
     this.bodyResponse.fkUserReceptor = this.dataProfile.pkUser;
     this.msgSvc.onGetResponseMsg( pkMessage ).subscribe( (res) => {
       if (!res.ok) {
@@ -553,6 +606,14 @@ export class ProfileDriverComponent implements OnInit {
           this.onShowAlert('error', 'Error',  this.onGetErrorMsgRes( res.showError ));
           return;
         }
+
+        const payload = {
+          pkMessage: this.bodyResponse.pkMessage,
+          pkReceptor: this.bodyResponse.fkUserReceptor
+        };
+        this.io.onEmit('new-response-to-app', payload, (resIO) => {
+          console.log('notificando a user mediante socket', resIO);
+        });
 
         const finded = this.dataMsg.find( msg => msg.pkMessage === this.bodyResponse.pkMessage );
         finded.totalResponses += 1;
@@ -913,7 +974,7 @@ export class ProfileDriverComponent implements OnInit {
   }
 
   onLoadVehicles() {
-    this.driverSvc.onGetVehicles( this.pkDriver ).subscribe( (res) => {
+    this.vehicleSbc = this.driverSvc.onGetVehicles( this.pkDriver ).subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
@@ -1005,7 +1066,6 @@ export class ProfileDriverComponent implements OnInit {
     reader.readAsDataURL(this.fileProfile);
   }
 
-
   onSubmitEditProfile( frm: NgForm ) {
     if (frm.valid) {
       this.loadingDriver = true;
@@ -1043,7 +1103,7 @@ export class ProfileDriverComponent implements OnInit {
   }
 
   onLoadNationality() {
-    this.userSvc.onGetNationalityAll().subscribe( (res) => {
+    this.countrySbc = this.userSvc.onGetNationalityAll().subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
@@ -1054,7 +1114,7 @@ export class ProfileDriverComponent implements OnInit {
   }
 
   onLoadTypeDoc() {
-    this.userSvc.onGetTypeDocumentAll().subscribe( (res) => {
+    this.typeDocSbc = this.userSvc.onGetTypeDocumentAll().subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
@@ -1071,6 +1131,27 @@ export class ProfileDriverComponent implements OnInit {
     }
 
     this.longitudeTD = finded.longitude;
+  }
+
+  ngOnDestroy() {
+
+    this.profileSbc.unsubscribe();
+    this.categorySbc.unsubscribe();
+    this.typeDocSbc.unsubscribe();
+    this.countrySbc.unsubscribe();
+
+    if (this.msgSbc) {
+      this.msgSbc.unsubscribe();
+    }
+
+    if (this.osSbc) {
+      this.osSbc.unsubscribe();
+    }
+
+    if (this.osResponseMsg) {
+      this.osResponseMsg.unsubscribe();
+    }
+
   }
 
 }

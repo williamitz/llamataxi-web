@@ -63,7 +63,7 @@ export class UserService {
 
     return this.http.put<IResponse>( URI_API + '/User/Profile/Update', body, { headers: { Authorization: this.storage.token } } );
   }
-  
+
   onDeleteUser( pkUser: number, status: boolean, observation: string ) {
     this.storage.onLoadToken();
     const params = `?observation=${ observation }`;

@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { RateModel } from "../models/rate.model";
-import { IResponse } from "../interfaces/response.interface";
-import { environment } from "../../environments/environment";
-import { StorageService } from "./storage.service";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { RateModel } from '../models/rate.model';
+import { IResponse } from '../interfaces/response.interface';
+import { environment } from '../../environments/environment';
+import { StorageService } from './storage.service';
 
 const URI_API = environment.URL_SERVER;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class RateService {
   constructor(private http: HttpClient, private storageSvc: StorageService) {}
@@ -41,25 +41,29 @@ export class RateService {
     );
   }
 
-  onGetListRate(page: number, q: number, showInactive: boolean) {
+  onGetListRate(page: number, qCategory = '', qJournal = '', showInactive: boolean) {
+
     showInactive = showInactive ? false : true;
     this.storageSvc.onLoadToken();
-    const params = `?page=${page}&q=${q}&showInactive=${showInactive}`;
+    const params = `?page=${page}&qCategory=${qCategory}&qJournal=${ qJournal }&showInactive=${showInactive}`;
 
     return this.http.get<IResponse>(URI_API + `/Rate/Get` + params, {
       headers: { Authorization: this.storageSvc.token },
     });
   }
+
   onGetListAllCategory() {
     this.storageSvc.onLoadToken();
     return this.http.get<IResponse>(URI_API + `/Category/GetAll`, {
       headers: { Authorization: this.storageSvc.token },
     });
   }
+
   onGetListAllJournal() {
     this.storageSvc.onLoadToken();
     return this.http.get<IResponse>(URI_API + `/Journal/GetAll`, {
       headers: { Authorization: this.storageSvc.token },
     });
   }
+
 }

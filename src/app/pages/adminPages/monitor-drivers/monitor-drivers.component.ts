@@ -16,10 +16,11 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
   @ViewChild('mapMonitor', {static: true}) mapMonitor: ElementRef;
   @ViewChild('infoPolygon', {static: true}) infoPolygon: ElementRef;
   @ViewChild('infoDriver', {static: true}) infoDriver: ElementRef;
-  
+
   loadSbc: Subscription;
   ioCoordsSbc: Subscription;
   ioLogoutSbc: Subscription;
+  ioPlayGeoSbc: Subscription;
   ioNewServiceSbc: Subscription;
   ioCancelServiceSbc: Subscription;
   zonesSbc: Subscription;
@@ -56,7 +57,6 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
   onLoadMap() {
 
-
     const styles: any = this.codJournal === 'DIURN' ? environment.styleMapDiurn : environment.styleMapDiurn;
 
     const optMap: google.maps.MapOptions = {
@@ -72,7 +72,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
     this.infoWindowPolygon = new google.maps.InfoWindow();
     this.infoWindowDriver = new google.maps.InfoWindow();
-    
+
     this.onLoadDrivers();
     this.onGetZonesDemand();
 
@@ -81,6 +81,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
     this.onListenCurrentCoords();
     this.onListenLogout();
+    this.onListenPlayGeo();
   }
 
   onLoadDrivers() {
@@ -286,12 +287,26 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
   }
 
+  onListenPlayGeo() {
+
+    this.ioPlayGeoSbc = this.io.onListen('driver-off').subscribe( (res: any) => {
+      const findeed = this.markers.find( mk => mk.pkUser === Number( res.pkUser ) );
+      // console.log('moviendo marker', res);
+      if (findeed) {
+        findeed.marker.setMap( null );
+        this.markers = this.markers.filter( mk => mk.pkUser !== Number( res.pkUser ) );
+      }
+    });
+
+  }
+
   ngOnDestroy() {
 
     this.loadSbc.unsubscribe();
 
     this.ioCoordsSbc.unsubscribe();
     this.ioLogoutSbc.unsubscribe();
+    this.ioPlayGeoSbc.unsubscribe();
 
     this.zonesSbc.unsubscribe();
     this.ioNewServiceSbc.unsubscribe();

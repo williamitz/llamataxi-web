@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { JournalModel } from 'src/app/models/journal.model';
 import { IJournal } from 'src/app/interfaces/journal.interface';
 import { JournalService } from 'src/app/services/journal.service';
 import { PagerService } from 'src/app/services/pager.service';
 import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-journal',
   templateUrl: './Journal.component.html',
   styleUrls: [],
 })
-export class JournalComponent implements OnInit {
+export class JournalComponent implements OnInit, OnDestroy {
+
+  journalSbc: Subscription;
+
   bodyJournal: JournalModel;
   dataJournal: IJournal[] = [];
   titleModal = 'Nuevo Jornada';
@@ -28,10 +32,7 @@ export class JournalComponent implements OnInit {
   loadData = false;
   loading = false;
 
-  constructor(
-    private JournalSvc: JournalService,
-    private pagerSvc: PagerService
-  ) {}
+  constructor( private JournalSvc: JournalService, private pagerSvc: PagerService ) {}
 
   ngOnInit() {
     this.bodyJournal = new JournalModel();
@@ -42,7 +43,8 @@ export class JournalComponent implements OnInit {
     if (chk) {
       this.showInactive = !this.showInactive;
     }
-    this.JournalSvc.onGetListJournal(page, 0, this.showInactive).subscribe(
+
+    this.journalSbc = this.JournalSvc.onGetListJournal(page, 0, this.showInactive).subscribe(
       (res) => {
         if (!res.ok) {
           throw new Error(res.error);
@@ -217,4 +219,11 @@ export class JournalComponent implements OnInit {
     this.textButton = 'Guardar';
     this.loadData = false;
   }
+
+  ngOnDestroy() {
+
+    this.journalSbc.unsubscribe();
+
+  }
+
 }

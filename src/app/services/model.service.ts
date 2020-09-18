@@ -39,10 +39,15 @@ export class ModelService {
     );
   }
 
-  onGetListModel(page: number, q: number, showInactive: boolean) {
+  onGetListModel(page: number, qCategory = '', qBrand = '', qModel = '',  showInactive: boolean) {
+
     showInactive = showInactive ? false : true;
     this.storageSvc.onLoadToken();
-    const params = `?page=${page}&q=${q}&showInactive=${showInactive}`;
+    let params = `?page=${ page }`;
+    params += `&qCategory=${ qCategory }`;
+    params += `&qBrand=${ qBrand }`;
+    params += `&qModel=${ qModel }`;
+    params += `&showInactive=${ showInactive }`;
 
     return this.http.get<IResponse>(URI_API + `/Model/Get` + params, {
       headers: { Authorization: this.storageSvc.token },

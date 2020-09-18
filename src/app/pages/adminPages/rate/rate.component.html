@@ -18,8 +18,34 @@
                             </tr>
                             <tr>
                                 <th scope="col">#</th>
-                                <th scope="col">Categoria</th>
-                                <th scope="col">Jornada</th>
+                                <th scope="col">
+                                    Categoria
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                          <i class="fas fa-search"></i>
+                                        </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+                                                <input type="text" name="qCategory" [(ngModel)]="qCategory" (change)="onGetRate(1)" class="form-control form-control-sm" placeholder="Buscar por categoría">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    Jornada
+
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <i class="fas fa-search"></i>
+                                    </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+                                                <input type="text" name="qJournal" [(ngModel)]="qJournal" (change)="onGetRate(1)" class="form-control form-control-sm" placeholder="Buscar por jornada">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </th>
                                 <th scope="col">Precio</th>
                                 <th scope="col">Min</th>
                                 <th scope="col">Fecha</th>
@@ -164,7 +190,6 @@
                                       <option value="" disabled selected>--Seleccione--</option>
                                       <option [value]="item.pkJournal" *ngFor="let item of dataJournal">
                                         {{item.nameJournal}}
-                                        <!-- - {{ item.hourStart }}:00 , {{ item.hourEnd }}:00 -->
                                     </option>
                                 </select>
 

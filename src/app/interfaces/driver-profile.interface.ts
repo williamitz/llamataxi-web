@@ -30,4 +30,5 @@ export interface IProfileDriver {
   verifyReniec?: number;
   yearsOld?: number;
   statusRegister?: boolean;
+  osId?: string;
 }

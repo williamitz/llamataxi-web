@@ -1,9 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ModelModel } from 'src/app/models/model.model';
 import { IModel } from 'src/app/interfaces/model.interface';
 import { ModelService } from 'src/app/services/model.service';
 import { PagerService } from 'src/app/services/pager.service';
 import { NgForm } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 @Component({
   // tslint:disable-next-line: component-selector
@@ -11,7 +12,7 @@ import { NgForm } from '@angular/forms';
   templateUrl: './model.component.html',
   styleUrls: [],
 })
-export class ModelComponent implements OnInit {
+export class ModelComponent implements OnInit, OnDestroy {
   bodyModel: ModelModel;
   dataModel: IModel[] = [];
   dataCategory: any[];
@@ -31,6 +32,14 @@ export class ModelComponent implements OnInit {
   loadData = false;
   loading = false;
 
+  categorySbc: Subscription;
+  brandSbc: Subscription;
+  modelSbc: Subscription;
+
+  qCategory = '';
+  qBrand = '';
+  qModel = '';
+
   constructor(private ModelSvc: ModelService, private pagerSvc: PagerService) {}
 
   ngOnInit() {
@@ -39,8 +48,9 @@ export class ModelComponent implements OnInit {
     this.onGetModel(1);
     // this.onGetAllBrand();
   }
+
   onGetAllCategory() {
-    this.ModelSvc.onGetListAllCategory().subscribe((res) => {
+    this.categorySbc = this.ModelSvc.onGetListAllCategory().subscribe((res) => {
       if (!res.ok) {
         throw new Error(res.error);
       }
@@ -49,8 +59,9 @@ export class ModelComponent implements OnInit {
       this.dataCategory = res.data;
     });
   }
+
   onGetAllBrand() {
-    this.ModelSvc.onGetListAllBrand( this.bodyModel.fkCategory ).subscribe((res) => {
+    this.brandSbc = this.ModelSvc.onGetListAllBrand( this.bodyModel.fkCategory ).subscribe((res) => {
       if (!res.ok) {
         throw new Error(res.error);
       }
@@ -62,12 +73,11 @@ export class ModelComponent implements OnInit {
     this.onGetAllBrand();
   }
 
-
   onGetModel(page: number, chk = false) {
     if (chk) {
       this.showInactive = !this.showInactive;
     }
-    this.ModelSvc.onGetListModel(page, 0, this.showInactive).subscribe(
+    this.modelSbc = this.ModelSvc.onGetListModel(page, this.qCategory, this.qBrand, this.qModel, this.showInactive).subscribe(
       (res) => {
         if (!res.ok) {
           throw new Error(res.error);
@@ -237,5 +247,14 @@ export class ModelComponent implements OnInit {
     this.titleModal = 'Nuevo Modelo';
     this.textButton = 'Guardar';
     this.loadData = false;
+  }
+
+  ngOnDestroy() {
+    this.categorySbc.unsubscribe();
+    this.modelSbc.unsubscribe();
+
+    if (this.brandSbc) {
+      this.brandSbc.unsubscribe();
+    }
   }
 }
