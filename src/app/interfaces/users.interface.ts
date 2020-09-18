@@ -24,5 +24,7 @@ export interface IUser {
 
     nameDocument: string;
     prefix: string;
+    osId: string;
+    isDriver: boolean;
 
 }
