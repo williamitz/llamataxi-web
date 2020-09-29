@@ -38,3 +38,8 @@
     position: absolute;
     height: 100%;
 }
+
+.navbar-brand {
+    max-width: 100% !important;
+    max-height: 180px !important;
+}

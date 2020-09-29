@@ -17,6 +17,11 @@ import { IUser } from 'src/app/interfaces/users.interface';
 import { ChangePassModel } from '../../../models/changePass.model';
 import swal from 'sweetalert2';
 import { SweetAlertIcon } from 'sweetalert2';
+import { MessageModel } from '../../../models/message.model';
+import { MessageService } from '../../../services/message.service';
+import { IResultMsg } from 'src/app/interfaces/resultSend.interface';
+import { OsService } from '../../../services/os.service';
+
 
 const URI_API = environment.URL_SERVER;
 @Component({
@@ -29,6 +34,8 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   userCnnSbc: Subscription;
   userDiscnnSbc: Subscription;
   passwordSbc: Subscription;
+  msgSbc: Subscription;
+  pushSbc: Subscription;
   dataUser: IUser[] = [];
 
   infoPagination = 'Mostrando 0 de 0 registros.';
@@ -49,12 +56,15 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   titleModal = 'Nuevo usuario';
   txtButton = 'Guardar';
 
+  bodyMessage: MessageModel;
+
   qName = '';
   qUser = '';
   qEmail = '';
   qRole = '';
   qVerified = 2;
   qConnect = 2;
+  rowsForPage = 10;
 
   dataNationality: INationality[] = [];
   dataTypeDoc: ITypeDocument[] = [];
@@ -74,12 +84,16 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   };
   prefix = '+';
 
+  rowStart = 0;
+  rowEnd = 0;
+
   // tslint:disable-next-line: max-line-length
-  constructor( private userSvc: UserService , private pagerSvc: PagerService, private storage: StorageService, private sk: SocketService) { }
+  constructor( private userSvc: UserService , private pagerSvc: PagerService, private st: StorageService, private sk: SocketService, private msgSvc: MessageService, private osSvc: OsService) { }
 
   ngOnInit() {
-    this.storage.onLoadToken();
-    this.token = `?token=${ this.storage.token }`;
+    this.st.onLoadToken();
+    this.bodyMessage = new MessageModel( true );
+    this.token = `?token=${ this.st.token }`;
     this.bodyUser = new UserModel();
     this.bodyChangePass = new ChangePassModel();
     this.onGetListUser( 1 );
@@ -115,7 +129,7 @@ export class AccountUserComponent implements OnInit, OnDestroy {
     }
     this.loadingList = true;
     this.userSvc.onGetUser( page,
-                              10,
+                              this.rowsForPage,
                               this.qName,
                               this.qEmail,
                               this.qUser,
@@ -130,16 +144,118 @@ export class AccountUserComponent implements OnInit, OnDestroy {
 
       this.loadingList = false;
       this.dataUser = res.data;
-      this.pagination = this.pagerSvc.getPager(res.total, page, 10);
+      this.pagination = this.pagerSvc.getPager(res.total, page, this.rowsForPage);
 
       if ( this.pagination.totalPages > 0 ) {
 
-        const start = ((this.pagination.currentPage - 1) * 10) + 1;
-        const vend = ((this.pagination.currentPage - 1) * 10) + this.dataUser.length;
-        this.infoPagination = `Mostrando del ${ start } al ${ vend } de ${ res.total } registros.`;
+        this.rowStart = ((this.pagination.currentPage - 1) * this.rowsForPage) + 1;
+        this.rowEnd = ((this.pagination.currentPage - 1) * this.rowsForPage) + this.dataUser.length;
+
+        this.infoPagination = `Mostrando del ${ this.rowStart } al ${ this.rowEnd } de ${ res.total } registros.`;
+      } else {
+        this.infoPagination = `Mostrando del 0 al 0 de 0 registros.`;
       }
 
     });
+  }
+
+  async onSendMessage( frm: NgForm ) {
+    if (frm.valid) {
+
+      swal.showLoading();
+
+      const arrUsersOS: string[] = [];
+      const resultSend: IResultMsg[] = [];
+
+      this.dataUser.forEach( (user) => {
+        if (user.osId && user.osId !== '') {
+          arrUsersOS.push( user.osId );
+        }
+      });
+
+      this.bodyMessage.fkUserEmisor = this.st.dataUser.pkUser ;
+
+      await Promise.all( this.dataUser.map( async (user) => {
+
+        this.bodyMessage.isDriver = user.isDriver;
+        this.bodyMessage.fkUserReceptor = user.pkUser;
+        const resMsg = await this.onSaveMsg( );
+        resultSend.push( resMsg );
+
+        // if (this.msgSbc) {
+        //   this.msgSbc.unsubscribe();
+        //   this.msgSbc = null;
+        // }
+
+      }) );
+
+      console.table(resultSend);
+
+      swal.hideLoading();
+      const resOs = await this.onSendPush( arrUsersOS );
+      let icon: SweetAlertIcon = 'success';
+      let text =  `Se registraron ${ resultSend.filter( res => res.ok === true ).length } mensajes, se notificaron ${ arrUsersOS.length }`;
+      if (!resOs.ok) {
+        text =  `Se registraron ${ resultSend.filter( res => res.ok === true ).length } mensajes, error al enviar notificaiones push`;
+        icon = 'warning';
+      }
+
+      swal.fire({
+        title: 'Mensaje al usuario',
+        text,
+        icon
+      });
+
+    }
+  }
+
+  onSaveMsg(  ): Promise<IResultMsg> {
+
+    return new Promise( (resolve) => {
+      this.msgSbc = this.msgSvc.onAddMessage( this.bodyMessage ).subscribe( (res) => {
+
+        let message = '';
+        if (!res.ok) {
+          message = `Error interno al enviar mensaje a ${ this.bodyMessage.nameReceptor }`;
+        }
+
+        message = this.onGetErrorMsg( res.showError );
+
+        if (res.showError === 0) {
+          message += `: ${ this.bodyMessage.nameReceptor }`;
+        }
+
+        resolve({
+          ok: res.ok,
+          message
+        });
+
+      });
+    });
+  }
+
+  onSendPush( arrIds: string[] ): Promise<IResponse> {
+    return new Promise( (resolve) => {
+      this.pushSbc = this.osSvc.onSendPushUser( arrIds, 'Nuevo mensaje - Llamataxi app', this.bodyMessage.subject ).subscribe( (res) => {
+        resolve( res );
+      });
+    });
+  }
+
+  onGetErrorMsg( showError: number ) {
+    const arrError = showError === 0 ? ['Mensaje enviado con éxito'] : ['Error'];
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 1) {
+      arrError.push('no se encontró registro del emisor');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 4) {
+      arrError.push('no se encontró registro del receptor');
+    }
+
+    return arrError.join(', ');
   }
 
   onChangeCountry(event: INationality) {
@@ -184,11 +300,15 @@ export class AccountUserComponent implements OnInit, OnDestroy {
           const { msg, css, icon } = this.onGetError( res.showError );
           this.loading = false;
 
+          swal.fire({
+            title: 'Mensaje al usuario',
+            text: msg,
+            icon
+          });
+
           if (res.showError !== 0) {
-            this.onShowAlert('alertUserModal', css, icon, msg );
             return;
           }
-          this.onShowAlert('alertUser', css, icon, msg );
           $('#btnCloseModal').trigger('click');
           this.onGetListUser(1);
         });
@@ -216,18 +336,6 @@ export class AccountUserComponent implements OnInit, OnDestroy {
         finded.statusSocket = false;
       }
     });
-  }
-
-  onShowAlert( idAlert: string, css: string, icon: string, msg: string ) {
-    let html = `<div class="alert alert-${ css } alert-dismissible fade show" role="alert">`;
-    html += `<span class="alert-icon"><i class="fa fa-${ icon }"></i></span>`;
-    html += `<span class="alert-text"> ${ msg } </span>`;
-    html += `<button type="button" class="close" data-dismiss="alert" aria-label="Close">`;
-    html += `<span aria-hidden="true">&times;</span>`;
-    html += `</button>`;
-    html += `</div>`;
-
-    $(`#${ idAlert }`).html(html);
   }
 
   onResetForm() {
@@ -286,7 +394,7 @@ export class AccountUserComponent implements OnInit, OnDestroy {
   onGetError( showError: number ) {
     let arrError = showError === 0 ? ['Se ha creado un nuevo usuario con éxito'] : ['Ya existe un registro'];
     const css = showError === 0 ? 'success' : 'danger';
-    const icon = showError === 0 ? 'check' : 'exclamation-circle';
+    const icon: SweetAlertIcon = showError === 0 ? 'success' : 'error';
 
     // tslint:disable-next-line: no-bitwise
     if (showError & 1) {
@@ -343,6 +451,14 @@ export class AccountUserComponent implements OnInit, OnDestroy {
 
     if ( this.passwordSbc ) {
       this.passwordSbc.unsubscribe();
+    }
+
+    if (this.msgSbc) {
+      this.msgSbc.unsubscribe();
+    }
+
+    if (this.pushSbc) {
+      this.pushSbc.unsubscribe();
     }
 
   }

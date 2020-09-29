@@ -10,6 +10,7 @@ import { SexPipe } from './sex.pipe';
 import { UserUrlPipe } from './user-url.pipe';
 import { CategoryDriverPipe } from './category-driver.pipe';
 import { OccupiedPipe } from './occupied.pipe';
+import { SafeHtmlPipe } from './safe-html.pipe';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { OccupiedPipe } from './occupied.pipe';
     SexPipe,
     UserUrlPipe,
     CategoryDriverPipe,
-    OccupiedPipe
+    OccupiedPipe,
+    SafeHtmlPipe
   ],
   exports: [
     RowIndexPipe,
@@ -34,7 +36,8 @@ import { OccupiedPipe } from './occupied.pipe';
     SexPipe,
     UserUrlPipe,
     CategoryDriverPipe,
-    OccupiedPipe
+    OccupiedPipe,
+    SafeHtmlPipe
   ],
   imports: [
     CommonModule

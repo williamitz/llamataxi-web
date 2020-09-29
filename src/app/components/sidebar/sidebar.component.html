@@ -1,8 +1,9 @@
 <!-- Brand -->
 <div class="sidenav-header  align-items-center">
-    <a class="navbar-brand" href="javascript:void(0)">
-        <img src="assets/img/brand/blue.png" class="navbar-brand-img" alt="...">
+    <a href="javascript:void(0)" [routerLink]="['/admin']">
+        <img src="assets/img/logo_2.png" class="navbar-brand-img" alt="...">
     </a>
+
 </div>
 <div class="navbar-inner">
     <!-- Collapse -->
@@ -10,7 +11,7 @@
         <!-- Nav items -->
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link " href="#" [routerLink]="['/admin']" routerLinkActive="active">
+                <a class="nav-link " [routerLink]="['/admin']" routerLinkActive="active">
                     <!-- <i class="ni ni-tv-2 text-primary"></i> -->
                     <i class="fas fa-home text-primary"></i>
                     <span class="nav-link-text">Inicio</span>
@@ -18,8 +19,8 @@
             </li>
 
             <li class="nav-item" *ngFor="let menu of dataMenu">
-                <a class="nav-link" href="#" routerLink="{{ menu.navChildrenPath }}" routerLinkActive="active">
-                    <i class="fas {{ menu.navChildrenIcon }} text-orange"></i>
+                <a class="nav-link" [routerLink]=" menu.navChildrenPath " routerLinkActive="active">
+                    <i class="fas {{ menu.navChildrenIcon }}  text-orange"></i>
                     <span class="nav-link-text">
                     {{ menu.navChildrenText }}
                   </span>
@@ -85,6 +86,20 @@
                     <span class="nav-link-text">Mapa</span>
                 </a>
             </li> -->
+
+        </ul>
+        <hr class="my-3">
+        <ul class="navbar-nav align-items-lg-center  ml-auto ">
+            <li class="nav-item d-xl-none">
+                <!-- Sidenav toggler -->
+                <div class="pr-3 sidenav-toggler sidenav-toggler-line" data-action="sidenav-pin" data-target="#sidenav-main">
+                    <div class="sidenav-toggler-inner">
+                        <i class="sidenav-toggler-line text-default"></i>
+                        <i class="sidenav-toggler-line text-default"></i>
+                        <i class="sidenav-toggler-line text-default"></i>
+                    </div>
+                </div>
+            </li>
 
         </ul>
         <!-- Divider -->

@@ -7,5 +7,6 @@ export interface IResponse {
   showError?: number;
   token?: string;
   newFile?: string;
+  message?: string;
 
 }
