@@ -7,6 +7,14 @@ export interface IDrivers {
   codeCategory: string;
 }
 
+export interface IClient {
+  pkUser: number;
+  lat: number;
+  lng: number;
+  nameComplete: string;
+  codeCategory: string;
+}
+
 export interface IMarkerDriver {
   pkUser: number;
   occupied: boolean;
@@ -14,11 +22,17 @@ export interface IMarkerDriver {
   codeCategory?: string;
 }
 
+export interface IMarkerClient {
+  pkUser: number;
+  marker: google.maps.Marker;
+  codeCategory?: string;
+  nameComplete?: string;
+}
 
 export interface IResCurrent {
   pkUser: number;
   coords: ICoords;
-  occupied: boolean;
+  occupied?: boolean;
   nameComplete: string;
   codeCategory: string;
 }
@@ -51,4 +65,11 @@ export interface IServiceSocket {
   center: number[];
   indexHex: string;
   totalDrivers: number;
+}
+
+export interface IDisposal {
+  pkService?: number;
+  msg?: string;
+  indexHex: string;
+  pkClient: number;
 }

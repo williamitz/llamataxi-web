@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { environment } from 'src/environments/environment';
 // import { google } from '@agm/core/services/google-maps-types';
-import { IDrivers, IMarkerDriver, IResCurrent, IZoneDemand, IPolygons, IServiceSocket } from '../../../interfaces/monitor.interface';
+import { IDrivers, IMarkerDriver, IResCurrent, IZoneDemand, IPolygons, IServiceSocket, IDisposal, IMarkerClient, IClient } from '../../../interfaces/monitor.interface';
 import { MonitorService } from '../../../services/monitor.service';
-import { Subscription } from 'rxjs';
+import { pipe, Subscription } from 'rxjs';
 import { retry } from 'rxjs/operators';
 import { SocketService } from '../../../services/socket.service';
 
@@ -16,9 +16,11 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
   @ViewChild('mapMonitor', {static: true}) mapMonitor: ElementRef;
   @ViewChild('infoPolygon', {static: true}) infoPolygon: ElementRef;
   @ViewChild('infoDriver', {static: true}) infoDriver: ElementRef;
+  @ViewChild('infoClient', {static: true}) infoClient: ElementRef;
 
   loadSbc: Subscription;
   ioCoordsSbc: Subscription;
+  ioCoordsClientSbc: Subscription;
   ioLogoutSbc: Subscription;
   ioPlayGeoSbc: Subscription;
   ioNewServiceSbc: Subscription;
@@ -30,6 +32,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
   dataDrivers: IDrivers[] = [];
   markers: IMarkerDriver[] = [];
+  markersClient: IMarkerClient[] = [];
   dataZones: IZoneDemand[] = [];
   polygons: IPolygons[] = [];
 
@@ -42,8 +45,17 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
     occupied: false
   };
 
+  currentClient: IClient = {
+    pkUser: 0,
+    nameComplete: '',
+    lat: 0,
+    lng: 0,
+    codeCategory: ''
+  };
+
   infoWindowPolygon: google.maps.InfoWindow;
   infoWindowDriver: google.maps.InfoWindow;
+  infoWindowClient: google.maps.InfoWindow;
   demandColors = ['#0091F2', '#209FF4', '#40ADF5', '#60BAF7', '#80C8F8', '#9FD6FA'];
   indexColor = 0;
   totalServicesZone = 0;
@@ -72,6 +84,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
     this.infoWindowPolygon = new google.maps.InfoWindow();
     this.infoWindowDriver = new google.maps.InfoWindow();
+    this.infoWindowClient = new google.maps.InfoWindow();
 
     this.onLoadDrivers();
     this.onGetZonesDemand();
@@ -79,7 +92,8 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
     this.onListenNewService();
     this.onListenCancelService();
 
-    this.onListenCurrentCoords();
+    this.onListenCoordsDriver();
+    this.onListenCoordsClient();
     this.onListenLogout();
     this.onListenPlayGeo();
   }
@@ -122,10 +136,12 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
     });
   }
 
-  onListenCurrentCoords() {
-    this.ioCoordsSbc = this.io.onListen('current-position-driver').subscribe( (res: IResCurrent) => {
+  onListenCoordsDriver() {
+    this.ioCoordsSbc = this.io.onListen('current-position-driver')
+    .pipe( retry() )
+    .subscribe( (res: IResCurrent) => {
       const findeed = this.markers.find( mk => mk.pkUser === res.pkUser );
-      console.log('moviendo marker', res);
+      // console.log('moviendo marker', res);
       if (findeed) {
         findeed.codeCategory = res.codeCategory;
         findeed.marker.setPosition( new google.maps.LatLng( res.coords.lat, res.coords.lng ) );
@@ -167,8 +183,56 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
     });
   }
 
+  onListenCoordsClient() {
+
+    this.ioCoordsClientSbc = this.io.onListen('current-position-client')
+    .pipe( retry() )
+    .subscribe( (resIO: IResCurrent) => {
+
+      const findeed = this.markersClient.find( mk => mk.pkUser === resIO.pkUser );
+      // console.log('moviendo marker', res);
+      if (findeed) {
+        findeed.codeCategory = resIO.codeCategory;
+        findeed.marker.setPosition( new google.maps.LatLng( resIO.coords.lat, resIO.coords.lng ) );
+
+        findeed.marker.addListener('click', () => {
+          this.infoWindowClient.setContent(this.infoClient.nativeElement);
+          this.infoWindowClient.setPosition( findeed.marker.getPosition() );
+
+          this.currentClient.nameComplete = resIO.nameComplete;
+          this.currentClient.codeCategory = resIO.codeCategory;
+
+          this.infoWindowClient.open(this.map);
+        });
+
+      } else {
+
+        const marker = new google.maps.Marker({
+          position: new google.maps.LatLng( resIO.coords.lat, resIO.coords.lng ),
+          animation: google.maps.Animation.DROP,
+          map: this.map,
+          icon: './assets/img/icons/mark_client.png',
+        });
+
+        marker.addListener('click', (data: any) => {
+          this.infoWindowDriver.setContent(this.infoClient.nativeElement);
+          this.infoWindowDriver.setPosition( marker.getPosition() );
+
+          this.currentDriver.nameComplete = resIO.nameComplete;
+          this.currentDriver.codeCategory = resIO.codeCategory;
+
+          this.infoWindowDriver.open(this.map);
+        });
+
+        this.markersClient.push({ pkUser: resIO.pkUser, marker, codeCategory: resIO.codeCategory });
+      }
+
+    });
+
+  }
+
   onGetZonesDemand() {
-    this.zonesSbc = this.monitor.onGetZonesDemand().pipe( retry(3) ).subscribe( (res) => {
+    this.zonesSbc = this.monitor.onGetZonesDemand().pipe( retry() ).subscribe( (res) => {
       if (!res.ok) {
         throw new Error( res.error );
       }
@@ -183,28 +247,23 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
   }
 
   onListenNewService() {
-    this.ioNewServiceSbc = this.io.onListen('new-service').subscribe( (resSocket: IServiceSocket) => {
+    this.ioNewServiceSbc = this.io.onListen('new-service')
+    .pipe( retry() )
+    .subscribe( (resIO: IServiceSocket) => {
       // recibimos la data del nuevo servicio
-      const indexHex = resSocket.indexHex;
-
-      // if ( indexHex === this.st.indexHex) {
-      //   this.dataZones.unshift( resSocket.data );
-      // }
+      const indexHex = resIO.indexHex;
 
       const polygonFinded = this.polygons.find( polygon => polygon.indexHex === indexHex );
 
       if (!polygonFinded) {
 
-        this.onBuildPolygon( resSocket.indexHex, resSocket.center, resSocket.polygon, 1, resSocket.totalDrivers );
+        this.onBuildPolygon( indexHex, resIO.center, resIO.polygon, 1, resIO.totalDrivers );
 
       } else {
 
         polygonFinded.totalServices += 1;
-        polygonFinded.totalDrivers = resSocket.totalDrivers;
-
-        if (!polygonFinded.polygon.getMap()) {
-          polygonFinded.polygon.setMap(this.map);
-        }
+        polygonFinded.totalDrivers = resIO.totalDrivers;
+        polygonFinded.polygon.setMap(this.map);
 
       }
 
@@ -220,7 +279,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
       verticesCoords.push( new google.maps.LatLng( coords[0], coords[1] ) );
     });
 
-    const hotPolygon = new google.maps.Polygon({
+    const polygon = new google.maps.Polygon({
       paths: verticesCoords,
       strokeColor: color,
       strokeOpacity: 0.7,
@@ -230,24 +289,24 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
       map: this.map
     });
 
-
     // Add a listener for the click event.
-    hotPolygon.addListener('click', (data: any) => {
+    polygon.addListener('click', (data: any) => {
       this.infoWindowPolygon.setContent(this.infoPolygon.nativeElement);
       this.infoWindowPolygon.setPosition( positionPolygon );
 
-      const tServices = this.polygons.find( pp => pp.indexHex === indexHex ).totalServices || 0;
-      const tDrivers = this.polygons.find( pp => pp.indexHex === indexHex ).totalDrivers || 0;
+      // const tServices = this.polygons.find( pp => pp.indexHex === indexHex ).totalServices || 0;
+      // const tDrivers = this.polygons.find( pp => pp.indexHex === indexHex ).totalDrivers || 0;
 
       this.totalServicesZone = totalServices;
       this.totalDriverZone = totalDrivers;
 
       this.infoWindowPolygon.open(this.map);
     });
+
     this.polygons.push( { indexHex,
                             totalServices,
                             totalDrivers,
-                            polygon: hotPolygon,
+                            polygon,
                             color} );
 
     if (this.indexColor <= 5) {
@@ -257,9 +316,16 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
   }
 
   onListenCancelService() {
-    this.ioCancelServiceSbc = this.io.onListen('disposal-service').subscribe( (res: any) => {
+    this.ioCancelServiceSbc = this.io.onListen('disposal-service')
+    .pipe( retry() )
+    .subscribe( (resIO: IDisposal) => {
 
-      const polygonFinded = this.polygons.find( polygon => polygon.indexHex === res.indexHex );
+      const polygonFinded = this.polygons.find( polygon => polygon.indexHex === resIO.indexHex );
+      const clientFinded = this.markersClient.find( mkCli => mkCli.pkUser === resIO.pkClient );
+
+      if (clientFinded) {
+        clientFinded.marker.setMap( null );
+      }
 
       if (polygonFinded && polygonFinded.totalServices > 0) {
 
@@ -291,7 +357,6 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
     this.ioPlayGeoSbc = this.io.onListen('driver-off').subscribe( (res: any) => {
       const findeed = this.markers.find( mk => mk.pkUser === Number( res.pkUser ) );
-      // console.log('moviendo marker', res);
       if (findeed) {
         findeed.marker.setMap( null );
         this.markers = this.markers.filter( mk => mk.pkUser !== Number( res.pkUser ) );
@@ -305,6 +370,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
     this.loadSbc.unsubscribe();
 
     this.ioCoordsSbc.unsubscribe();
+    this.ioCoordsClientSbc.unsubscribe();
     this.ioLogoutSbc.unsubscribe();
     this.ioPlayGeoSbc.unsubscribe();
 

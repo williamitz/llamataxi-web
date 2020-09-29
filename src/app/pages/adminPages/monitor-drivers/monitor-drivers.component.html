@@ -32,6 +32,21 @@
               <a href="#" class="card-link">Another link</a> -->
             </div>
         </div>
+
+        <div #infoClient style="width: 200px;">
+            <div class="">
+                <h4 class="card-title">
+                    {{ currentClient.codeCategory | categoryDriver}}
+                </h4>
+
+                <p class="card-text text-center">
+                    <b>
+                      {{ currentClient.nameComplete }}
+                  </b>
+                </p>
+            </div>
+        </div>
+
     </div>
 </div>
 <br>
