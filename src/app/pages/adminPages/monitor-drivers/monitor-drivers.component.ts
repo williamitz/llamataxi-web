@@ -18,7 +18,8 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
   @ViewChild('infoDriver', {static: true}) infoDriver: ElementRef;
   @ViewChild('infoClient', {static: true}) infoClient: ElementRef;
 
-  loadSbc: Subscription;
+  loadDriversSbc: Subscription;
+  loadClientSbc: Subscription;
   ioCoordsSbc: Subscription;
   ioCoordsClientSbc: Subscription;
   ioLogoutSbc: Subscription;
@@ -31,6 +32,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
   codJournal = 'DIURN';
 
   dataDrivers: IDrivers[] = [];
+  dataClients: IClient[] = [];
   markers: IMarkerDriver[] = [];
   markersClient: IMarkerClient[] = [];
   dataZones: IZoneDemand[] = [];
@@ -87,6 +89,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
     this.infoWindowClient = new google.maps.InfoWindow();
 
     this.onLoadDrivers();
+    this.onLoadClients();
     this.onGetZonesDemand();
 
     this.onListenNewService();
@@ -99,7 +102,10 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
   }
 
   onLoadDrivers() {
-    this.loadSbc = this.monitor.onGetDrivers().subscribe( (res) => {
+    this.loadDriversSbc = this.monitor.onGetDrivers()
+    .pipe( retry() )
+    .subscribe( (res) => {
+
       if (!res.ok) {
         throw new Error(res.error);
       }
@@ -128,12 +134,52 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
           });
           this.markers.push({ pkUser: driver.pkUser, occupied: driver.occupied, marker });
 
+        });
+
+      }
+
+    });
+  }
+
+  onLoadClients() {
+
+    this.loadClientSbc = this.monitor.onGetClients()
+    .pipe( retry() )
+    .subscribe( (res) => {
+
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      this.dataClients = res.data;
+
+      if (this.dataClients.length > 0) {
+
+        this.dataClients.forEach( driver => {
+          const marker = new google.maps.Marker({
+            position: new google.maps.LatLng( driver.lat, driver.lng ),
+            animation: google.maps.Animation.DROP,
+            map: this.map,
+            icon: './assets/img/icons/mark_client.png'
+          });
+
+          marker.addListener('click', (data: any) => {
+            this.infoWindowClient.setContent(this.infoClient.nativeElement);
+            this.infoWindowClient.setPosition( marker.getPosition() );
+
+            this.currentClient.nameComplete = driver.nameComplete;
+            this.currentClient.codeCategory = driver.codeCategory;
+
+            this.infoWindowClient.open(this.map);
+          });
+          this.markersClient.push({ pkUser: driver.pkUser, marker });
 
         });
 
       }
 
     });
+
   }
 
   onListenCoordsDriver() {
@@ -342,7 +388,9 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
   onListenLogout() {
 
-    this.ioLogoutSbc = this.io.onListen('user-disconnect').subscribe( (res: IResCurrent) => {
+    this.ioLogoutSbc = this.io.onListen('user-disconnect')
+    .pipe( retry() )
+    .subscribe( (res: IResCurrent) => {
       const findeed = this.markers.find( mk => mk.pkUser === res.pkUser );
       // console.log('moviendo marker', res);
       if (findeed) {
@@ -355,7 +403,9 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
   onListenPlayGeo() {
 
-    this.ioPlayGeoSbc = this.io.onListen('driver-off').subscribe( (res: any) => {
+    this.ioPlayGeoSbc = this.io.onListen('driver-off')
+    .pipe( retry() )
+    .subscribe( (res: any) => {
       const findeed = this.markers.find( mk => mk.pkUser === Number( res.pkUser ) );
       if (findeed) {
         findeed.marker.setMap( null );
@@ -367,8 +417,8 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
 
-    this.loadSbc.unsubscribe();
-
+    this.loadDriversSbc.unsubscribe();
+    this.loadClientSbc.unsubscribe();
     this.ioCoordsSbc.unsubscribe();
     this.ioCoordsClientSbc.unsubscribe();
     this.ioLogoutSbc.unsubscribe();
