@@ -1,0 +1,87 @@
+<div class="row justify-content-center">
+    <div class="col-lg-5 col-md-7">
+        <div class="card bg-secondary border-0 mb-0">
+
+            <div class="card-body px-lg-5 py-lg-5">
+
+                <form #frmRestore="ngForm">
+                    <div class="form-group">
+
+                        <label for="">Nueva contraseña</label>
+                        <div class="input-group">
+                            <input [type]="viewPsw ? 'text' : 'password'" class="form-control" name="newPsw" #psw="ngModel" [(ngModel)]="bodyRestore.password" [ngClass]="{
+                              'is-invalid': (psw.errors?.required || psw.errors?.pattern || psw.errors?.minlength ) && psw.touched,
+                              'is-valid': !psw.errors?.required && !psw.errors?.pattern && !psw.errors?.minlength && psw.touched
+                            }" pattern="(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9]).*" minlength="6" required>
+                            <div class="input-group-append" id="button-addon4">
+                                <button class="btn btn-outline-primary" type="button" (click)="viewPsw = !viewPsw;">
+                                  <i class="fa fa-eye" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <span *ngIf="psw.errors?.required && psw.touched">
+                            <small class="text-danger">*Requerido</small>
+                        </span>
+
+                        <span *ngIf="psw.errors?.pattern && psw.touched">
+                            <small class="text-danger">
+                            *Una mayuscula, minuscula y un n&uacute;mero
+                            </small>
+                        </span>
+
+                        <span *ngIf="psw.errors?.minlength && psw.touched">
+                            <small class="text-danger">*M&iacute;nimo 9 caracteres</small>
+                        </span>
+                    </div>
+                    <div class="form-group">
+
+                        <label for="">Repita contraseña</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" name="newPswRepit" [(ngModel)]="bodyRestore.passwordRepit" #pswRepit="ngModel" [ngClass]="{
+                              'is-invalid': bodyRestore.passwordRepit !== bodyRestore.password && pswRepit.touched,
+                              'is-valid': bodyRestore.passwordRepit === bodyRestore.password && pswRepit.touched
+                            }" required>
+                        </div>
+
+                        <span *ngIf="pswRepit.errors?.required && psw.touched">
+                            <small class="text-danger">*Requerido</small>
+                        </span>
+
+                        <span *ngIf="bodyRestore.passwordRepit !== bodyRestore.password && pswRepit.touched">
+                            <small class="text-danger">*No coindicen</small>
+                        </span>
+                    </div>
+
+                </form>
+
+                <!-- <p>restore-account works!</p> -->
+            </div>
+        </div>
+        <div class="row mt-3 text-center">
+            <div class="col-12">
+                <button class="btn btn-outline-primary" [disabled]="frmRestore.invalid || bodyRestore.passwordRepit !== bodyRestore.password" (click)="onRestore()">
+                Aceptar
+              </button>
+            </div>
+            <!-- <div class="col-6 text-right">
+                <a href="#" class="text-light"><small>Create new account</small></a>
+            </div> -->
+        </div>
+    </div>
+</div>
+
+<i class="far fa-grin-beam-sweat sweati"></i>
+<i class="far fa-grin-beam beam"></i>
+<i class="fas fa-car car"></i>
+<i class="fas fa-user-circle user"></i>
+<i class="fas fa-map-marked-alt marked "></i>
+<i class="fas fa-map-marker-alt marker "></i>
+<i class="far fa-thumbs-up like"></i>
+
+<i class="far fa-clock clock"></i>
+<i class="fas fa-briefcase briefcase"></i>
+<i class="fas fa-globe-americas americas"></i>
+
+<i class="fas fa-cloud-moon moon"></i>
+<i class="fas fa-money-bill money"></i>

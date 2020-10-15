@@ -7,6 +7,7 @@ import { TokenGuard } from './guards/token.guard';
 import { AuthGuard } from './guards/auth.guard';
 import { AllowUrlGuard } from './guards/allow-url.guard';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
+import { UtilitiesLayoutComponent } from './layouts/utilities-layout/utilities-layout.component';
 
 
 const APP_ROUTES: Routes = [
@@ -22,6 +23,13 @@ const APP_ROUTES: Routes = [
     data: {title: 'Dashboard'},
     component: AdminLayoutComponent,
     loadChildren: () => import('./layouts/admin-layout/admin-layout.module').then(m => m.AdminLayoutModule)
+  },
+
+  { path: 'utilities',
+    // pathMatch: 'full',
+    // canLoad: [TokenGuard, AuthGuard],
+    component: UtilitiesLayoutComponent,
+    loadChildren: () => import('./layouts/utilities-layout/utilities-layout.module').then(m => m.UtilitiesLayoutModule)
   },
 
   {

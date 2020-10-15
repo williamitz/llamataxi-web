@@ -1,0 +1,96 @@
+.fas,
+.far {
+    position: absolute;
+    font-size: 65px;
+    color: rgba(34, 5, 102, 0.5);
+}
+
+.like {
+    color: rgba(95, 89, 109, 0.5);
+    bottom: 45px;
+    right: 50px;
+    transform: rotate(15deg);
+}
+
+.sweati {
+    color: rgba(95, 89, 109, 0.5);
+    bottom: -55px;
+    left: -5px;
+    font-size: 87px;
+    transform: rotate(-35deg);
+}
+
+.beam {
+    bottom: 305px;
+    left: 230px;
+    transform: rotate(-5deg);
+}
+
+.user {
+    top: 45px;
+    right: 50px;
+    font-size: 120px;
+    transform: rotate(2deg);
+}
+
+.marked {
+    color: rgba(95, 89, 109, 0.5);
+    bottom: 195px;
+    right: 150px;
+    font-size: 119px;
+    transform: rotate(30deg);
+}
+
+.marker {
+    color: rgba(95, 89, 109, 0.5);
+    bottom: 95px;
+    left: 350px;
+    font-size: 140px;
+    transform: rotate(-10deg);
+}
+
+.car {
+    color: rgba(95, 89, 109, 0.5);
+    bottom: -35px;
+    right: 350px;
+    font-size: 119px;
+    transform: rotate(-2deg);
+}
+
+.clock {
+    color: rgba(95, 89, 109, 0.5);
+    bottom: -25px;
+    left: 525px;
+    transform: rotate(2deg);
+}
+
+.briefcase {
+    color: rgba(95, 89, 109, 0.5);
+    bottom: -170px;
+    left: 695px;
+    transform: rotate(-2deg);
+}
+
+.americas {
+    color: rgba(144, 253, 168, 0.5);
+    top: 20px;
+    left: 505px;
+    font-size: 215px;
+    transform: rotate(2deg);
+}
+
+.moon {
+    color: rgba(144, 253, 168, 0.5);
+    top: 145px;
+    right: 300px;
+    font-size: 165px;
+    transform: rotate(2deg);
+}
+
+.money {
+    color: rgba(74, 53, 126, 0.3);
+    top: 20px;
+    left: 13px;
+    font-size: 115px;
+    transform: rotate(-35deg);
+}

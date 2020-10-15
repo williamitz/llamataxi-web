@@ -16,6 +16,7 @@ import { ComponentsModule } from './components/components.module';
 import { FormsModule } from '@angular/forms';
 import { SocketIoModule, SocketIoConfig } from 'ngx-socket-io';
 import { environment } from '../environments/environment';
+import { UtilitiesLayoutComponent } from './layouts/utilities-layout/utilities-layout.component';
 
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
   direction: 'horizontal',
@@ -30,6 +31,7 @@ const socketConfig: SocketIoConfig = { url: environment.URL_SERVER, options: {} 
     AppComponent,
     AuthLayoutComponent,
     AdminLayoutComponent,
+    UtilitiesLayoutComponent,
     NotFoundComponent,
   ],
   imports: [
