@@ -8,6 +8,7 @@ import { AuthGuard } from './guards/auth.guard';
 import { AllowUrlGuard } from './guards/allow-url.guard';
 import { NotFoundComponent } from './pages/not-found/not-found.component';
 import { UtilitiesLayoutComponent } from './layouts/utilities-layout/utilities-layout.component';
+import { SegurityLayoutComponent } from './layouts/segurity-layout/segurity-layout.component';
 
 
 const APP_ROUTES: Routes = [
@@ -30,6 +31,12 @@ const APP_ROUTES: Routes = [
     // canLoad: [TokenGuard, AuthGuard],
     component: UtilitiesLayoutComponent,
     loadChildren: () => import('./layouts/utilities-layout/utilities-layout.module').then(m => m.UtilitiesLayoutModule)
+  },
+  { path: 'segurity',
+    // pathMatch: 'full',
+    // canLoad: [TokenGuard, AuthGuard],
+    component: SegurityLayoutComponent,
+    loadChildren: () => import('./layouts/segurity-layout/segurity-layout.module').then(m => m.SegurityLayoutModule)
   },
 
   {

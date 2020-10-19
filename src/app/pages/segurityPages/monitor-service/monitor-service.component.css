@@ -1,0 +1,75 @@
+.span-150 {
+    position: absolute;
+    background-color: rgba(rgb(135, 90, 241), 0.9);
+    width: 150px;
+    height: 50px;
+    top: 5px;
+}
+
+.icon {
+    position: absolute;
+    font-size: 85px;
+}
+
+.americas {
+    color: rgba(71, 59, 99, 0.7);
+    top: 20px;
+    left: 30%;
+    font-size: 255px;
+    transform: rotate(-8deg);
+}
+
+.shield {
+    color: rgba(71, 59, 99, 0.7);
+    top: 20px;
+    right: 10%;
+    font-size: 145px;
+    transform: rotate(15deg);
+}
+
+.mapMonitor {
+    height: 400px;
+    background-color: rgba(71, 59, 99, 0.7);
+}
+
+.info-title {
+    padding-left: 80px;
+}
+
+.description {
+    padding-left: 80px;
+}
+
+.circle-cq {
+    position: absolute;
+    border-radius: 100px;
+    background-color: rgba(105, 148, 211, 0.377);
+}
+
+.cc-one {
+    top: -50px;
+    right: 5px;
+    width: 50px;
+    height: 50px;
+}
+
+.cc-two {
+    top: 50px;
+    right: -65px;
+    width: 90px;
+    height: 90px;
+}
+
+.cc-three {
+    top: 200px;
+    right: 20px;
+    width: 120px;
+    height: 120px;
+}
+
+.cc-four {
+    top: 280px;
+    right: 180px;
+    width: 190px;
+    height: 190px;
+}
