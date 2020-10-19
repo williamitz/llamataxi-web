@@ -409,6 +409,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
       const findeed = this.markers.find( mk => mk.pkUser === Number( res.pkUser ) );
       if (findeed) {
         findeed.marker.setMap( null );
+        findeed.marker.setMap( null );
         this.markers = this.markers.filter( mk => mk.pkUser !== Number( res.pkUser ) );
       }
     });

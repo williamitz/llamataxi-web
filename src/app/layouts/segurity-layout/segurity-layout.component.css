@@ -1,41 +1,75 @@
-element.style {}
-
-.pb-lg,
-.py-lg {
-    padding-bottom: 6rem!important;
+.span-150 {
+    position: absolute;
+    background-color: rgba(rgb(135, 90, 241), 0.9);
+    width: 150px;
+    height: 50px;
+    top: 5px;
 }
 
-.pt-lg,
-.py-lg {
-    padding-top: 6rem!important;
+.icon {
+    position: absolute;
+    font-size: 85px;
 }
 
-.align-items-center {
-    align-items: center!important;
+.americas {
+    color: rgba(71, 59, 99, 0.7);
+    top: 20px;
+    left: 30%;
+    font-size: 255px;
+    transform: rotate(-8deg);
 }
 
-.d-flex {
-    display: flex!important;
+.shield {
+    color: rgba(71, 59, 99, 0.7);
+    top: 20px;
+    right: 10%;
+    font-size: 145px;
+    transform: rotate(15deg);
 }
 
-@media (min-width: 576px) .container {
-    max-width: 540px;
+.mapMonitor {
+    height: 400px;
+    background-color: rgba(71, 59, 99, 0.7);
 }
 
-.container {
-    width: 100%;
-    padding-right: 15px;
-    padding-left: 15px;
-    margin-right: auto;
-    margin-left: auto;
+.info-title {
+    padding-left: 80px;
 }
 
-*,
- :after,
- :before {
-    box-sizing: border-box;
+.description {
+    padding-left: 80px;
 }
 
-user agent stylesheet div {
-    display: block;
+.circle-cq {
+    position: absolute;
+    border-radius: 100px;
+    background-color: rgba(105, 148, 211, 0.377);
+}
+
+.cc-one {
+    top: -50px;
+    right: 5px;
+    width: 50px;
+    height: 50px;
+}
+
+.cc-two {
+    top: 50px;
+    right: -65px;
+    width: 90px;
+    height: 90px;
+}
+
+.cc-three {
+    top: 200px;
+    right: 20px;
+    width: 120px;
+    height: 120px;
+}
+
+.cc-four {
+    top: 280px;
+    right: 180px;
+    width: 190px;
+    height: 190px;
 }

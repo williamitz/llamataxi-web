@@ -73,3 +73,43 @@ export interface IDisposal {
   indexHex: string;
   pkClient: number;
 }
+
+export interface IServiceMonitor {
+  nameClient: string;
+  imgClient: string;
+  documentClient?: string;
+  typeDocClient?: string;
+  nameDriver: string;
+  imgDriver: string;
+  documentDriver?: string;
+  typeDocDriver?: string;
+
+  latOrigin?: number;
+  lngOrigin?: number;
+  latDestination?: number;
+  lngDestination?: number;
+  streetOrigin: string;
+  streetDestination: string;
+  distanceText: string;
+  minutesText: string;
+  paymentType?: string;
+  rateOffer?: number;
+
+  numberPlate?: string;
+  year?: string;
+  color?: string;
+  aliasCategory?: string;
+
+  imgTaxiFrontal?: string;
+  nameModel?: string;
+  nameBrand?: string;
+
+  runOrigin?: boolean;
+  finishOrigin?: boolean;
+  runDestination?: boolean;
+  finishDestination?: boolean;
+  dateRunOrigin?: string;
+  dateFinishOrigin?: string;
+  dateRunDestination?: string;
+  dateFinishDestination?: string;
+}

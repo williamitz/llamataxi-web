@@ -5,12 +5,12 @@ import { MonitorServiceComponent } from '../../pages/segurityPages/monitor-servi
 
 export const SEGURITY_ROUTES: Routes = [
   { path: 'monitor/:tokenMonitor', component: MonitorServiceComponent },
+  { path: '**', redirectTo: '/notFound' },
 
   // { path: '**', component: PageNotFoundComponent },
 
-  //{ path: 'path/:routeParam', component: MyComponent },
-  //{ path: 'staticPath', component: ... },
-  //{ path: '**', component: ... },
-  //{ path: 'oldPath', redirectTo: '/staticPath' },
-  //{ path: ..., component: ..., data: { message: 'Custom' }
+  // { path: 'path/:routeParam', component: MyComponent },
+  // { path: 'staticPath', component: ... },
+  // { path: '**', component: ... },
+  // { path: ..., component: ..., data: { message: 'Custom' }
 ];

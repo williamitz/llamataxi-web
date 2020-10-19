@@ -1,54 +1,15 @@
-<i class="fas fa-globe-americas icon americas animated fadeIn"></i>
-<i class="fas fa-shield-alt icon shield animated fadeIn"></i>
-<div class="section section-hero  bg-gradient-primary section-shaped">
-    <div class="shape shape-style-3 shape-default">
-        <span class="span-150"></span>
-        <span class="span-50"></span>
-        <span class="span-50"></span>
-        <span class="span-75"></span>
-        <span class="span-100"></span>
-        <span class="span-75"></span>
-        <span class="span-50"></span>
-        <span class="span-100"></span>
-        <span class="span-50"></span>
-        <span class="span-100"></span>
-    </div>
-    <div class="page-header">
-        <div class="container shape-container d-flex align-items-center py-lg">
-            <div class="col px-0">
-                <div class="row align-items-center justify-content-center">
-                    <div class="col-lg-6 text-center">
-                        <h1 class="text-white display-1">Monitorear servicio</h1>
-                        <h2 class="display-4 font-weight-normal text-white">Seguimiento en tiempo real!</h2>
-                        <div class="btn-wrapper mt-4">
-                            <!-- <a href="https://www.creative-tim.com/product/argon-design-system" class="btn btn-warning btn-icon mt-3 mb-sm-0">
-                              <span class="btn-inner--icon"><i class="ni ni-button-play"></i></span>
-                              <span class="btn-inner--text">Play more</span>
-                          </a> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- <div class="separator separator-bottom separator-skew zindex-100">
-        <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
-          <polygon class="fill-white" points="2560 0 2560 100 0 100"></polygon>
-        </svg>
-    </div> -->
-</div>
 <div class="section features-6">
     <div class="container">
-        <div class="row align-items-center" style="padding-top: 20px;">
-            <div class="col-lg-6 mapMonitor">
+        <div class="row " style="padding-top: 20px;">
+            <div class="col-lg-6 mapMonitor" #mapMonitor>
 
             </div>
-            <div class="col-lg-6 col-10 mx-md-auto pt--1">
+            <div class="col-lg-6 " style="padding-top: 20px;">
 
                 <div class="circle-cq cc-one animated fadeInRight"></div>
                 <div class="circle-cq cc-two animated fadeInRight"></div>
                 <div class="circle-cq cc-three animated fadeInUp"></div>
-                <div class="circle-cq cc-four animated fadeInUp"></div>
+                <!-- <div class="circle-cq cc-four animated fadeInUp"></div> -->
 
                 <div class="row">
                     <div class="col-12">
@@ -59,7 +20,14 @@
                                 <!-- <i class="ni ni-settings-gear-65"></i> -->
                             </div>
                             <h6 class="info-title text-uppercase text-primary">Origen y destino</h6>
-                            <p class="description opacity-8">We get insulted by others, lose trust for those others. We get back stabbed by friends. It becomes harder for us to give others a hand.</p>
+                            <p class="description ">
+                                <b>
+                                    <i class="fas fa-map-marker-alt text-info"></i>
+                                </b> {{ dataService.streetOrigin }} <br>
+                                <b>
+                                    <i class="fas fa-map-marker-alt text-danger"></i>
+                                </b> {{ dataService.streetDestination }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -71,7 +39,9 @@
                                 <i class="fas fa-taxi"></i>
                             </div>
                             <h6 class="info-title text-uppercase text-success">Conductor</h6>
-                            <p class="description opacity-8">We get insulted by others, lose trust for those others. We get back stabbed by friends. It becomes harder for us to give others a hand.</p>
+                            <p class="description " style="padding-bottom: 30px;">
+                                {{ dataService.nameDriver }}
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -83,9 +53,42 @@
                                 <i class="fas fa-user-circle"></i>
                             </div>
                             <h6 class="info-title text-uppercase text-warning">Pasajero</h6>
-                            <p class="description opacity-8">We get insulted by others, lose trust for those others. We get back stabbed by friends. It becomes harder for us to give others a hand.</p>
+                            <p class="description " style="padding-bottom: 30px;">
+                                {{ dataService.nameClient }}
+                            </p>
                         </div>
                     </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-12">
+                        <div class="info">
+                            <div class="icon icon-lg icon-shape icon-shape-info shadow rounded-circle">
+                                <i class="far fa-clock"></i>
+                            </div>
+                            <h6 class="info-title text-uppercase text-info">
+                                Bitacora de viaje
+                            </h6>
+
+                            <div class="row description ">
+                                <div class="col-6">
+                                    Salida
+                                    <p>
+                                        {{ dataService.dateRunOrigin | moment }}
+                                    </p>
+                                </div>
+                                <div class="col-6">
+                                    Llegada
+                                    <p>
+                                        {{ dataService.dateFinishDestination | moment }}
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+
                 </div>
 
             </div>

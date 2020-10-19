@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import * as moment from 'moment';
 
 @Component({
   selector: 'app-not-found',
@@ -27,10 +28,16 @@ import { Component, OnInit } from '@angular/core';
       line-height: 210px
     }
 
+    .spaceman {
+      transform: rotate(35deg);
+    }
+
     `
   ]
 })
 export class NotFoundComponent implements OnInit {
+
+  currentYear = moment().year();
 
   constructor() { }
 

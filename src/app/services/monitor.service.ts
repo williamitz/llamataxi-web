@@ -29,4 +29,8 @@ export class MonitorService {
     return this.http.get<IResponse>( URI_API + `/Monitor/GetZones`, {headers: { Authorization: this.st.token }} );
   }
 
+  onGetInfoService( token: string ) {
+    return this.http.get<IResponse>( URI_API + `/Service/Info/Monitor`, {headers: { AuthMonitor: token }} );
+  }
+
 }
