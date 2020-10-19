@@ -1,58 +1,58 @@
 .fas,
 .far {
     position: absolute;
-    font-size: 65px;
+    font-size: 55px;
     color: rgba(34, 5, 102, 0.5);
 }
 
 .like {
     color: rgba(95, 89, 109, 0.5);
-    bottom: 45px;
-    right: 50px;
+    bottom: 4%;
+    right: 5%;
     transform: rotate(15deg);
 }
 
 .sweati {
     color: rgba(95, 89, 109, 0.5);
-    bottom: -55px;
-    left: -5px;
+    bottom: -5%;
+    left: -1%;
     font-size: 87px;
     transform: rotate(-35deg);
 }
 
 .beam {
-    bottom: 305px;
-    left: 230px;
+    bottom: 56%;
+    left: 14%;
     transform: rotate(-5deg);
 }
 
 .user {
-    top: 45px;
-    right: 50px;
+    top: 1%;
+    right: 1%;
     font-size: 120px;
     transform: rotate(2deg);
 }
 
 .marked {
     color: rgba(95, 89, 109, 0.5);
-    bottom: 195px;
-    right: 150px;
+    bottom: 20%;
+    right: 15%;
     font-size: 119px;
     transform: rotate(30deg);
 }
 
 .marker {
     color: rgba(95, 89, 109, 0.5);
-    bottom: 95px;
-    left: 350px;
+    bottom: 16%;
+    left: 18%;
     font-size: 140px;
     transform: rotate(-10deg);
 }
 
 .car {
     color: rgba(95, 89, 109, 0.5);
-    bottom: -35px;
-    right: 350px;
+    bottom: -5%;
+    right: 25%;
     font-size: 119px;
     transform: rotate(-2deg);
 }
@@ -73,16 +73,16 @@
 
 .americas {
     color: rgba(144, 253, 168, 0.5);
-    top: 20px;
-    left: 505px;
-    font-size: 215px;
+    top: 2%;
+    left: 40%;
+    font-size: 190px;
     transform: rotate(2deg);
 }
 
 .moon {
     color: rgba(144, 253, 168, 0.5);
-    top: 145px;
-    right: 300px;
+    top: 20%;
+    right: 5%;
     font-size: 165px;
     transform: rotate(2deg);
 }

@@ -1,0 +1,41 @@
+element.style {}
+
+.pb-lg,
+.py-lg {
+    padding-bottom: 6rem!important;
+}
+
+.pt-lg,
+.py-lg {
+    padding-top: 6rem!important;
+}
+
+.align-items-center {
+    align-items: center!important;
+}
+
+.d-flex {
+    display: flex!important;
+}
+
+@media (min-width: 576px) .container {
+    max-width: 540px;
+}
+
+.container {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+*,
+ :after,
+ :before {
+    box-sizing: border-box;
+}
+
+user agent stylesheet div {
+    display: block;
+}
