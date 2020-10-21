@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
+import swal from 'sweetalert2';
 
 @Component({
   selector: 'app-not-found',
@@ -42,6 +43,7 @@ export class NotFoundComponent implements OnInit {
   constructor() { }
 
   ngOnInit() {
+    swal.hideLoading();
   }
 
 }

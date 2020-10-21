@@ -10,3 +10,9 @@ export interface IResponse {
   message?: string;
 
 }
+
+
+export interface ICoorsIO {
+  lat: number;
+  lng: number;
+}

@@ -75,6 +75,7 @@ export interface IDisposal {
 }
 
 export interface IServiceMonitor {
+  abduzcan: number;
   nameClient: string;
   imgClient: string;
   documentClient?: string;
