@@ -8,6 +8,9 @@ import { SocketService } from 'src/app/services/socket.service';
 import { environment } from 'src/environments/environment';
 import Swal from 'sweetalert2';
 import { MonitorService } from '../../../services/monitor.service';
+import swal from 'sweetalert2';
+
+const URI_API = environment.URL_SERVER;
 
 @Component({
   selector: 'app-monitor-service',
@@ -40,7 +43,7 @@ export class MonitorServiceComponent implements OnInit, OnDestroy {
 
   map: google.maps.Map;
   marker: google.maps.Marker;
-
+  pathImg = URI_API + `/User/Img/Get/`;
   polygonsRing = [
     {
       polygon: [
@@ -160,8 +163,8 @@ export class MonitorServiceComponent implements OnInit, OnDestroy {
   }
 
   onLoadInfo() {
-
-    Swal.showLoading();
+    // swal.showLoading();
+    // Swal.showLoading();
 
     this.sbcInfo = this.monitorSvc.onGetInfoService( this.tokenMonitor )
     .pipe( retry(3) )
@@ -172,8 +175,11 @@ export class MonitorServiceComponent implements OnInit, OnDestroy {
       }
 
       this.dataService = res.data;
+      // this.io.onEmit()
       this.onLoadRoute();
-      Swal.hideLoading();
+      this.onSingMonitor();
+      this.onListenCoors();
+      // swal.hideLoading();
     });
   }
 
@@ -208,7 +214,7 @@ export class MonitorServiceComponent implements OnInit, OnDestroy {
     };
     this.io.onEmit('sing-monitor', payload, (resIO: IResponse) => {
       if (resIO.ok) {
-        console.log('Socket monitor configurado');
+        console.log('Socket monitor configurado', resIO);
       }
     });
 

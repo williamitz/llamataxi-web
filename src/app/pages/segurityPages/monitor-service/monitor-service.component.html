@@ -41,7 +41,12 @@
                             <h6 class="info-title text-uppercase text-success">Conductor</h6>
                             <p class="description " style="padding-bottom: 30px;">
                                 {{ dataService.nameDriver }}
+                                <br> {{ dataService.typeDocDriver }} {{ dataService.documentDriver }}
                             </p>
+
+                            <div class="card-profile-image">
+                                <img [src]="pathImg + dataService.imgDriver + '?token=' + tokenMonitor" class="rounded-circle imgDriver">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -55,7 +60,12 @@
                             <h6 class="info-title text-uppercase text-warning">Pasajero</h6>
                             <p class="description " style="padding-bottom: 30px;">
                                 {{ dataService.nameClient }}
+                                <br> {{ dataService.typeDocClient }} {{ dataService.documentClient }}
                             </p>
+
+                            <div class="card-profile-image">
+                                <img [src]="pathImg + dataService.imgClient + '?token=' + tokenMonitor" class="rounded-circle imgClient">
+                            </div>
                         </div>
                     </div>
                 </div>

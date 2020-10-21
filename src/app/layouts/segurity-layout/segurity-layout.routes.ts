@@ -5,7 +5,7 @@ import { MonitorServiceComponent } from '../../pages/segurityPages/monitor-servi
 
 export const SEGURITY_ROUTES: Routes = [
   { path: 'monitor/:tokenMonitor', component: MonitorServiceComponent },
-  { path: '**', redirectTo: '/notFound' },
+  // { path: '**', redirectTo: '/notFound' },
 
   // { path: '**', component: PageNotFoundComponent },
 
