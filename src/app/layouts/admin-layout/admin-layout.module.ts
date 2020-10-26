@@ -27,6 +27,8 @@ import { JournalComponent } from './../../pages/adminPages/journal/journal.compo
 import { ChartsModule } from 'ng2-charts';
 import { MonitorDriversComponent } from '../../pages/adminPages/monitor-drivers/monitor-drivers.component';
 import { AlertServiceComponent } from '../../pages/adminPages/alert-service/alert-service.component';
+import { ConfigReferalComponent } from 'src/app/pages/adminPages/config-referal/config-referal.component';
+import { CouponComponent } from 'src/app/pages/adminPages/coupon/coupon.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +49,8 @@ import { AlertServiceComponent } from '../../pages/adminPages/alert-service/aler
     JournalComponent,
     MonitorDriversComponent,
     AlertServiceComponent,
+    ConfigReferalComponent,
+    CouponComponent
   ],
   imports: [
     CommonModule,

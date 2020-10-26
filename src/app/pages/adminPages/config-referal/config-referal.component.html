@@ -1,0 +1,110 @@
+<div class="table">
+    <div class="row justify-content-center">
+        <div class="col-lg-5 col-md-7">
+            <div class="card bg-secondary border-0 mb-0">
+
+                <div class="card-body px-lg-5 py-lg-5">
+
+                    <div class="text-center text-muted mb-4">
+                        <small>Configuraci&oacute;n de referidos</small>
+                    </div>
+
+                    <form role="form" #frmConfig="ngForm">
+
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="">Bonus cliente</label>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group mb-3">
+                                    <div class="input-group input-group-merge input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-dollar-sign"></i>
+                                                <!-- <i class="ni ni-email-83"></i> -->
+                                            </span>
+                                        </div>
+                                        <input type="number" class="form-control text-right" placeholder="Llama cr&eacute;dito" name="bonnusClient" #bnClient="ngModel" [(ngModel)]="bodyReferal.bonnusClient" [ngClass]="{
+                                            'is-invalid': (bnClient.errors?.required || bodyReferal.bonnusClient > 10 || bodyReferal.bonnusClient < 1 ) && bnClient.touched,
+                                            'is-valid': !bnClient.errors?.required && bodyReferal.bonnusClient < 10 && bodyReferal.bonnusClient > 1 && bnClient.touched}" required max="10" min="1">
+
+                                    </div>
+                                    <span *ngIf="bnClient.errors?.required && bnClient.touched">
+                                      <small class="text-danger">
+                                        *Requerido
+                                      </small>
+                                    </span>
+                                    <span *ngIf="bodyReferal.bonnusClient < 1 && bnClient.touched">
+                                        <small class="text-danger">
+                                          *M&iacute;nimo 1
+                                        </small>
+                                    </span>
+                                    <span *ngIf="bodyReferal.bonnusClient > 10 && bnClient.touched">
+                                        <small class="text-danger">
+                                          *M&aacute;ximo 10
+                                        </small>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="">Bonus conductor</label>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <div class="input-group input-group-merge input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-tag"></i>
+                                                <!-- <i class="ni ni-lock-circle-open"></i> -->
+                                            </span>
+                                        </div>
+                                        <input type="number" class="form-control text-right" placeholder="Puntos" required name="bonnusDriver" #bnDriver="ngModel" [(ngModel)]="bodyReferal.bonnusDriver" required [ngClass]="{
+                                            'is-invalid': (bnDriver.errors?.required || bodyReferal.bonnusDriver > 50 || bodyReferal.bonnusDriver < 1 ) && bnDriver.touched,
+                                            'is-valid': !bnDriver.errors?.required && bodyReferal.bonnusDriver < 50 && bodyReferal.bonnusDriver > 1 && bnDriver.touched}">
+
+                                    </div>
+                                    <span *ngIf="bnDriver.errors?.required && bnDriver.touched">
+                                        <small class="text-danger">
+                                          *Requerido
+                                        </small>
+                                    </span>
+                                    <span *ngIf="bodyReferal.bonnusDriver < 1 && bnDriver.touched">
+                                        <small class="text-danger">
+                                            *M&iacute;nimo 1
+                                        </small>
+                                    </span>
+                                    <span *ngIf="bodyReferal.bonnusDriver > 50 && bnDriver.touched">
+                                        <small class="text-danger">
+                                            *M&aacute;ximo 50
+                                        </small>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <button type="button" class="btn btn-primary my-4" [disabled]="frmConfig.invalid || loading " (click)="onUpdate(frmConfig)">
+                              Guardar cambios
+                              <!-- <span *ngIf="loading">
+                                  <i class="fa fa-spinner fa-pulse "></i>
+                              </span> -->
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <!-- <div class="row mt-3">
+                <div class="col-6">
+                    <a href="#" class="text-light"><small>Forgot password?</small></a>
+                </div>
+                <div class="col-6 text-right">
+                    <a href="#" class="text-light"><small>Create new account</small></a>
+                </div>
+            </div> -->
+        </div>
+    </div>
+</div>

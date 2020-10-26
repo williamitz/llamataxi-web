@@ -17,6 +17,8 @@ import { JournalComponent } from '../../pages/adminPages/journal/journal.compone
 import { RateComponent } from '../../pages/adminPages/rate/rate.component';
 import { MonitorDriversComponent } from '../../pages/adminPages/monitor-drivers/monitor-drivers.component';
 import { AlertServiceComponent } from '../../pages/adminPages/alert-service/alert-service.component';
+import { ConfigReferalComponent } from 'src/app/pages/adminPages/config-referal/config-referal.component';
+import { CouponComponent } from '../../pages/adminPages/coupon/coupon.component';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -107,6 +109,16 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'alertService/:idEncrypt',
     component: AlertServiceComponent,
+    canActivate: [AllowUrlGuard]
+  },
+  {
+    path: 'configReferal',
+    component: ConfigReferalComponent,
+    canActivate: [AllowUrlGuard]
+  },
+  {
+    path: 'coupon',
+    component: CouponComponent,
     canActivate: [AllowUrlGuard]
   },
 
