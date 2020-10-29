@@ -1,23 +1,39 @@
 export class CouponModel {
     pkCoupon: number;
     codeCoupon: string;
-    title: string;
-    description: string;
+    titleCoupon: string;
+    descriptionCoupon: string;
     minRateService: number;
     amountCoupon: number;
     dateExpiration: string;
     daysExpiration: number;
-    role: string;
+    roleCoupon: string;
+    statusRegister: boolean;
+    dateRegister: string;
 
     constructor() {
         this.pkCoupon = 0;
         this.codeCoupon = '';
-        this.title = '';
-        this.description = '';
+        this.titleCoupon = '';
+        this.descriptionCoupon = '';
         this.minRateService = 0;
         this.amountCoupon = 0;
         this.dateExpiration = '';
         this.daysExpiration = 7;
-        this.role = 'CLIENT';
+        this.roleCoupon = 'CLIENT_ROLE';
+        this.statusRegister = true;
+        this.dateRegister = '';
     }
+
+    onReset() {
+      this.pkCoupon = 0;
+      this.codeCoupon = '';
+      this.titleCoupon = '';
+      this.descriptionCoupon = '';
+      this.minRateService = 0;
+      this.amountCoupon = 0;
+      this.dateExpiration = '';
+      this.daysExpiration = 7;
+      this.roleCoupon = 'CLIENT_ROLE';
+  }
 }

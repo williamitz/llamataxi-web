@@ -10,10 +10,12 @@
                     </div>
 
                     <form role="form" #frmConfig="ngForm">
-
+                        <p>
+                            Por cada usuario asociado el cliente obtendr&aacute; llamacr&eacute;ditos el cual podrá utilizar para hacer descuentos en su servicio de taxi
+                        </p>
                         <div class="row">
                             <div class="col-6">
-                                <label for="">Bonus cliente</label>
+                                <label for="">Llama-cr&eacute;ditos</label>
                             </div>
                             <div class="col-6">
                                 <div class="form-group mb-3">
@@ -50,7 +52,47 @@
 
                         <div class="row">
                             <div class="col-6">
-                                <label for="">Bonus conductor</label>
+                                <label for="">Caducidad (d&iacute;as)</label>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group mb-3">
+                                    <div class="input-group input-group-merge input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                            <i class="far fa-calendar-times"></i>
+                                          </span>
+                                        </div>
+                                        <input type="number" class="form-control text-right" placeholder="Caducidad" name="daysExpCli" #bnClient="ngModel" [(ngModel)]="bodyReferal.daysExpClient" [ngClass]="{
+                                          'is-invalid': (bnClient.errors?.required || bodyReferal.daysExpClient > 30 || bodyReferal.daysExpClient < 7 ) && bnClient.touched,
+                                          'is-valid': !bnClient.errors?.required && bodyReferal.daysExpClient < 30 && bodyReferal.daysExpClient > 7 && bnClient.touched}" required max="30" min="7">
+
+                                    </div>
+                                    <span *ngIf="bnClient.errors?.required && bnClient.touched">
+                                    <small class="text-danger">
+                                      *Requerido
+                                    </small>
+                                  </span>
+                                    <span *ngIf="bodyReferal.daysExpClient < 7 && bnClient.touched">
+                                      <small class="text-danger">
+                                        *M&iacute;nimo 7
+                                      </small>
+                                  </span>
+                                    <span *ngIf="bodyReferal.daysExpClient > 30 && bnClient.touched">
+                                      <small class="text-danger">
+                                        *M&aacute;ximo 30
+                                      </small>
+                                  </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <p>
+                            Por cada usuario asociado el conductor obtendr&aacute; puntos que podrá canjear por premios
+                        </p>
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="">Puntos</label>
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
@@ -81,6 +123,42 @@
                                             *M&aacute;ximo 50
                                         </small>
                                     </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="">Caducidad (d&iacute;as)</label>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group mb-3">
+                                    <div class="input-group input-group-merge input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                            <i class="far fa-calendar-times"></i>
+                                          </span>
+                                        </div>
+                                        <input type="number" class="form-control text-right" placeholder="Caducidad" name="daysExpDri" #bnClient="ngModel" [(ngModel)]="bodyReferal.daysExpDriver" [ngClass]="{
+                                          'is-invalid': (bnClient.errors?.required || bodyReferal.daysExpDriver > 30 || bodyReferal.daysExpDriver < 7 ) && bnClient.touched,
+                                          'is-valid': !bnClient.errors?.required && bodyReferal.daysExpDriver < 30 && bodyReferal.daysExpDriver > 7 && bnClient.touched}" required max="30" min="7">
+
+                                    </div>
+                                    <span *ngIf="bnClient.errors?.required && bnClient.touched">
+                                    <small class="text-danger">
+                                      *Requerido
+                                    </small>
+                                  </span>
+                                    <span *ngIf="bodyReferal.daysExpDriver < 7 && bnClient.touched">
+                                      <small class="text-danger">
+                                        *M&iacute;nimo 7
+                                      </small>
+                                  </span>
+                                    <span *ngIf="bodyReferal.daysExpDriver > 30 && bnClient.touched">
+                                      <small class="text-danger">
+                                        *M&aacute;ximo 30
+                                      </small>
+                                  </span>
                                 </div>
                             </div>
                         </div>

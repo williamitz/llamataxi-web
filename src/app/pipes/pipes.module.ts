@@ -11,6 +11,7 @@ import { UserUrlPipe } from './user-url.pipe';
 import { CategoryDriverPipe } from './category-driver.pipe';
 import { OccupiedPipe } from './occupied.pipe';
 import { SafeHtmlPipe } from './safe-html.pipe';
+import { RoleCouponPipe } from './role-coupon.pipe';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { SafeHtmlPipe } from './safe-html.pipe';
     UserUrlPipe,
     CategoryDriverPipe,
     OccupiedPipe,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    RoleCouponPipe
   ],
   exports: [
     RowIndexPipe,
@@ -37,7 +39,8 @@ import { SafeHtmlPipe } from './safe-html.pipe';
     UserUrlPipe,
     CategoryDriverPipe,
     OccupiedPipe,
-    SafeHtmlPipe
+    SafeHtmlPipe,
+    RoleCouponPipe
   ],
   imports: [
     CommonModule

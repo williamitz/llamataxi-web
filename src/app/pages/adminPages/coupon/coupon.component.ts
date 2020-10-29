@@ -9,6 +9,7 @@ import * as moment from 'moment';
 import Swal from 'sweetalert2';
 import swal from 'sweetalert2';
 import { SweetAlertIcon } from 'sweetalert2';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-coupon',
@@ -29,6 +30,8 @@ export class CouponComponent implements OnInit, OnDestroy {
   textButton = 'Guardar';
   actionConfirm = 'eliminar';
   showInactive = false;
+  qCode = '';
+  qRole = 'ALL';
   qTitle = '';
   qLte = 0;
   qGte = 0;
@@ -40,7 +43,7 @@ export class CouponComponent implements OnInit, OnDestroy {
     totalPages: 0,
   };
 
-  today = moment().set( 'day', 2 ).format('YYYY-MM-DD');
+  today = moment().set( 'days', 2 ).format('YYYY-MM-DD');
 
   loadData = false;
   loading = false;
@@ -55,7 +58,9 @@ export class CouponComponent implements OnInit, OnDestroy {
   }
 
   onReset() {
-
+    this.bodyCoupon.onReset();
+    this.bodyCoupon.dateExpiration = this.today;
+    this.loadData = false;
   }
 
   onSubmit( frm: NgForm ) {
@@ -71,14 +76,55 @@ export class CouponComponent implements OnInit, OnDestroy {
 
           Swal.close();
           swal.fire( this.onGetError( res.showError ) );
+
+          if ( res.showError === 0 ) {
+
+            this.onGetCoupon(1);
+            setTimeout(() => {
+              $('#btnCloseModal').trigger('click');
+            }, 500);
+          }
         });
+      } else {
+
+        this.cpUpdateSbc = this.cpSvc.onUpdateCoupon( this.bodyCoupon ).subscribe( (res) => {
+
+          if (!res.ok) {
+            throw new Error(res.error);
+          }
+
+          Swal.close();
+          swal.fire( this.onGetError( res.showError ) );
+
+          if ( res.showError === 0 ) {
+
+            const finded = this.dataCoupon.find( coupon => coupon.pkCoupon === this.bodyCoupon.pkCoupon );
+            if (finded) {
+              finded.titleCoupon = this.bodyCoupon.titleCoupon;
+              finded.descriptionCoupon = this.bodyCoupon.descriptionCoupon;
+              finded.codeCoupon = this.bodyCoupon.codeCoupon;
+              finded.amountCoupon = this.bodyCoupon.amountCoupon;
+              finded.minRateService = this.bodyCoupon.minRateService;
+              finded.dateExpiration = moment( this.bodyCoupon.dateExpiration ).format('YYYY-MM-DD');
+              finded.daysExpiration = this.bodyCoupon.daysExpiration;
+              finded.roleCoupon = this.bodyCoupon.roleCoupon;
+
+            }
+
+            setTimeout(() => {
+              $('#btnCloseModal').trigger('click');
+            }, 500);
+          }
+        });
+
       }
 
     }
   }
 
   onGetError( showError: number ) {
-    const arrError = showError === 0 ? ['Cupon registrado con éxito'] : ['Error'];
+    const action = this.loadData ? 'actualizado' : 'registrado';
+    const arrError = showError === 0 ? [`Cupon ${ action } con éxito`] : ['Error'];
     const icon: SweetAlertIcon = showError === 0 ? 'success' : 'error';
     // tslint:disable-next-line: no-bitwise
     if (showError & 1) {
@@ -90,6 +136,25 @@ export class CouponComponent implements OnInit, OnDestroy {
       arrError.push('se encuentra inactivo');
     }
 
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 4) {
+      arrError.push('no se encontró cupón');
+    }
+
+    return { title: 'Mensaje al usuario', html: arrError.join(', '), icon };
+
+  }
+
+  onGetErrorDel( showError: number ) {
+    const action = this.bodyCoupon.statusRegister ? 'restaurado' : 'eliminado';
+    const arrError = showError === 0 ? [`Cupon ${ action } con éxito`] : ['Error'];
+    const icon: SweetAlertIcon = showError === 0 ? 'success' : 'error';
+
+    // tslint:disable-next-line: no-bitwise
+    if (showError & 1) {
+      arrError.push('no se encontró cupón');
+    }
+
     return { title: 'Mensaje al usuario', html: arrError.join(', '), icon };
 
   }
@@ -99,7 +164,9 @@ export class CouponComponent implements OnInit, OnDestroy {
     if (chk) {
       this.showInactive = !this.showInactive;
     }
-    this.cpListSbc = this.cpSvc.onGetCoupon(page, this.qTitle, this.qLte, this.qGte, this.qEq, this.showInactive)
+    this.cpListSbc = this.cpSvc.onGetCoupon( page, this.qCode, this.qRole, this.qTitle,
+                                          this.qLte, this.qGte, this.qEq,
+                                          this.showInactive)
     .subscribe( (res) => {
         if (!res.ok) {
           throw new Error(res.error);
@@ -120,19 +187,72 @@ export class CouponComponent implements OnInit, OnDestroy {
   }
 
   onEdit( pk: number ) {
+    const finded = this.dataCoupon.find( coupon => coupon.pkCoupon === pk );
+    if (finded) {
+      this.bodyCoupon.pkCoupon = pk;
+      this.bodyCoupon.titleCoupon = finded.titleCoupon;
+      this.bodyCoupon.descriptionCoupon = finded.descriptionCoupon;
+      this.bodyCoupon.codeCoupon = finded.codeCoupon;
+      this.bodyCoupon.amountCoupon = finded.amountCoupon;
+      this.bodyCoupon.minRateService = finded.minRateService;
+      this.bodyCoupon.dateExpiration = moment( finded.dateExpiration ).format('YYYY-MM-DD');
+      this.bodyCoupon.daysExpiration = finded.daysExpiration;
+      this.bodyCoupon.roleCoupon = finded.roleCoupon;
 
+      this.loadData = true;
+    }
   }
 
   onDelete() {
+    this.cpDeleteSbc = this.cpSvc.onDeleteCoupon( this.bodyCoupon.pkCoupon, this.bodyCoupon.codeCoupon, this.bodyCoupon.statusRegister )
+    .subscribe( (res) => {
 
+      if (!res.ok) {
+        throw new Error(res.error);
+      }
+
+      Swal.close();
+      swal.fire( this.onGetErrorDel( res.showError ) );
+
+      if ( res.showError === 0 ) {
+
+        this.onGetCoupon(1);
+
+        setTimeout(() => {
+          $('#btnCloseConfirm').trigger('click');
+        }, 500);
+      }
+    });
   }
 
   onConfirm( pk: number ) {
+    const finded = this.dataCoupon.find( coupon => coupon.pkCoupon === pk );
+    if (finded) {
+      this.bodyCoupon.pkCoupon = pk;
+      this.bodyCoupon.codeCoupon = finded.codeCoupon;
+      this.bodyCoupon.statusRegister = finded.statusRegister;
+      this.actionConfirm = this.bodyCoupon.statusRegister ? 'eliminar' : 'restaurar';
+      this.bodyCoupon.statusRegister = !finded.statusRegister;
 
+      this.loadData = true;
+    }
   }
 
   ngOnDestroy() {
     this.cpListSbc.unsubscribe();
+
+    if (this.cpAddSbc) {
+      this.cpAddSbc.unsubscribe();
+    }
+
+    if (this.cpUpdateSbc) {
+      this.cpUpdateSbc.unsubscribe();
+    }
+
+    if (this.cpDeleteSbc) {
+      this.cpDeleteSbc.unsubscribe();
+    }
+
   }
 
 }

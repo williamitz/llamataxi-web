@@ -4,6 +4,7 @@ import { ConfigReferal } from 'src/app/models/configReferal.model';
 import { ReferalService } from 'src/app/services/referal.service';
 import Swal from 'sweetalert2';
 import swal from 'sweetalert2';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-config-referal',
@@ -37,25 +38,32 @@ export class ConfigReferalComponent implements OnInit, OnDestroy {
 
       this.bodyReferal.bonnusClient = res.data.amountClient || 0;
       this.bodyReferal.bonnusDriver = res.data.amountDriver || 0;
+      this.bodyReferal.daysExpClient = res.data.daysExpClient || 0;
+      this.bodyReferal.daysExpDriver = res.data.daysExpDriver || 0;
       Swal.close();
 
     });
   }
 
-  onUpdate() {
-    this.loading = true;
-    Swal.fire({title: 'Guardando...'});
-    Swal.showLoading();
-    this.updateSbc = this.rb.onUpdateConfig( this.bodyReferal ).subscribe( (res) => {
-      if (!res.ok) {
-        throw new Error( res.error );
-      }
+  onUpdate( frm: NgForm ) {
 
-      Swal.close();
-      swal.fire('Mensaje al usuario', 'Se actualizó con éxito', 'success');
-      this.loading = false;
+    if( frm.valid ) {
 
-    });
+      this.loading = true;
+      Swal.fire({title: 'Guardando...'});
+      Swal.showLoading();
+      this.updateSbc = this.rb.onUpdateConfig( this.bodyReferal ).subscribe( (res) => {
+        if (!res.ok) {
+          throw new Error( res.error );
+        }
+
+        Swal.close();
+        swal.fire('Mensaje al usuario', 'Se actualizó con éxito', 'success');
+        this.loading = false;
+
+      });
+    }
+
 
   }
 

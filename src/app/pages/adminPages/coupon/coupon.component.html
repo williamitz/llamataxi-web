@@ -12,40 +12,114 @@
                                         Nuevo
                                     </button>
                                 </th>
-                                <th colspan="3" id="alertBrand">
+                                <th colspan="4" id="alertBrand">
 
                                 </th>
                             </tr>
                             <tr>
                                 <th scope="col">#</th>
                                 <th scope="col">
-                                    Categoria
-                                    <!-- <div class="btn-group">
+                                    C&oacute;digo
+                                    <div class="btn-group">
                                         <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                           <i class="fas fa-search"></i>
                                         </button>
                                         <div class="dropdown-menu">
                                             <div class="px-4 py-3">
-                                                <input type="text" name="qCategory" [(ngModel)]="qCategory" (change)="onGetCoupon(1)" class="form-control form-control-sm" placeholder="Buscar por categoría">
+                                                <input type="text" name="qCode" [(ngModel)]="qCode" (change)="onGetCoupon(1)" class="form-control form-control-sm" placeholder="Buscar por código">
                                             </div>
                                         </div>
-                                    </div> -->
+                                    </div>
 
                                 </th>
                                 <th scope="col">
-                                    Marca
-                                    <!-- <div class="btn-group">
+                                    Nombre
+                                    <div class="btn-group">
                                         <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                           <i class="fas fa-search"></i>
                                         </button>
                                         <div class="dropdown-menu">
                                             <div class="px-4 py-3">
 
-                                                <input type="text" name="qBrand" [(ngModel)]="qBrand" (change)="onGetCoupon(1)" class="form-control form-control-sm" placeholder="Buscar por marca">
+                                                <input type="text" name="qTitle" [(ngModel)]="qTitle" (change)="onGetCoupon(1)" class="form-control form-control-sm" placeholder="Buscar por nombre">
 
                                             </div>
                                         </div>
-                                    </div> -->
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    Bonus
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fas fa-search"></i>
+                                  </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1">
+                                                          <i class="fas fa-less-than-equal"></i>
+                                                        </span>
+                                                    </div>
+                                                    <input type="number" class="form-control" placeholder="Mayor igual a" aria-label="Username" aria-describedby="basic-addon1" name="qLte" [(ngModel)]="qLte" (change)="onGetCoupon(1)" min="0">
+                                                </div>
+
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1">
+                                                        <i class="fas fa-greater-than-equal"></i>
+                                                      </span>
+                                                    </div>
+                                                    <input type="number" class="form-control" placeholder="Menor igual a" aria-label="Username" aria-describedby="basic-addon1" name="qGte" [(ngModel)]="qGte" (change)="onGetCoupon(1)" min="0">
+                                                </div>
+
+                                                <div class="input-group mb-3">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text" id="basic-addon1">
+                                                        <i class="fas fa-equals"></i>
+                                                      </span>
+                                                    </div>
+                                                    <input type="number" class="form-control" placeholder="Igual a" aria-label="Username" aria-describedby="basic-addon1" name="qEq" [(ngModel)]="qEq" (change)="onGetCoupon(1)" min="0">
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th scope="col">
+                                    Rol
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-outline-secondary btnSearch" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                      <i class="fas fa-search"></i>
+                                    </button>
+                                        <div class="dropdown-menu">
+                                            <div class="px-4 py-3">
+
+                                                <div class="custom-control custom-radio mb-3">
+                                                    <input type="radio" id="rbtAllV" name="qRole" class="custom-control-input" value="ALL" [(ngModel)]="qRole" (change)="onGetCoupon(1)">
+                                                    <label class="custom-control-label" for="rbtAllV">
+                                                  Todos
+                                                </label>
+                                                </div>
+
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="rbtYesV" name="qRole" class="custom-control-input" value="CLIENT" [(ngModel)]="qRole" (change)="onGetCoupon(1)">
+                                                    <label class="custom-control-label" for="rbtYesV">
+                                                  Cliente
+                                                </label>
+                                                </div>
+
+                                                <div class="custom-control custom-radio">
+                                                    <input type="radio" id="rbtNotV" name="qRole" class="custom-control-input" value="DRIVER" [(ngModel)]="qRole" (change)="onGetCoupon(1)">
+                                                    <label class="custom-control-label" for="rbtNotV">
+                                                  Conductor
+                                                </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </th>
                                 <th scope="col">F. registro</th>
                                 <th scope=""></th>
@@ -67,17 +141,25 @@
                                     {{ coupon.codeCoupon }}
                                 </td>
                                 <td>
-                                    {{ coupon.codeCoupon }}
+                                    {{ coupon.titleCoupon }}
+                                </td>
+
+                                <td class="text-right">
+                                    {{ coupon.amountCoupon | number: '.2-2' }}
+                                </td>
+
+                                <td>
+                                    {{ coupon.roleCoupon | roleCoupon }}
                                 </td>
                                 <td>
                                     {{ coupon.dateRegister | date }}
                                 </td>
                                 <td style="width: 100px;" class="text-right">
-                                    <button *ngIf="coupon.statusRegister" class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal" data-target="#CouponModal" (click)="onEdit( coupon.pkBrand )">
+                                    <button *ngIf="coupon.statusRegister" class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal" data-target="#CouponModal" (click)="onEdit( coupon.pkCoupon )">
                                       <i class="fa fa-edit"></i>
                                     </button>
 
-                                    <button class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal" data-target="#confirmModal" (click)="onConfirm( coupon.pkBrand )">
+                                    <button class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal" data-target="#confirmModal" (click)="onConfirm( coupon.pkCoupon )">
                                       <span *ngIf="coupon.statusRegister">
                                         <i class="fa fa-trash"></i>
                                       </span>
@@ -109,7 +191,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th colspan="3">
+                                <th colspan="4">
 
                                     <div *ngIf="pagination.currentPage" class="text-right">
 
@@ -150,7 +232,6 @@
         </div>
     </div>
 </div>
-
 
 <!-- Modal -->
 <div class="modal fade" data-backdrop="static" id="CouponModal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -234,7 +315,7 @@
                         <div class="col-8">
                             <div class="form-group">
                                 <label for=""> Nombre </label>
-                                <input type="text" class="form-control" name="title" #title="ngModel" [(ngModel)]="bodyCoupon.title" [ngClass]="{
+                                <input type="text" class="form-control" name="title" #title="ngModel" [(ngModel)]="bodyCoupon.titleCoupon" [ngClass]="{
                                     'is-invalid': (title.errors?.required || title.errors?.pattern ) && title.touched,
                                     'is-valid': !title.errors?.required && !title.errors?.pattern && title.touched}" required pattern="[a-zA-Z0-9áéíóúüÁÉÍÓÚÜÑñ\ \(\)\,\.\-]{0,100}">
 
@@ -284,7 +365,7 @@
                         <div class="col-12">
                             <div class="form-group">
                                 <label for=""> Descripci&oacute;n </label>
-                                <textarea class="form-control" name="description" #desc="ngModel" [(ngModel)]="bodyCoupon.description" cols="30" rows="2" [ngClass]="{
+                                <textarea class="form-control" name="description" #desc="ngModel" [(ngModel)]="bodyCoupon.descriptionCoupon" cols="30" rows="2" [ngClass]="{
                                     'is-invalid': (desc.errors?.required || desc.errors?.pattern ) && desc.touched,
                                     'is-valid': !desc.errors?.required && !desc.errors?.pattern && desc.touched}" required pattern="[a-zA-Z0-9áéíóúüÁÉÍÓÚÜÑñ\ \(\)\,\.\-]{0,100}">
 
@@ -350,12 +431,12 @@
                         <div class="col-4">
                             <div class="form-group">
                                 <label for=""> Usuario </label>
-                                <select class="form-control" name="role" #role="ngModel" [(ngModel)]="bodyCoupon.role" required [ngClass]="{
+                                <select class="form-control" name="role" #role="ngModel" [(ngModel)]="bodyCoupon.roleCoupon" required [ngClass]="{
                                     'is-invalid': role.errors?.required && role.touched,
                                     'is-valid': !role.errors?.required && role.touched}">
                                     <option value="" disabled selected>-- seleccione --</option>
-                                    <option value="CLIENT">Cliente</option>
-                                    <option value="DRIVER">Conductor</option>
+                                    <option value="CLIENT_ROLE">Cliente</option>
+                                    <option value="DRIVER_ROLE">Conductor</option>
                                 </select>
 
                                 <span *ngIf="role.errors?.required && role.touched">

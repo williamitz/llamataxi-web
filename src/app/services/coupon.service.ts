@@ -14,16 +14,36 @@ export class CouponService {
 
   constructor( private http: HttpClient, private st: StorageService ) { }
 
-  onGetCoupon(page: number, qTitle = '', qLte = 0, qGte = 0, qEq = 0, showInactive: boolean ) {
+  onGetCoupon(page: number, qCode = '', qRole = '', qTitle = '', qLte = 0, qGte = 0, qEq = 0, showInactive: boolean ) {
     showInactive = showInactive ? false : true;
     this.st.onLoadToken();
-    const qParams = `?page=${ page }&showInactive=${ showInactive }&qTitle=${ qTitle }&qLte=${ qLte }&qGte=${ qGte }&qEq=${ qEq }`;
+    let qParams = `?page=${ page }`;
+    qParams += `&showInactive=${ showInactive }`;
+    qParams += `&qTitle=${ qTitle }`;
+    qParams += `&qLte=${ qLte }`;
+    qParams += `&qGte=${ qGte }`;
+    qParams += `&qEq=${ qEq }`;
+    qParams += `&qCode=${ qCode }`;
+    qParams += `&qRole=${ qRole }`;
+
     return this.http.get<IResponse>( URI_API + `/Coupon${ qParams }`, { headers: { Authorization: this.st.token }});
   }
 
   onAddCoupon( body: CouponModel ) {
     this.st.onLoadToken();
     return this.http.post<IResponse>( URI_API + `/Coupon/Add`, body, { headers: { Authorization: this.st.token }});
+  }
+
+  onUpdateCoupon( body: CouponModel ) {
+    this.st.onLoadToken();
+    return this.http.put<IResponse>( URI_API + `/Coupon/${ body.pkCoupon }`, body,
+    { headers: { Authorization: this.st.token }});
+  }
+
+  onDeleteCoupon( pk: number, code: string, status: boolean ) {
+    this.st.onLoadToken();
+    return this.http.delete<IResponse>( URI_API + `/Coupon/${ pk }/${ code }/${ status }`,
+    { headers: { Authorization: this.st.token }});
   }
 
 }
