@@ -23,7 +23,6 @@ import { LockedComponent } from './pages/locked/locked.component';
 const DEFAULT_SWIPER_CONFIG: SwiperConfigInterface = {
   direction: 'horizontal',
   slidesPerView: 'auto',
-
 };
 
 const socketConfig: SocketIoConfig = { url: environment.URL_SERVER, options: {} };

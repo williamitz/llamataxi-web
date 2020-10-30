@@ -29,6 +29,7 @@ import { MonitorDriversComponent } from '../../pages/adminPages/monitor-drivers/
 import { AlertServiceComponent } from '../../pages/adminPages/alert-service/alert-service.component';
 import { ConfigReferalComponent } from 'src/app/pages/adminPages/config-referal/config-referal.component';
 import { CouponComponent } from 'src/app/pages/adminPages/coupon/coupon.component';
+import { ConfigJournalComponent } from '../../pages/adminPages/config-journal/config-journal.component';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { CouponComponent } from 'src/app/pages/adminPages/coupon/coupon.componen
     MonitorDriversComponent,
     AlertServiceComponent,
     ConfigReferalComponent,
-    CouponComponent
+    CouponComponent,
+    ConfigJournalComponent
   ],
   imports: [
     CommonModule,

@@ -19,6 +19,7 @@ import { MonitorDriversComponent } from '../../pages/adminPages/monitor-drivers/
 import { AlertServiceComponent } from '../../pages/adminPages/alert-service/alert-service.component';
 import { ConfigReferalComponent } from 'src/app/pages/adminPages/config-referal/config-referal.component';
 import { CouponComponent } from '../../pages/adminPages/coupon/coupon.component';
+import { ConfigJournalComponent } from 'src/app/pages/adminPages/config-journal/config-journal.component';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -119,6 +120,12 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'coupon',
     component: CouponComponent,
+    canActivate: [AllowUrlGuard]
+  },
+
+  {
+    path: 'ccJournal',
+    component: ConfigJournalComponent,
     canActivate: [AllowUrlGuard]
   },
 
