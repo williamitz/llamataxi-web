@@ -204,6 +204,8 @@ export class CouponComponent implements OnInit, OnDestroy {
   }
 
   onDelete() {
+    Swal.fire({title: 'Espere...'});
+    Swal.showLoading();
     this.cpDeleteSbc = this.cpSvc.onDeleteCoupon( this.bodyCoupon.pkCoupon, this.bodyCoupon.codeCoupon, this.bodyCoupon.statusRegister )
     .subscribe( (res) => {
 

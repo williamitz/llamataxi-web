@@ -12,6 +12,7 @@ import { CategoryDriverPipe } from './category-driver.pipe';
 import { OccupiedPipe } from './occupied.pipe';
 import { SafeHtmlPipe } from './safe-html.pipe';
 import { RoleCouponPipe } from './role-coupon.pipe';
+import { ModeJournalPipe } from './mode-journal.pipe';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { RoleCouponPipe } from './role-coupon.pipe';
     CategoryDriverPipe,
     OccupiedPipe,
     SafeHtmlPipe,
-    RoleCouponPipe
+    RoleCouponPipe,
+    ModeJournalPipe
   ],
   exports: [
     RowIndexPipe,
@@ -40,7 +42,8 @@ import { RoleCouponPipe } from './role-coupon.pipe';
     CategoryDriverPipe,
     OccupiedPipe,
     SafeHtmlPipe,
-    RoleCouponPipe
+    RoleCouponPipe,
+    ModeJournalPipe
   ],
   imports: [
     CommonModule
