@@ -10,4 +10,6 @@ export interface ICoupon {
     daysExpiration: number;
     statusRegister: boolean;
     dateRegister: string;
+    isExpired: boolean;
+    forExpired: boolean;
 }

@@ -43,7 +43,7 @@ export class CouponComponent implements OnInit, OnDestroy {
     totalPages: 0,
   };
 
-  today = moment().set( 'days', 2 ).format('YYYY-MM-DD');
+  today = moment().add( 'days', 2 ).format('YYYY-MM-DD');
 
   loadData = false;
   loading = false;
@@ -108,6 +108,13 @@ export class CouponComponent implements OnInit, OnDestroy {
               finded.dateExpiration = moment( this.bodyCoupon.dateExpiration ).format('YYYY-MM-DD');
               finded.daysExpiration = this.bodyCoupon.daysExpiration;
               finded.roleCoupon = this.bodyCoupon.roleCoupon;
+
+              const dateExp = moment( this.bodyCoupon.dateExpiration );
+              const current = moment();
+
+              finded.isExpired = dateExp.diff( current, 'days' ) <= 0 ? true : false;
+              finded.forExpired = [1, 2, 3].includes( dateExp.diff( current, 'days' )  ) ? true : false;
+              
 
             }
 

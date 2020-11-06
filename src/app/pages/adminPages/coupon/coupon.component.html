@@ -7,7 +7,6 @@
                         <thead class="thead-light">
                             <tr>
                                 <th colspan="3">
-                                    <!-- Button trigger modal -->
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#CouponModal">
                                         Nuevo
                                     </button>
@@ -121,7 +120,7 @@
                                         </div>
                                     </div>
                                 </th>
-                                <th scope="col">F. registro</th>
+                                <th scope="col">Expira</th>
                                 <th scope=""></th>
                             </tr>
                         </thead>
@@ -151,8 +150,8 @@
                                 <td>
                                     {{ coupon.roleCoupon | roleCoupon }}
                                 </td>
-                                <td>
-                                    {{ coupon.dateRegister | date }}
+                                <td [ngClass]="{'bg-danger text-white': coupon.isExpired, 'bg-warning text-white': coupon.forExpired}">
+                                    {{ coupon.dateExpiration | date }}
                                 </td>
                                 <td style="width: 100px;" class="text-right">
                                     <button *ngIf="coupon.statusRegister" class="btn btn-outline-primary btn-icon" type="button" data-toggle="modal" data-target="#CouponModal" (click)="onEdit( coupon.pkCoupon )">
@@ -258,7 +257,7 @@
                                     </div>
                                     <input type="text" class="form-control text-center text-uppercase" placeholder="Código" name="code" #code="ngModel" [(ngModel)]="bodyCoupon.codeCoupon" [ngClass]="{
                                         'is-invalid': (code.errors?.required || code.errors?.pattern ) && code.touched,
-                                        'is-valid': !code.errors?.required && !code.errors?.pattern && code.touched}" required pattern="[a-zA-Z0-9]{0,10}" minlength="6" maxlength="10">
+                                        'is-valid': !code.errors?.required && !code.errors?.pattern && code.touched}" required pattern="[a-zA-Z0-9]{0,8}" minlength="6" maxlength="8">
 
 
                                 </div>
@@ -277,7 +276,7 @@
 
                                 <span *ngIf="code.errors?.maxlength && code.touched">
                                     <small class="text-danger">
-                                        *M&aacute;ximo 10 caracteres
+                                        *M&aacute;ximo 8 caracteres
                                     </small>
                                 </span>
 
@@ -316,8 +315,8 @@
                             <div class="form-group">
                                 <label for=""> Nombre </label>
                                 <input type="text" class="form-control" name="title" #title="ngModel" [(ngModel)]="bodyCoupon.titleCoupon" [ngClass]="{
-                                    'is-invalid': (title.errors?.required || title.errors?.pattern ) && title.touched,
-                                    'is-valid': !title.errors?.required && !title.errors?.pattern && title.touched}" required pattern="[a-zA-Z0-9áéíóúüÁÉÍÓÚÜÑñ\ \(\)\,\.\-]{0,100}">
+                                    'is-invalid': (title.errors?.required || title.errors?.maxlength || title.errors?.pattern ) && title.touched,
+                                    'is-valid': !title.errors?.required && !title.errors?.maxlength && !title.errors?.pattern && title.touched}" required pattern="[a-zA-Z0-9áéíóúüÁÉÍÓÚÜÑñ\ \(\)\,\.\-]{0,40}" maxlength="30">
 
                                 <span *ngIf="title.errors?.required && title.touched">
                                     <small class="text-danger">
@@ -328,6 +327,12 @@
                                 <span *ngIf="title.errors?.pattern && title.touched">
                                     <small class="text-danger">
                                         *Solo letras, n&uacute;meros y ( ) - , .
+                                    </small>
+                                </span>
+
+                                <span *ngIf="title.errors?.maxlength && title.touched">
+                                    <small class="text-danger">
+                                        *M&aacute;ximo 30 caracteres
                                     </small>
                                 </span>
                             </div>
@@ -366,8 +371,8 @@
                             <div class="form-group">
                                 <label for=""> Descripci&oacute;n </label>
                                 <textarea class="form-control" name="description" #desc="ngModel" [(ngModel)]="bodyCoupon.descriptionCoupon" cols="30" rows="2" [ngClass]="{
-                                    'is-invalid': (desc.errors?.required || desc.errors?.pattern ) && desc.touched,
-                                    'is-valid': !desc.errors?.required && !desc.errors?.pattern && desc.touched}" required pattern="[a-zA-Z0-9áéíóúüÁÉÍÓÚÜÑñ\ \(\)\,\.\-]{0,100}">
+                                    'is-invalid': (desc.errors?.required || desc.errors?.maxlength || desc.errors?.pattern ) && desc.touched,
+                                    'is-valid': !desc.errors?.required && !desc.errors?.maxlength && !desc.errors?.pattern && desc.touched}" required pattern="[a-zA-Z0-9áéíóúüÁÉÍÓÚÜÑñ\ \(\)\,\.\-\/]{0,50}" maxlength="40">
 
                                 </textarea>
 
@@ -380,6 +385,12 @@
                                 <span *ngIf="desc.errors?.pattern && desc.touched">
                                     <small class="text-danger">
                                         *Solo letras, n&uacute;meros y ( ) - , .
+                                    </small>
+                                </span>
+
+                                <span *ngIf="desc.errors?.maxlength && desc.touched">
+                                    <small class="text-danger">
+                                        *M&aacute;ximo 40 caracteres
                                     </small>
                                 </span>
                             </div>
