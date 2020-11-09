@@ -36,8 +36,10 @@ export class ConfigReferalComponent implements OnInit, OnDestroy {
         throw new Error( res.error );
       }
 
-      this.bodyReferal.bonnusClient = res.data.amountClient || 0;
-      this.bodyReferal.bonnusDriver = res.data.amountDriver || 0;
+      this.bodyReferal.amountClient = res.data.amountClient || 0;
+      this.bodyReferal.bonusCliRef = res.data.bonusCliRef || 0;
+      this.bodyReferal.amountDriver = res.data.amountDriver || 0;
+      this.bodyReferal.bonusDriRef = res.data.bonusDriRef || 0;
       this.bodyReferal.daysExpClient = res.data.daysExpClient || 0;
       this.bodyReferal.daysExpDriver = res.data.daysExpDriver || 0;
       Swal.close();

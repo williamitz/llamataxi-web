@@ -1,12 +1,16 @@
 export class ConfigReferal {
-    bonnusClient: number;
-    bonnusDriver: number;
+    amountClient: number;
+    bonusCliRef: number;
+    amountDriver: number;
+    bonusDriRef: number;
     daysExpClient: number;
     daysExpDriver: number;
 
     constructor() {
-      this.bonnusClient = 0;
-      this.bonnusDriver = 0;
+      this.amountClient = 0;
+      this.bonusCliRef = 0;
+      this.amountDriver = 0;
+      this.bonusDriRef = 0;
       this.daysExpClient = 7;
       this.daysExpDriver = 7;
     }

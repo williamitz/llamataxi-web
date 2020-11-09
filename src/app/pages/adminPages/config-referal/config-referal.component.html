@@ -26,9 +26,9 @@
                                                 <!-- <i class="ni ni-email-83"></i> -->
                                             </span>
                                         </div>
-                                        <input type="number" class="form-control text-right" placeholder="Llama cr&eacute;dito" name="bonnusClient" #bnClient="ngModel" [(ngModel)]="bodyReferal.bonnusClient" [ngClass]="{
-                                            'is-invalid': (bnClient.errors?.required || bodyReferal.bonnusClient > 10 || bodyReferal.bonnusClient < 1 ) && bnClient.touched,
-                                            'is-valid': !bnClient.errors?.required && bodyReferal.bonnusClient < 10 && bodyReferal.bonnusClient > 1 && bnClient.touched}" required max="10" min="1">
+                                        <input type="number" class="form-control text-right" placeholder="Llama cr&eacute;dito" name="amountClient" #bnClient="ngModel" [(ngModel)]="bodyReferal.amountClient" [ngClass]="{
+                                            'is-invalid': (bnClient.errors?.required || bodyReferal.amountClient > 10 || bodyReferal.amountClient < 1 ) && bnClient.touched,
+                                            'is-valid': !bnClient.errors?.required && bodyReferal.amountClient < 10 && bodyReferal.amountClient > 1 && bnClient.touched}" required max="10" min="1">
 
                                     </div>
                                     <span *ngIf="bnClient.errors?.required && bnClient.touched">
@@ -36,12 +36,49 @@
                                         *Requerido
                                       </small>
                                     </span>
-                                    <span *ngIf="bodyReferal.bonnusClient < 1 && bnClient.touched">
+                                    <span *ngIf="bodyReferal.amountClient < 1 && bnClient.touched">
                                         <small class="text-danger">
                                           *M&iacute;nimo 1
                                         </small>
                                     </span>
-                                    <span *ngIf="bodyReferal.bonnusClient > 10 && bnClient.touched">
+                                    <span *ngIf="bodyReferal.amountClient > 10 && bnClient.touched">
+                                        <small class="text-danger">
+                                          *M&aacute;ximo 10
+                                        </small>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="">Bono referido</label>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group mb-3">
+                                    <div class="input-group input-group-merge input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-dollar-sign"></i>
+                                                <!-- <i class="ni ni-email-83"></i> -->
+                                            </span>
+                                        </div>
+                                        <input type="number" class="form-control text-right" placeholder="Llama cr&eacute;dito" name="bonusCliRef" #bnClient="ngModel" [(ngModel)]="bodyReferal.bonusCliRef" [ngClass]="{
+                                            'is-invalid': (bnClient.errors?.required || bodyReferal.bonusCliRef > 10 || bodyReferal.bonusCliRef < 1 ) && bnClient.touched,
+                                            'is-valid': !bnClient.errors?.required && bodyReferal.bonusCliRef < 10 && bodyReferal.bonusCliRef > 1 && bnClient.touched}" required max="10" min="1">
+
+                                    </div>
+                                    <span *ngIf="bnClient.errors?.required && bnClient.touched">
+                                      <small class="text-danger">
+                                        *Requerido
+                                      </small>
+                                    </span>
+                                    <span *ngIf="bodyReferal.bonusCliRef < 1 && bnClient.touched">
+                                        <small class="text-danger">
+                                          *M&iacute;nimo 1
+                                        </small>
+                                    </span>
+                                    <span *ngIf="bodyReferal.bonusCliRef > 10 && bnClient.touched">
                                         <small class="text-danger">
                                           *M&aacute;ximo 10
                                         </small>
@@ -103,9 +140,9 @@
                                                 <!-- <i class="ni ni-lock-circle-open"></i> -->
                                             </span>
                                         </div>
-                                        <input type="number" class="form-control text-right" placeholder="Puntos" required name="bonnusDriver" #bnDriver="ngModel" [(ngModel)]="bodyReferal.bonnusDriver" required [ngClass]="{
-                                            'is-invalid': (bnDriver.errors?.required || bodyReferal.bonnusDriver > 50 || bodyReferal.bonnusDriver < 1 ) && bnDriver.touched,
-                                            'is-valid': !bnDriver.errors?.required && bodyReferal.bonnusDriver < 50 && bodyReferal.bonnusDriver > 1 && bnDriver.touched}">
+                                        <input type="number" class="form-control text-right" placeholder="Puntos" required name="amountDriver" #bnDriver="ngModel" [(ngModel)]="bodyReferal.amountDriver" required [ngClass]="{
+                                            'is-invalid': (bnDriver.errors?.required || bodyReferal.amountDriver > 50 || bodyReferal.amountDriver < 1 ) && bnDriver.touched,
+                                            'is-valid': !bnDriver.errors?.required && bodyReferal.amountDriver < 50 && bodyReferal.amountDriver > 1 && bnDriver.touched}">
 
                                     </div>
                                     <span *ngIf="bnDriver.errors?.required && bnDriver.touched">
@@ -113,14 +150,51 @@
                                           *Requerido
                                         </small>
                                     </span>
-                                    <span *ngIf="bodyReferal.bonnusDriver < 1 && bnDriver.touched">
+                                    <span *ngIf="bodyReferal.amountDriver < 1 && bnDriver.touched">
                                         <small class="text-danger">
                                             *M&iacute;nimo 1
                                         </small>
                                     </span>
-                                    <span *ngIf="bodyReferal.bonnusDriver > 50 && bnDriver.touched">
+                                    <span *ngIf="bodyReferal.amountDriver > 50 && bnDriver.touched">
                                         <small class="text-danger">
                                             *M&aacute;ximo 50
+                                        </small>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <label for="">Bono referido</label>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group mb-3">
+                                    <div class="input-group input-group-merge input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-tag"></i>
+                                                <!-- <i class="ni ni-email-83"></i> -->
+                                            </span>
+                                        </div>
+                                        <input type="number" class="form-control text-right" placeholder="Llama cr&eacute;dito" name="bonusDriRef" #bnClient="ngModel" [(ngModel)]="bodyReferal.bonusDriRef" [ngClass]="{
+                                            'is-invalid': (bnClient.errors?.required || bodyReferal.bonusDriRef > 10 || bodyReferal.bonusDriRef < 1 ) && bnClient.touched,
+                                            'is-valid': !bnClient.errors?.required && bodyReferal.bonusDriRef < 10 && bodyReferal.bonusDriRef > 1 && bnClient.touched}" required max="10" min="1">
+
+                                    </div>
+                                    <span *ngIf="bnClient.errors?.required && bnClient.touched">
+                                      <small class="text-danger">
+                                        *Requerido
+                                      </small>
+                                    </span>
+                                    <span *ngIf="bodyReferal.bonusDriRef < 1 && bnClient.touched">
+                                        <small class="text-danger">
+                                          *M&iacute;nimo 1
+                                        </small>
+                                    </span>
+                                    <span *ngIf="bodyReferal.bonusDriRef > 10 && bnClient.touched">
+                                        <small class="text-danger">
+                                          *M&aacute;ximo 10
                                         </small>
                                     </span>
                                 </div>
