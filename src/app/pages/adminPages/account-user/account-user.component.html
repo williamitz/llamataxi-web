@@ -30,7 +30,7 @@
                                     </div>
 
                                 </th>
-                                <th colspan="5" id="alertUser">
+                                <th colspan="2" id="alertUser">
                                     <button type="button" class="btn btn-danger bg-gradient-danger" data-toggle="modal" data-target="#modalMsg">
                                         <i class="fas fa-bell"></i>
                                         Mensajes masivos
@@ -39,7 +39,7 @@
                                 <th colspan="2"></th>
                             </tr>
                             <tr>
-                                <th scope="col">#</th>
+                                <th scope="col" style="width: 35px;">#</th>
                                 <th scope="col" style="width: 35px;">
                                     Apellidos y nombres
                                     <div class="btn-group">
@@ -759,14 +759,6 @@
                         </div>
 
                         <form role="form" #frmSendMsg="ngForm" accept-charset="UTF-8">
-                            <!-- <div class="form-group mb-3">
-                                <div class="input-group input-group-merge input-group-alternative">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text"><i class="ni ni-email-83"></i></span>
-                                    </div>
-                                    <input class="form-control" placeholder="Email" type="email">
-                                </div>
-                            </div> -->
 
                             <div class="form-group">
                                 <label for="txtSubject">Asunto</label>
@@ -783,7 +775,7 @@
 
                             <div class="form-group">
                                 <label for="txtMessage">
-                                  Asunto
+                                  Mensaje
                                 </label>
                                 <span class="msgLength">
                                       <small>{{ bodyMessage.message.length }}</small>
