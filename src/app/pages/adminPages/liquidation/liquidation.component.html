@@ -1,0 +1,435 @@
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="table-responsive">
+                <div>
+                    <table class="table align-items-center">
+                        <thead class="thead-light">
+                            <tr>
+                                <th colspan="4">
+                                    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#BrandModal">
+                                        Nuevo
+                                    </button> -->
+                                </th>
+                                <th colspan="4" id="alertBrand">
+
+                                </th>
+                            </tr>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">
+                                    Conductor
+
+                                </th>
+                                <th scope="col">
+                                    Total efec
+
+                                </th>
+
+                                <th scope="col">
+                                    Total tarj
+
+                                </th>
+                                <th scope="col">
+                                    Total cred
+
+                                </th>
+                                <th scope="col">
+                                    Total desc
+
+                                </th>
+                                <th scope="col">F. cierre</th>
+                                <th scope=""></th>
+                            </tr>
+                        </thead>
+                        <tbody class="list">
+
+                            <tr *ngFor="let liq of dataLiquidation | rowIndex: pagination.currentPage">
+                                <th scope="row">
+                                    {{ liq.rowIndex }}
+                                </th>
+                                <td>
+                                    <div class="media align-items-center">
+
+                                        <img class="avatar rounded-circle mr-3" alt="Image placeholder" [src]="pathImg + liq.img + st.token">
+                                        <div class="media-body">
+                                            <span class="name mb-0 text-sm">
+                                              {{ liq.nameComplete | slice: 0: 29 }} {{ liq.nameComplete.length > 29 ? '...' : '' }}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td class="text-right">{{ liq.totalCash | number: '.2-2' }}</td>
+                                <td class="text-right">{{ liq.totalCard | number: '.2-2' }}</td>
+                                <td class="text-right">{{ liq.totalCredit | number: '.2-2' }}</td>
+                                <td class="text-right">{{ liq.totalDiscount | number: '.2-2' }}</td>
+                                <td>
+                                    {{ liq.dateEnd | moment: 'ddd DD MMM h:mm a' }}
+                                </td>
+                                <td style="width: 100px;" class="text-right">
+
+                                    <div class="dropdown">
+                                        <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                            <i class="fas fa-ellipsis-v"></i>
+                                        </a>
+                                        <div class="dropdown-menu dropdown-menu-right dropdown-menu-arrow">
+                                            <span class="dropdown-item" data-toggle="modal" data-target="#LiqModal" (click)="onNewLiquided( liq.pkJournalDriver )">
+                                                <i class="fas fa-receipt"></i>
+                                                Liquidar
+                                            </span>
+                                            <span class="dropdown-item">
+                                                <i class="far fa-eye"></i>
+                                                Ver Detalle
+                                            </span>
+                                            <!-- <a class="dropdown-item" href="#"></a> -->
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="4">
+                                    <div class="row">
+                                        <div class="col-7">
+                                            {{ infoPagination }}
+                                        </div>
+                                        <div class="col-5">
+                                            <span class="">
+                                                Ver inactivos
+                                            </span>&nbsp;
+                                            <label class="custom-toggle chkInactive">
+                                                <input type="checkbox" name="showInactive" [(ngModel)]="showInactive"
+                                                    (click)="onGetLiquidation(1, true)">
+                                                <span class="custom-toggle-slider rounded-circle"></span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </th>
+                                <th colspan="4">
+
+                                    <div *ngIf="pagination.currentPage" class="text-right">
+
+                                        <nav aria-label="Page navigation example">
+                                            <ul class="pagination justify-content-center mt-2">
+
+                                                <li class="page-item prev" [ngClass]="{'disabled':pagination.currentPage === 1}">
+                                                    <a class="page-link" (click)="onGetLiquidation(pagination.currentPage - 1)">
+                                                        <i class="fa fa-angle-left"></i>
+                                                        <span class="sr-only">Previous</span>
+                                                    </a>
+                                                </li>
+
+                                                <li class="page-item" *ngFor="let page of pagination.pages" [ngClass]="{active:pagination.currentPage === page}">
+                                                    <a class="page-link" (click)="onGetLiquidation(page)">
+                                                        {{ page }}
+                                                    </a>
+                                                </li>
+
+                                                <li class="page-item next" [ngClass]="{'disabled':pagination.currentPage === pagination.totalPages}">
+                                                    <a class="page-link" (click)="onGetLiquidation(pagination.currentPage + 1)">
+                                                        <i class="fa fa-angle-right"></i>
+                                                        <span class="sr-only">Next</span>
+                                                    </a>
+                                                </li>
+                                            </ul>
+
+                                        </nav>
+                                    </div>
+                                </th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" data-backdrop="static" id="LiqModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title"> Liquidar jornada </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onReset()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="row">
+                    <div class="col-6">
+                        <!-- Body liquidation -->
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <div class="input-group input-group-merge input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-qrcode"></i>
+                                                <!-- <i class="ni ni-lock-circle-open"></i> -->
+                                            </span>
+                                        </div>
+
+                                        <span class="form-control">
+                                            {{ body.codeJournal }}
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-7">
+                                <div class="form-group">
+                                    <div class="input-group input-group-merge input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-user-circle"></i>
+                                                <!-- <i class="ni ni-lock-circle-open"></i> -->
+                                            </span>
+                                        </div>
+
+                                        <span class="form-control">
+                                            {{ body.nameComplete }}
+                                        </span>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="form-group">
+                                    <label for=""> Cuenta bancaria </label>
+                                    <select class="form-control" name="role" #role="ngModel" [(ngModel)]="body.fkAccount" required [ngClass]="{
+                                        'is-invalid': role.errors?.required && role.touched,
+                                        'is-valid': !role.errors?.required && role.touched}">
+                                        <option value="" disabled selected>-- seleccione --</option>
+                                        <option *ngFor="let acc of accountDriver" [value]="acc.pkAccountDriver">
+                                            
+                                                {{ acc.bankAlias }} 
+                                                <small>
+                                                    (cc: {{ acc.ccAccount }}) <br>
+                                                    (cci: {{ acc.cciAccount }})
+                                                </small>
+                                            
+                                        </option>
+                                    </select>
+
+                                    <span *ngIf="role.errors?.required && role.touched">
+                                        <small class="text-danger">
+                                            *Requerido
+                                        </small>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-5">
+                                <div class="form-group">
+                                    <div class="input-group input-group-merge input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-dollar-sign"></i>
+                                                <!-- <i class="ni ni-lock-circle-open"></i> -->
+                                            </span>
+                                        </div>
+
+                                        <input type="number" class="form-control text-right" name="amount" [(ngModel)]="body.amount" min="0">
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-7">
+                                <div class="form-group">
+                                    <div class="input-group input-group-merge input-group-alternative">
+                                        <div class="input-group-prepend">
+                                            <span class="input-group-text">
+                                                <i class="fas fa-receipt"></i>
+                                            </span>
+                                        </div>
+
+                                        <input type="text" class="form-control" name="operation" [(ngModel)]="body.operation" placeholder="N° operación">
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12">
+
+                                <div class="form-group">
+                                    <textarea class="form-control" name="observation" rows="2" placeholder="Observación" [(ngModel)]="body.observation">
+                                    </textarea>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-6">
+                                <h2> {{ body.nameJournal }} S/ {{ body.rateJournal | number: '.2-2' }} </h2>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group form-check">
+                                    <input type="checkbox" class="form-check-input" id="chkHaveDebt">
+                                    <label class="form-check-label" for="chkHaveDebt">Saldo pendiente</label>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-6">
+                        <!-- Services detail -->
+
+                        <div class="card">
+                            <div class="card-header border-0">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h3 class="mb-0">Servicios finalizados</h3>
+                                    </div>
+                                    <!-- <div class="col text-right">
+                                        <a href="#!" class="btn btn-sm btn-primary">See all</a>
+                                    </div> -->
+                                </div>
+                            </div>
+                            <div class="table-responsive">
+                                <!-- Projects table -->
+                                <table class="table align-items-center table-flush">
+                                    <thead class="thead-light">
+                                        <tr>
+                                            <th scope="col">Distancia - tiempo</th>
+                                            <th scope="col">Tarifa</th>
+                                            <th scope="col">Desc</th>
+                                            <th scope="col">M. Pago</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+
+                                        <tr *ngFor="let service of servicesDriver">
+                                            <th scope="row">
+                                                {{ service.distanceText }} - {{ service.minutesText }}
+                                            </th>
+                                            <td class="text-right">
+                                                {{ service.rateService | number: '.2-2' }}
+                                            </td>
+                                            <td class="text-right">
+                                                {{ service.discount | number: '.2-2' }}
+                                            </td>
+                                            <td>
+                                                {{ service.paymentType | payments}} ->
+                                            </td>
+                                        </tr>
+
+                                        <tr *ngIf="servicesDriver.length === 0">
+                                            <th colspan="4" class="text-center">
+                                                <img src="./assets/img/spaceman.png" alt="" style="width: 80px; height: 80px;">
+                                                <p>
+                                                    <small>
+                                                        No se encontraron registros
+                                                    </small>
+                                                </p>
+                                            </th>
+                                        </tr>
+
+                                    </tbody>
+
+                                    <tfoot>
+                                        <tr>
+                                            <th colspan="2">
+                                                {{ infoPaginationServices }}
+                                            </th>
+                                            <th colspan="2">
+
+                                                <div *ngIf="paginationServices.currentPage" class="text-right">
+
+                                                    <nav aria-label="Page navigation example">
+                                                        <ul class="pagination justify-content-center mt-2">
+
+                                                            <li class="page-item prev" [ngClass]="{'disabled':paginationServices.currentPage === 1}">
+                                                                <a class="page-link" (click)="onGetLiquidation(paginationServices.currentPage - 1)">
+                                                                    <i class="fa fa-angle-left"></i>
+                                                                    <span class="sr-only">Previous</span>
+                                                                </a>
+                                                            </li>
+
+                                                            <li class="page-item" *ngFor="let page of paginationServices.pages" [ngClass]="{active:paginationServices.currentPage === page}">
+                                                                <a class="page-link" (click)="onGetLiquidation(page)">
+                                                                    {{ page }}
+                                                                </a>
+                                                            </li>
+
+                                                            <li class="page-item next" [ngClass]="{'disabled':paginationServices.currentPage === paginationServices.totalPages}">
+                                                                <a class="page-link" (click)=" pageServices =  pageServices + 1; onLoadServicesDetail()">
+                                                                    <i class="fa fa-angle-right"></i>
+                                                                    <span class="sr-only">Next</span>
+                                                                </a>
+                                                            </li>
+                                                        </ul>
+
+                                                    </nav>
+                                                </div>
+                                            </th>
+                                        </tr>
+                                    </tfoot>
+
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal" (click)="onReset()">
+                    Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" [disabled]=" loading" (click)="onSubmit()">
+                    {{ textButton }}
+                    <span *ngIf="loading">
+                        <i class="fa fa-spinner fa-pulse "></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<!-- <div class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mensaje al usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                ¿Est&aacute; seguro(a) de <strong class="text-primary">{{ actionConfirm }}</strong> este registro?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnCloseConfirm">
+                    Cerrar
+                </button>
+                <button type="button" class="btn btn-primary" [disabled]="loading" (click)="onDelete()">
+                    Aceptar
+                    <span *ngIf="loading">
+                        <i class="fa fa-spinner fa-pulse "></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div> -->

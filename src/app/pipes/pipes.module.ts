@@ -13,6 +13,7 @@ import { OccupiedPipe } from './occupied.pipe';
 import { SafeHtmlPipe } from './safe-html.pipe';
 import { RoleCouponPipe } from './role-coupon.pipe';
 import { ModeJournalPipe } from './mode-journal.pipe';
+import { PaymentsPipe } from './payments.pipe';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { ModeJournalPipe } from './mode-journal.pipe';
     OccupiedPipe,
     SafeHtmlPipe,
     RoleCouponPipe,
-    ModeJournalPipe
+    ModeJournalPipe,
+    PaymentsPipe
   ],
   exports: [
     RowIndexPipe,
@@ -43,7 +45,8 @@ import { ModeJournalPipe } from './mode-journal.pipe';
     OccupiedPipe,
     SafeHtmlPipe,
     RoleCouponPipe,
-    ModeJournalPipe
+    ModeJournalPipe,
+    PaymentsPipe
   ],
   imports: [
     CommonModule

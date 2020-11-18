@@ -30,6 +30,8 @@ import { AlertServiceComponent } from '../../pages/adminPages/alert-service/aler
 import { ConfigReferalComponent } from 'src/app/pages/adminPages/config-referal/config-referal.component';
 import { CouponComponent } from 'src/app/pages/adminPages/coupon/coupon.component';
 import { ConfigJournalComponent } from '../../pages/adminPages/config-journal/config-journal.component';
+import { LiquidationComponent } from 'src/app/pages/adminPages/liquidation/liquidation.component';
+import { AwardsComponent } from 'src/app/pages/adminPages/awards/awards.component';
 
 @NgModule({
   declarations: [
@@ -52,7 +54,9 @@ import { ConfigJournalComponent } from '../../pages/adminPages/config-journal/co
     AlertServiceComponent,
     ConfigReferalComponent,
     CouponComponent,
-    ConfigJournalComponent
+    ConfigJournalComponent,
+    LiquidationComponent,
+    AwardsComponent,
   ],
   imports: [
     CommonModule,

@@ -20,6 +20,8 @@ import { AlertServiceComponent } from '../../pages/adminPages/alert-service/aler
 import { ConfigReferalComponent } from 'src/app/pages/adminPages/config-referal/config-referal.component';
 import { CouponComponent } from '../../pages/adminPages/coupon/coupon.component';
 import { ConfigJournalComponent } from 'src/app/pages/adminPages/config-journal/config-journal.component';
+import { LiquidationComponent } from 'src/app/pages/adminPages/liquidation/liquidation.component';
+import { AwardsComponent } from 'src/app/pages/adminPages/awards/awards.component';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -126,6 +128,18 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'ccJournal',
     component: ConfigJournalComponent,
+    canActivate: [AllowUrlGuard]
+  },
+
+  {
+    path: 'liquidation',
+    component: LiquidationComponent,
+    canActivate: [AllowUrlGuard]
+  },
+
+  {
+    path: 'awards',
+    component: AwardsComponent,
     canActivate: [AllowUrlGuard]
   },
 

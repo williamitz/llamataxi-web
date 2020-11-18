@@ -14,7 +14,8 @@ export class MomentPipe implements PipeTransform {
     } else {
       newDate = moment(date).format(format) || 'error';
     }
-    return newDate.charAt(0).toUpperCase() + newDate.slice(1);
+    const outStr = newDate.charAt(0).toUpperCase() + newDate.slice(1);
+    return outStr.replace( '.', '' );
   }
 
 }
