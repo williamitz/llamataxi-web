@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { HttpClient } from "@angular/common/http";
-import { CategoryModel } from "../models/category.model";
-import { IResponse } from "../interfaces/response.interface";
-import { environment } from "../../environments/environment";
-import { StorageService } from "./storage.service";
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { CategoryModel } from '../models/category.model';
+import { IResponse } from '../interfaces/response.interface';
+import { environment } from '../../environments/environment';
+import { StorageService } from './storage.service';
 
 const URI_API = environment.URL_SERVER;
 
 @Injectable({
-  providedIn: "root",
+  providedIn: 'root',
 })
 export class CategoryService {
   constructor(private http: HttpClient, private storageSvc: StorageService) {}
