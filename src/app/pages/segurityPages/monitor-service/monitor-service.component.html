@@ -90,7 +90,12 @@
                                 <div class="col-6">
                                     Llegada
                                     <p>
-                                        {{ dataService.dateFinishDestination | moment }}
+                                        <span *ngIf="!dataService.dateFinishDestination">
+                                            En curso
+                                        </span>
+                                        <span *ngIf="dataService.dateFinishDestination">
+                                            {{ dataService.dateFinishDestination | moment }}
+                                        </span>
                                     </p>
                                 </div>
                             </div>

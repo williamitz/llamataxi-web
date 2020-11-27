@@ -133,7 +133,6 @@ export class MonitorServiceComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.tokenMonitor = String( this.routerAct.snapshot.params.tokenMonitor ) || 'xD';
     this.onLoadMap();
-    // this.onBuildPolygon();
     this.onLoadInfo();
   }
 
@@ -163,14 +162,15 @@ export class MonitorServiceComponent implements OnInit, OnDestroy {
   }
 
   onLoadInfo() {
-    // swal.showLoading();
+    swal.fire({text: 'Espere...'});
+    swal.showLoading();
     // Swal.showLoading();
 
     this.sbcInfo = this.monitorSvc.onGetInfoService( this.tokenMonitor )
     .pipe( retry(3) )
     .subscribe( (res) => {
       if (!res.ok) {
-        // Swal.hideLoading();
+        Swal.close();
         return this.router.navigateByUrl('/notFound');
       }
 
@@ -178,15 +178,16 @@ export class MonitorServiceComponent implements OnInit, OnDestroy {
       // this.io.onEmit()
       this.onLoadRoute();
       this.onSingMonitor();
-      this.onListenCoors();
-      // swal.hideLoading();
+      
+      Swal.close();
     });
   }
 
   onListenCoors() {
     this.ioSbc = this.io.onListen('current-position-driver')
-    .pipe( retry(10) )
+    .pipe( )
     .subscribe( (res: ICoorsIO) => {
+      console.log('nuevo socket', res);
       this.marker.setPosition( new google.maps.LatLng( res.lat, res.lng ) );
     });
   }
@@ -215,33 +216,8 @@ export class MonitorServiceComponent implements OnInit, OnDestroy {
     this.io.onEmit('sing-monitor', payload, (resIO: IResponse) => {
       if (resIO.ok) {
         console.log('Socket monitor configurado', resIO);
+        this.onListenCoors();
       }
-    });
-
-  }
-
-  onBuildPolygon() {
-
-
-    this.polygonsRing.forEach( (item) => {
-
-      const positionPolygon = new google.maps.LatLng( item.center[0], item.center[1] );
-      const verticesCoords: google.maps.LatLng[] = [];
-      const color = '#0091F2';
-      item.polygon.forEach( (coords) => {
-        verticesCoords.push( new google.maps.LatLng( coords[0], coords[1] ) );
-      });
-
-      const polygon = new google.maps.Polygon({
-        paths: verticesCoords,
-        strokeColor: color,
-        strokeOpacity: 0.7,
-        strokeWeight: 2,
-        fillColor: color,
-        fillOpacity: 0.35,
-        map: this.map
-      });
-
     });
 
   }

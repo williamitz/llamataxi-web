@@ -28,9 +28,14 @@ export class MonitorService {
     this.st.onLoadToken();
     return this.http.get<IResponse>( URI_API + `/Monitor/GetZones`, {headers: { Authorization: this.st.token }} );
   }
-
+  
   onGetInfoService( token: string ) {
     return this.http.get<IResponse>( URI_API + `/Service/Info/Monitor`, {headers: { AuthMonitor: token }} );
+  }
+  
+  onRefreshDrivers( ) {
+    this.st.onLoadToken();
+    return this.http.post<IResponse>( URI_API + `/Monitor/Refresh`, {}, {headers: { Authorization: this.st.token }} );
   }
 
 }

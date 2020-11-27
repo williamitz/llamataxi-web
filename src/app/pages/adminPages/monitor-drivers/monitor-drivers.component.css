@@ -1,6 +1,12 @@
 .mapMonitor {
-    /* position: absolute; */
+    position: relative;
     width: 1150px;
     height: 750px;
     background-color: #354e74;
+}
+
+.btnRefresh {
+    position: absolute;
+    top: 230px;
+    left: 130px;
 }

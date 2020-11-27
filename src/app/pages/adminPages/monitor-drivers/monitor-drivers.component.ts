@@ -6,6 +6,7 @@ import { MonitorService } from '../../../services/monitor.service';
 import { pipe, Subscription } from 'rxjs';
 import { retry } from 'rxjs/operators';
 import { SocketService } from '../../../services/socket.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-monitor-drivers',
@@ -20,6 +21,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
   loadDriversSbc: Subscription;
   loadClientSbc: Subscription;
+  refreshSbc: Subscription;
   ioCoordsSbc: Subscription;
   ioCoordsClientSbc: Subscription;
   ioLogoutSbc: Subscription;
@@ -101,9 +103,30 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
     this.onListenPlayGeo();
   }
 
+  onRefresh() {
+    Swal.fire({title: 'Espere...'});
+    Swal.showLoading();
+    this.refreshSbc = this.monitor.onRefreshDrivers().
+    subscribe( (res) => {
+
+      if (!res.ok) {
+        throw new Error( res.error );
+      }
+
+      this.markers.forEach( (rec) => {
+        rec.marker.setMap( null );
+      });
+
+      this.markers = [];
+      this.onLoadDrivers();
+      Swal.close();
+      
+    });
+  }
+
   onLoadDrivers() {
     this.loadDriversSbc = this.monitor.onGetDrivers()
-    .pipe( retry() )
+    // .pipe( retry() )
     .subscribe( (res) => {
 
       if (!res.ok) {
@@ -144,7 +167,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
   onLoadClients() {
 
     this.loadClientSbc = this.monitor.onGetClients()
-    .pipe( retry() )
+    // .pipe( retry() )
     .subscribe( (res) => {
 
       if (!res.ok) {
@@ -184,7 +207,7 @@ export class MonitorDriversComponent implements OnInit, OnDestroy {
 
   onListenCoordsDriver() {
     this.ioCoordsSbc = this.io.onListen('current-position-driver')
-    .pipe( retry() )
+    // .pipe( retry() )
     .subscribe( (res: IResCurrent) => {
       const findeed = this.markers.find( mk => mk.pkUser === res.pkUser );
       // console.log('moviendo marker', res);
