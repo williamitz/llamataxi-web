@@ -22,6 +22,7 @@ import { CouponComponent } from '../../pages/adminPages/coupon/coupon.component'
 import { ConfigJournalComponent } from 'src/app/pages/adminPages/config-journal/config-journal.component';
 import { LiquidationComponent } from 'src/app/pages/adminPages/liquidation/liquidation.component';
 import { AwardsComponent } from 'src/app/pages/adminPages/awards/awards.component';
+import { ProfileComponent } from 'src/app/pages/adminPages/profile/profile.component';
 
 export const ADMIN_ROUTES: Routes = [
   {
@@ -140,6 +141,11 @@ export const ADMIN_ROUTES: Routes = [
   {
     path: 'awards',
     component: AwardsComponent,
+    canActivate: [AllowUrlGuard]
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
     canActivate: [AllowUrlGuard]
   },
 

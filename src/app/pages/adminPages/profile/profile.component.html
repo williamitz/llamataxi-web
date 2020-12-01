@@ -1,0 +1,273 @@
+<div class="wrapper">
+    <section class="section-profile-cover section-shaped my-0">
+        <!-- Circles background -->
+        <img class="bg-image" src="../assets/img/theme/banner-cover3.jpg" style="width: 100%; height: 580px;">
+        <!-- SVG separator -->
+        <div class="separator separator-bottom separator-skew">
+            <svg x="0" y="0" viewBox="0 0 2560 100" preserveAspectRatio="none" version="1.1" xmlns="http://www.w3.org/2000/svg">
+        <polygon class="fill-secondary" points="2560 0 2560 100 0 100"></polygon>
+      </svg>
+        </div>
+    </section>
+    <section class="section bg-secondary">
+        <div class="container">
+            <div class="card card-profile shadow mt--300">
+                <div class="px-4">
+                    <div class="row justify-content-center">
+                        <div class="col-lg-3 order-lg-2">
+                            <div class="card-profile-image">
+                                <a href="javascript:;">
+                                    <img [src]="dataProfile.img" class="rounded-circle">
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 order-lg-3 text-lg-right align-self-lg-center">
+                            <div class="card-profile-actions py-4 mt-lg-0">
+                                <button class="btn btn-sm btn-info mr-4" data-toggle="modal" data-target="#exampleModal" (click)="onShowModal()">
+                                  Editar
+                                </button>
+                                <!-- <a href="#" class="btn btn-sm btn-info mr-4">Connect</a>
+                                <a href="#" class="btn btn-sm btn-default float-right">Message</a> -->
+                            </div>
+                        </div>
+                        <div class="col-lg-4 order-lg-1">
+                            <div class="card-profile-stats d-flex justify-content-center">
+                                <div>
+                                    <span class="heading">ROL</span>
+                                    <span class="description">{{ dataProfile.role | roles }}</span>
+                                </div>
+                                <!-- <div>
+                                    <span class="heading">22</span>
+                                    <span class="description">Friends</span>
+                                </div>
+                                <div>
+                                    <span class="heading">10</span>
+                                    <span class="description">Photos</span>
+                                </div>
+                                <div>
+                                    <span class="heading">89</span>
+                                    <span class="description">Comments</span>
+                                </div> -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center mt-5">
+                        <h3>{{ dataProfile.nameComplete }}
+                            <!-- <span class="font-weight-light">, 27</span> -->
+                        </h3>
+                        <div class="h5 font-weight-600">
+                            <i class="ni location_pin mr-2"></i> {{ dataProfile.prefixPhone }}&nbsp;{{ dataProfile.phone }}
+                        </div>
+                        <div class="h6 mt-4">
+                            <i class="ni business_briefcase-24 mr-2"></i> {{ dataProfile.email }}
+                        </div>
+                        <div>
+                            <i class="ni education_hat mr-2"></i> {{ dataProfile.aboutMe }}
+                        </div>
+                    </div>
+                    <div class="mt-5 py-5 border-top text-center">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-9">
+                                <p>An artist of considerable range, Ryan — the name taken by Melbourne-raised, Brooklyn-based Nick Murphy — writes, performs and records all of his own music, giving it a warm, intimate feel with a solid groove structure.
+                                    An artist of considerable range.</p>
+                                <a href="javascript:;">Show more</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+</div>
+
+<div class="modal fade" data-backdrop="static" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Editar perfil</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="onReset()">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form #frmProfile="ngForm" id="frmProfile">
+                    <div class="row">
+                        <div class="col-9">
+                            <div class="row">
+                                <div class="col-7">
+
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="cbxTypeDoc">Tipo Documento</label>
+                                                <select class="form-control" id="cbxTypeDoc" name="typeDoc" #typedoc="ngModel" [(ngModel)]="body.fkTypeDocument" [ngClass]="{'is-invalid': typedoc.errors?.required && typedoc.touched, 'is-valid': !typedoc.errors?.required && typedoc.touched}" required
+                                                    (change)="onChangeTypeDoc( this.body.fkTypeDocument )">
+                                                  <option value="null" disabled selected>--Seleccione--</option>
+                                                  <option [value]="td.pkTypeDocument" *ngFor="let td of dataTypeDoc">
+                                                    {{ td.prefix }}
+                                                  </option>
+                                                </select>
+
+                                                <span *ngIf="typedoc.errors?.required && typedoc.touched">
+                                                  <small class="text-danger">*Requerido</small>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <label for="ndoc">Nro Documento</label>
+                                                <input type="text" id="ndoc" name="ndoc" #ndoc="ngModel" [(ngModel)]="body.document" class="form-control" [ngClass]="{'is-invalid': (ndoc.errors?.required || ndoc.errors?.minlength) && ndoc.touched, 'is-valid': !ndoc.errors?.required && !ndoc.errors?.minlength && ndoc.touched}"
+                                                    required minlength="{{ longitudeTD }}">
+
+                                                <span *ngIf="ndoc.errors?.required && ndoc.touched">
+                                                  <small class="text-danger">*Requerido</small>
+                                                </span>
+
+                                                <span *ngIf="ndoc.errors?.minlength && ndoc.touched">
+                                                  <small class="text-danger">*Minimo {{ longitudeTD }} caracteres</small>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-5">
+                                    <div class="form-group">
+
+                                        <label class="form-control-label"> Nacionalidad </label>
+                                        <!-- (change)="onChangeCountry($event)" -->
+                                        <ng-select [items]="dataNationality" bindValue="pkNationality" bindLabel="nameCountry" [(ngModel)]="body.fkNationality" name="country" #country="ngModel" required="true" class=" is-invalid" [ngClass]="{  'is-invalid': country.errors?.required , 'is-valid': !country.errors?.required }">
+
+                                        </ng-select>
+                                        <span *ngIf="country.errors?.required ">
+                                          <small class="text-danger">*Requerido</small>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-12">
+                                    <label>Nombres y apellidos</label>
+                                    <div class="row">
+
+                                        <div class="col-6">
+                                            <div class="form-group">
+
+                                                <input type="text" class="form-control" name="names" #names="ngModel" [(ngModel)]="body.name" placeholder="Nombres" required minlength="2" [ngClass]="{ 'is-invalid': (names.errors?.required || names.errors?.minlength) && names.touched, 'is-valid': !names.errors?.required && !names.errors?.minlength && names.touched }">
+
+                                                <span *ngIf="names.errors?.required && names.touched">
+                                                  <small class="text-danger">*Requerido</small>
+                                                </span>
+
+                                                <span *ngIf="names.errors?.minlength && names.touched">
+                                                  <small class="text-danger">
+                                                    *Minimo 2 caracteres
+                                                  </small>
+                                                </span>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" name="surname" #surname="ngModel" [(ngModel)]="body.surname" placeholder="Apellidos" required minlength="2" [ngClass]="{ 'is-invalid': (surname.errors?.required || surname.errors?.minlength) && surname.touched, 'is-valid': !surname.errors?.required && !surname.errors?.minlength && surname.touched }">
+
+                                                <span *ngIf="surname.errors?.required && surname.touched">
+                                                  <small class="text-danger">*Requerido</small>
+                                                </span>
+
+                                                <span *ngIf="surname.errors?.minlength && surname.touched">
+                                                  <small class="text-danger">
+                                                    *Minimo 2 caracteres
+                                                  </small>
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="col-3">
+                            <div class="text-center">
+                                <h3>Foto</h3>
+                            </div>
+                            <br>
+                            <br>
+                            <br>
+                            <div class="card">
+                                <!-- {{ bodyDriver.img }} -->
+                                <div class="card-profile-image">
+                                    <img [src]="dataProfile.img" class="rounded-circle" style="height: 150px;">
+                                </div>
+
+                            </div>
+                            <br>
+                            <br>
+                            <div class="text-center">
+                                <label class="btn btn-sm btn-primary " title="Subir" for="fileProfile">
+                                    <i class="fa fa-upload"></i>
+                                </label>
+                                <input type="file" id="fileProfile" style="display: none;" (change)="onChangeFileProfile( $event.target.files )">
+                                <span *ngIf="loadingImg" class="text-primary">
+                                    <i class="fa fa-spinner fa-pulse "></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-5">
+                            <div class="form-group">
+                                <label>Email</label>
+                                <input type="email" class="form-control" name="email" placeholder="Correo electrónico" [(ngModel)]="body.email" #email="ngModel" pattern="^([a-zA-Z0-9_\-\.]+)@([a-zA-Z0-9_\-\.]+)\.([a-zA-Z]{2,5})$" required [ngClass]="{ 'is-invalid': (email.errors?.required || email.errors?.pattern ) && email.touched,'is-valid': (!email.errors?.required || !email.errors?.pattern ) && email.touched }">
+
+                                <span *ngIf="email.errors?.required && email.touched">
+                                  <small class="text-danger">*Requerido</small>
+                                </span>
+
+                                <span *ngIf="email.errors?.pattern && email.touched">
+                                  <small class="text-danger">*Email inv&aacute;lido</small>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="col-4">
+                            <label class="form-control-label" for="">Tel&eacute;fono</label>
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text" id="basic-addon1">
+                                      +51
+                                    </span>
+                                </div>
+                                <input type="text" class="form-control" placeholder="000000000" name="phone" [(ngModel)]="body.phone" #phone="ngModel" [ngClass]="{   'is-invalid': phone.errors?.required && phone.touched, 'is-valid': !phone.errors?.required && phone.touched }" required>
+
+                            </div>
+                            <span *ngIf="phone.errors?.required && phone.touched">
+                              <small class="text-danger">*Requerido</small>
+                            </span>
+                        </div>
+
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btnCloseModalUser" class="btn btn-secondary" data-dismiss="modal" (click)="onReset()">
+                  Cerrar
+                </button>
+
+                <button type="button" class="btn btn-primary" [disabled]="frmProfile.invalid || loading" (click)="onSubmitProfile( frmProfile )">
+                  Guardar cambios
+                  <span *ngIf="loading" >
+                    <i class="fa fa-spinner fa-pulse"></i>
+                  </span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -32,6 +32,7 @@ import { CouponComponent } from 'src/app/pages/adminPages/coupon/coupon.componen
 import { ConfigJournalComponent } from '../../pages/adminPages/config-journal/config-journal.component';
 import { LiquidationComponent } from 'src/app/pages/adminPages/liquidation/liquidation.component';
 import { AwardsComponent } from 'src/app/pages/adminPages/awards/awards.component';
+import { ProfileComponent } from 'src/app/pages/adminPages/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -56,6 +57,7 @@ import { AwardsComponent } from 'src/app/pages/adminPages/awards/awards.componen
     CouponComponent,
     ConfigJournalComponent,
     LiquidationComponent,
+    ProfileComponent,
     AwardsComponent,
   ],
   imports: [

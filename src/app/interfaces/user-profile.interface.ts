@@ -30,6 +30,7 @@ export interface IUserProfile {
 
 export interface IUserStorage {
   pkUser: number;
+  pkPerson: number;
   userName: string;
   nameComplete: string;
   email: string;

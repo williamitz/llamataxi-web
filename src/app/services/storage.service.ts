@@ -8,6 +8,7 @@ export class StorageService {
   public token = '';
   public dataUser: IUserStorage = {
     pkUser: 0,
+    pkPerson: 0,
     userName: '',
     nameComplete: '',
     email: '',
@@ -26,6 +27,10 @@ export class StorageService {
 
   onGetItem( name: string, isJson = false ) {
     return isJson ? JSON.parse( localStorage.getItem(name) ) : localStorage.getItem(name);
+  }
+
+  onSetItem( name: string, data: any, isJson = false ) {
+    localStorage.setItem(name, isJson ? JSON.stringify( data ) : data );
   }
 
   onLoadToken() {
