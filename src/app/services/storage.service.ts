@@ -48,6 +48,7 @@ export class StorageService {
     this.token = '';
     this.dataUser = {
       pkUser: 0,
+      pkPerson: 0,
       userName: '',
       nameComplete: '',
       email: '',
