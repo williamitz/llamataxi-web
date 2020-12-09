@@ -6,6 +6,10 @@ export interface IJournalDriver {
     dateStart: string;
     dateEnd: string;
     journalStatus: boolean;
+    paidOut: boolean;
+    datePaid: string;
+    illPay: boolean;
+    totalDebt: number;
     totalCash: number;
     totalCard: number;
     totalCredit: number;
@@ -15,6 +19,8 @@ export interface IJournalDriver {
     rateJournal: number;
     modeJournal: string;
     nameComplete: string;
+    totalPay: number;
+
     img: string;
     fkLiquidation: number;
     liquidated: boolean;

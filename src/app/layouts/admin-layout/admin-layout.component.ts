@@ -6,6 +6,7 @@ import { INotification, INotiSocket } from '../../interfaces/notification.interf
 import { UiService } from '../../services/ui.service';
 import * as $ from 'jquery';
 import { Router } from '@angular/router';
+import IJournalIO from 'src/app/interfaces/journal-socket.interface';
 
 @Component({
   selector: 'app-admin-layout',
@@ -17,6 +18,8 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   title = '';
   ioNotify: Subscription;
   ioPanic: Subscription;
+  ioCloseSbc: Subscription;
+
   dataNoti: INotification[] = [];
   totalNews = 0;
 
@@ -30,6 +33,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
     this.io.onStatusSocket();
     this.onListenNofify();
     this.onListenAlertPanic();
+    this.onListenClose();
   }
 
   onTitle(title) {
@@ -41,6 +45,16 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
       console.log(res);
       this.onGetNotify();
       this.uiSbc.onShowNotification( res.title, res.message, '', res.urlShow );
+    });
+  }
+
+  onListenClose() {
+    this.ioCloseSbc = this.io.onListen( 'close-journal' ).subscribe( (res: IJournalIO) => {
+      this.uiSbc.onShowNotification(
+        'Jornada cerrada',
+        `${ res.nameDriver }, acaba de cerrar una jornada laboral`,
+        './assets/img/icons/price-tag-4.png'
+        );
     });
   }
 
@@ -72,6 +86,7 @@ export class AdminLayoutComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.ioNotify.unsubscribe();
     this.ioPanic.unsubscribe();
+    this.ioCloseSbc.unsubscribe();
   }
 
 }

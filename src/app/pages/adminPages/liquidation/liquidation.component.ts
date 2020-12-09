@@ -1,13 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { find } from 'rxjs/operators';
+import IJournalIO from 'src/app/interfaces/journal-socket.interface';
 import { IAccountDriver, IJournalDriver } from 'src/app/interfaces/liquidation.interface';
 import { LiquidationService } from 'src/app/services/liquidation.service';
 import { PagerService } from 'src/app/services/pager.service';
+import { SocketService } from 'src/app/services/socket.service';
 import { StorageService } from 'src/app/services/storage.service';
 import Swal from 'sweetalert2';
 import { environment } from '../../../../environments/environment';
 import { IServiceJournal, LiquidationModel } from '../../../models/liquidation.model';
+import { UiService } from '../../../services/ui.service';
+import { NgForm } from '@angular/forms';
+import { SweetAlertIcon } from 'sweetalert2';
 
 const URI_API = environment.URL_SERVER;
 
@@ -16,18 +21,20 @@ const URI_API = environment.URL_SERVER;
   templateUrl: './liquidation.component.html',
   styleUrls: ['./liquidation.component.css']
 })
-export class LiquidationComponent implements OnInit {
+export class LiquidationComponent implements OnInit, OnDestroy {
 
   listSbc: Subscription;
   accountSbc: Subscription;
   servicesSbc: Subscription;
+  addLiqui: Subscription;
+  ioCloseSbc: Subscription;
 
   dataLiquidation: IJournalDriver[] = [];
   accountDriver: IAccountDriver[] = [];
   servicesDriver: IServiceJournal[] = [];
   body: LiquidationModel;
   titleModal = 'Nuea Marca';
-  textButton = 'Guardar';
+  textButton = 'Liquidar';
   actionConfirm = 'eliminar';
   showInactive = false;
   rowsForPage = 10;
@@ -51,25 +58,36 @@ export class LiquidationComponent implements OnInit {
   loadData = false;
   loading = false;
   pageServices = 1;
-  constructor( private liqSvc: LiquidationService, private pagerSvc: PagerService, public st: StorageService ) { }
+  // tslint:disable-next-line: max-line-length
+  constructor( private liqSvc: LiquidationService, private pagerSvc: PagerService, public st: StorageService, private io: SocketService, private ui: UiService ) { }
 
   ngOnInit(): void {
 
     this.st.onLoadToken();
     this.onGetLiquidation(1);
+    this.onListenClose();
     this.body = new LiquidationModel();
 
   }
 
+  onListenClose() {
+    this.ioCloseSbc = this.io.onListen( 'close-journal' ).subscribe( (res: IJournalIO) => {
+
+      this.onGetLiquidation( 1 );
+
+    });
+  }
+
   onEdit( pk: number ) {
-    
+
   }
 
   onConfirm( pk: number ) {
-    
+
   }
 
   onGetLiquidation( page: number, chk = false ) {
+
     if (chk) {
       this.showInactive = !this.showInactive;
     }
@@ -90,6 +108,7 @@ export class LiquidationComponent implements OnInit {
         }
 
     });
+
   }
 
   onReset() {
@@ -107,13 +126,23 @@ export class LiquidationComponent implements OnInit {
       this.body.nameComplete = finded.nameComplete;
       this.body.img = finded.img;
       this.body.fkJournalDriver = pk;
-      this.body.amount = finded.totalCredit + finded.totalDiscount;
+      // this.body.amount = finded.totalCredit + finded.totalDiscount;
       this.body.fkDriver = finded.fkDriver;
       this.body.codeJournal = finded.codeJournal;
       this.body.dateStart = finded.dateStart;
       this.body.dateEnd = finded.dateEnd;
       this.body.nameJournal = finded.nameJournal;
       this.body.rateJournal = finded.rateJournal;
+      this.body.totalDebt = finded.totalDebt;
+      this.body.totalPay = finded.totalPay;
+      this.body.paidOut = !finded.paidOut;
+
+      this.body.totalLiquidation = (finded.totalCard + finded.totalCredit + finded.totalDiscount);
+      if (!finded.paidOut) {
+        this.body.amountCompany = ( finded.totalDebt + finded.totalPay );
+        this.body.totalLiquidation -= ( finded.totalDebt + finded.totalPay );
+      }
+
       this.onLoadAccounts();
       this.onLoadServicesDetail();
     }
@@ -122,7 +151,7 @@ export class LiquidationComponent implements OnInit {
   onLoadAccounts() {
     this.accountSbc = this.liqSvc.onGetAccountDriver( this.body.fkDriver )
     .subscribe( (res) => {
-      
+
       if ( !res.ok ) {
         throw new Error( res.error );
       }
@@ -147,8 +176,79 @@ export class LiquidationComponent implements OnInit {
     });
   }
 
-  onSubmit() {
+  onSubmit( frm: NgForm ) {
 
+    if (frm.valid) {
+      Swal.fire({text: 'Espere...'});
+      Swal.showLoading();
+      this.addLiqui = this.liqSvc.onAddLiquidation( this.body ).subscribe( (res) => {
+        if (!res.ok) {
+          throw new Error( res.error );
+        }
+
+        Swal.close();
+
+        Swal.fire( this.onGetError( res.showError ) );
+        if (condition) {
+          
+        }
+
+      });
+    }
+
+  }
+
+  onGetError( showError: number ) {
+    let arrError = showError === 0 ? ['Se ha creado una liquidación con éxito'] : ['Alerta!'];
+    const icon: SweetAlertIcon = showError === 0 ? 'success' : 'warning';
+    // tslint:disable-next-line: no-bitwise
+    if (  showError & 1 ) {
+      arrError.push('esta jornada aún esta abierta');
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (  showError & 2 ) {
+      arrError = ['Alerta!', 'esta jornada ya tiene una liquidación'];
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (  showError & 4 ) {
+      arrError = ['Alerta!', 'ya existe una liquidación con este número de operación'];
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (  showError & 8 ) {
+      arrError = ['Alerta!', 'esta cuenta bancaría está inactiva'];
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (  showError & 16 ) {
+      arrError = ['Alerta!', 'no se encontró jornada'];
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (  showError & 32 ) {
+      arrError = ['Alerta!', 'no se encontró conductor'];
+    }
+
+    // tslint:disable-next-line: no-bitwise
+    if (  showError & 64 ) {
+      arrError = ['Alerta!', 'no se encontró cuenta bancaria'];
+    }
+
+    return { title: 'Mensaje al usuaio', html: arrError.join(', '), icon };
+
+
+  }
+
+  ngOnDestroy() {
+    if (this.ioCloseSbc) {
+      this.ioCloseSbc.unsubscribe();
+    }
+
+    if (this.listSbc) {
+      this.listSbc.unsubscribe();
+    }
   }
 
 }

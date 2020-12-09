@@ -68,6 +68,9 @@
                                 </td>
                                 <td style="width: 100px;" class="text-right">
 
+                                    <span class="badge badge-circle " [ngClass]="{'badge-success': liq.paidOut, 'badge-danger': !liq.paidOut}">
+                                      {{ liq.paidOut | paidOut }}
+                                    </span> &nbsp;&nbsp;
                                     <div class="dropdown">
                                         <a class="btn btn-sm btn-icon-only text-light" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                             <i class="fas fa-ellipsis-v"></i>
@@ -165,127 +168,142 @@
 
                 <div class="row">
                     <div class="col-6">
-                        <!-- Body liquidation -->
-                        <div class="row">
-                            <div class="col-5">
-                                <div class="form-group">
-                                    <div class="input-group input-group-merge input-group-alternative">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
+                        <form #frmLiquidation="ngForm">
+
+                            <!-- Body liquidation -->
+                            <div class="row">
+                                <div class="col-5">
+                                    <div class="form-group">
+                                        <div class="input-group input-group-merge input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
                                                 <i class="fas fa-qrcode"></i>
                                                 <!-- <i class="ni ni-lock-circle-open"></i> -->
                                             </span>
-                                        </div>
+                                            </div>
 
-                                        <span class="form-control">
+                                            <span class="form-control">
                                             {{ body.codeJournal }}
                                         </span>
 
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="col-7">
-                                <div class="form-group">
-                                    <div class="input-group input-group-merge input-group-alternative">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
+                                <div class="col-7">
+                                    <div class="form-group">
+                                        <div class="input-group input-group-merge input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
                                                 <i class="fas fa-user-circle"></i>
                                                 <!-- <i class="ni ni-lock-circle-open"></i> -->
                                             </span>
-                                        </div>
+                                            </div>
 
-                                        <span class="form-control">
+                                            <span class="form-control">
                                             {{ body.nameComplete }}
                                         </span>
 
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="form-group">
-                                    <label for=""> Cuenta bancaria </label>
-                                    <select class="form-control" name="role" #role="ngModel" [(ngModel)]="body.fkAccount" required [ngClass]="{
-                                        'is-invalid': role.errors?.required && role.touched,
-                                        'is-valid': !role.errors?.required && role.touched}">
-                                        <option value="" disabled selected>-- seleccione --</option>
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="form-group">
+                                        <label for=""> Cuenta bancaria </label>
+                                        <select class="form-control" name="role" #acc="ngModel" [(ngModel)]="body.fkAccount" required [ngClass]="{
+                                        'is-invalid': acc.errors?.required && acc.touched,
+                                        'is-valid': !acc.errors?.required && acc.touched}">
+                                        <option disabled selected>-- seleccione --</option>
                                         <option *ngFor="let acc of accountDriver" [value]="acc.pkAccountDriver">
-                                            
-                                                {{ acc.bankAlias }} 
-                                                <small>
-                                                    (cc: {{ acc.ccAccount }}) <br>
-                                                    (cci: {{ acc.cciAccount }})
-                                                </small>
-                                            
+
+                                          {{ acc.bankAlias }}
+                                          <small>
+                                              (cc: {{ acc.ccAccount }}) <br>
+                                              (cci: {{ acc.cciAccount }})
+                                          </small>
+
                                         </option>
                                     </select>
 
-                                    <span *ngIf="role.errors?.required && role.touched">
+                                        <span *ngIf="acc.errors?.required && acc.touched">
+                                            <small class="text-danger">
+                                                *Requerido
+                                            </small>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-7">
+                                    <div class="form-group">
+
+                                        <textarea class="form-control" name="observation" rows="2" placeholder="Observación" [(ngModel)]="body.observation">
+                                        </textarea>
+
+                                    </div>
+                                </div>
+                                <div class="col-5">
+                                    <div class="form-group">
+                                        <div class="input-group input-group-merge input-group-alternative">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">
+                                                <i class="fas fa-receipt"></i>
+                                            </span>
+                                            </div>
+
+                                            <input type="text" class="form-control" name="operation" [(ngModel)]="body.operation" #ope="ngModel" [ngClass]="{
+                                              'is-invalid': ope.errors?.required && ope.touched,
+                                              'is-valid': !ope.errors?.required && ope.touched}" required placeholder="N° operación">
+
+                                        </div>
+                                    </div>
+
+                                    <span *ngIf="ope.errors?.required && ope.touched">
                                         <small class="text-danger">
                                             *Requerido
                                         </small>
                                     </span>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-5">
-                                <div class="form-group">
-                                    <div class="input-group input-group-merge input-group-alternative">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-dollar-sign"></i>
-                                                <!-- <i class="ni ni-lock-circle-open"></i> -->
-                                            </span>
-                                        </div>
 
-                                        <input type="number" class="form-control text-right" name="amount" [(ngModel)]="body.amount" min="0">
-
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-7">
-                                <div class="form-group">
-                                    <div class="input-group input-group-merge input-group-alternative">
-                                        <div class="input-group-prepend">
-                                            <span class="input-group-text">
-                                                <i class="fas fa-receipt"></i>
-                                            </span>
-                                        </div>
-
-                                        <input type="text" class="form-control" name="operation" [(ngModel)]="body.operation" placeholder="N° operación">
-
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-12">
-
-                                <div class="form-group">
-                                    <textarea class="form-control" name="observation" rows="2" placeholder="Observación" [(ngModel)]="body.observation">
-                                    </textarea>
+                            <div class="row">
+                                <div class="col-6">
+                                    Deuda acumulada
                                 </div>
 
+                                <div class="col-6 text-right">
+                                    S/ {{ body.totalDebt | number: '.2-2' }}
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-6">
-                                <h2> {{ body.nameJournal }} S/ {{ body.rateJournal | number: '.2-2' }} </h2>
-                            </div>
-                            <div class="col-6">
-                                <div class="form-group form-check">
-                                    <input type="checkbox" class="form-check-input" id="chkHaveDebt">
+                            <div class="row">
+                                <div class="col-6">
+                                    {{ body.nameJournal }}
+                                </div>
+                                <div class="col-6 text-right">
+                                    S/ {{ body.totalPay | number: '.2-2' }}
+                                    <!-- <div class="form-group form-check">
+                                  <input type="checkbox" class="form-check-input" id="chkHaveDebt">
                                     <label class="form-check-label" for="chkHaveDebt">Saldo pendiente</label>
+                                  </div> -->
                                 </div>
                             </div>
-                        </div>
+
+                            <div class="row">
+                                <div class="col-6">
+                                    Total a liquidar
+                                </div>
+                                <div class="col-6 text-right" [ngClass]="{'text-danger': body.totalLiquidation < 0}">
+                                    S/ {{ body.totalLiquidation | number: '.2-2' }}
+                                </div>
+                            </div>
+
+                        </form>
 
                     </div>
                     <div class="col-6">
@@ -326,7 +344,11 @@
                                                 {{ service.discount | number: '.2-2' }}
                                             </td>
                                             <td>
-                                                {{ service.paymentType | payments}} ->
+                                                <i class="fas" [ngClass]="{
+                                                'fa-hand-holding-usd': service.paymentType === 'CASH',
+                                                'fa-money-check': service.paymentType === 'CARD',
+                                                'fa-credit-card': service.paymentType === 'CRED'
+                                              }"></i> {{ service.paymentType | payments}}
                                             </td>
                                         </tr>
 
@@ -394,7 +416,7 @@
                 <button type="button" id="btnCloseModal" class="btn btn-secondary" data-dismiss="modal" (click)="onReset()">
                     Cerrar
                 </button>
-                <button type="button" class="btn btn-primary" [disabled]=" loading" (click)="onSubmit()">
+                <button type="button" class="btn btn-primary" [disabled]=" frmLiquidation.invalid || body.totalLiquidation < 3 || loading" (click)="onSubmit( frmLiquidation )">
                     {{ textButton }}
                     <span *ngIf="loading">
                         <i class="fa fa-spinner fa-pulse "></i>

@@ -11,14 +11,14 @@ export class PaymentsPipe implements PipeTransform {
 
     switch (value) {
       case 'CASH':
-        str = '<i class="fas fa-hand-holding-usd bg-gradient-success"></i>';
+        str = 'Efectivo';
         break;
         case 'CARD':
-          str = '<i class="fas fa-money-check bg-gradient-info"></i>';
+          str = 'Tarjeta';
           break;
 
         case 'CRED':
-          str = '<i class="far fa-credit-card bg-gradient-danger"></i>';
+          str = 'Llamacréditos';
           break;
 
       default:

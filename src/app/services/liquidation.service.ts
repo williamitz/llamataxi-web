@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { IResponse } from '../interfaces/response.interface';
+import { LiquidationModel } from '../models/liquidation.model';
 import { StorageService } from './storage.service';
 
 const URI_API = environment.URL_SERVER;
@@ -11,7 +12,7 @@ const URI_API = environment.URL_SERVER;
 })
 export class LiquidationService {
 
-  constructor(private http: HttpClient, private storageSvc: StorageService) {}
+  constructor(private http: HttpClient, private st: StorageService) {}
 
   onGetJournal( page: number, rowsForPage: number, qName: string, showInactive: boolean ) {
     showInactive = showInactive ? false : true;
@@ -19,14 +20,14 @@ export class LiquidationService {
     const params = `?page=${ page }&rowsForPage=${ rowsForPage }&qName=${ qName }&showInactive=${ showInactive }`;
 
     return this.http.get<IResponse>(URI_API + `/Liquidation${ params }`, {
-      headers: { Authorization: this.storageSvc.token },
+      headers: { Authorization: this.st.token },
     });
   }
 
   onGetAccountDriver( pkDriver: number ) {
 
     return this.http.get<IResponse>(URI_API + `/Account/Driver/${ pkDriver }`, {
-      headers: { Authorization: this.storageSvc.token },
+      headers: { Authorization: this.st.token },
     });
 
   }
@@ -35,9 +36,15 @@ export class LiquidationService {
 
     const params = `?page=${ page }&pkDriver=${ pkDriver }&fkJournal=${ fkJournal }&codeJournal=${ codeJournal }`;
     return this.http.get<IResponse>(URI_API + `/Services/Journal${ params }`, {
-      headers: { Authorization: this.storageSvc.token },
+      headers: { Authorization: this.st.token },
     });
 
+  }
+
+  onAddLiquidation( body: LiquidationModel ) {
+    return this.http.post<IResponse>(URI_API + `/Liquidation`, body, {
+      headers: { Authorization: this.st.token },
+    });
   }
 
 }

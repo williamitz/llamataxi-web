@@ -4,9 +4,13 @@ export class LiquidationModel {
     fkDriver: number;
     operation: string;
     observation: string;
-    amount: number;
+    amountCompany: number;
     haveDebt: boolean;
     fkAccount: number;
+    totalDebt: number;
+    totalPay: number;
+    totalLiquidation: number;
+    paidOut: boolean;
 
     // data view
     nameComplete: string;
@@ -23,9 +27,10 @@ export class LiquidationModel {
         this.fkDriver = 0;
         this.operation = '';
         this.observation = '';
-        this.amount = 0;
+        this.amountCompany = 0;
         this.haveDebt = false;
-        this.fkAccount = 0;
+        this.paidOut = false;
+        // this.fkAccount = 0;
         this.nameComplete = '';
         this.img = '';
         this.codeJournal = '';
@@ -33,17 +38,24 @@ export class LiquidationModel {
         this.dateEnd = '';
         this.nameJournal = '';
         this.rateJournal = 0;
-    }
+        this.totalDebt = 0;
+        this.totalPay = 0;
+        this.totalLiquidation = 0;
+      }
 
-    onReset() {
+      onReset() {
         this.pkLiquidation = 0;
+        this.totalLiquidation = 0;
+        this.paidOut = false;
         this.fkJournalDriver = 0;
         this.fkDriver = 0;
+        this.totalDebt = 0;
+        this.totalPay = 0;
         this.operation = '';
         this.observation = '';
-        this.amount = 0;
+        this.amountCompany = 0;
         this.haveDebt = false;
-        this.fkAccount = 0;
+        // this.fkAccount = 0;
         this.nameComplete = '';
         this.img = '';
         this.codeJournal = '';
