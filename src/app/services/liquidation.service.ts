@@ -47,4 +47,14 @@ export class LiquidationService {
     });
   }
 
+  onUpload( pkLiquidation: number, file: File ) {
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // tslint:disable-next-line: max-line-length
+    return this.http.put<IResponse>(URI_API + `/upload/voucher/${ pkLiquidation }/`, formData, {headers: { Authorization: this.st.token } });
+
+  }
+
 }

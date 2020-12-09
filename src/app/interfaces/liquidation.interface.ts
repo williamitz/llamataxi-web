@@ -26,6 +26,7 @@ export interface IJournalDriver {
     liquidated: boolean;
     dateLiquidated: string;
     pkUser: number;
+    osId: string;
 }
 
 

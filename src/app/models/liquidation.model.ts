@@ -20,6 +20,7 @@ export class LiquidationModel {
     dateEnd: string;
     nameJournal: string;
     rateJournal: number;
+    osId: string;
 
     constructor() {
         this.pkLiquidation = 0;
@@ -41,9 +42,11 @@ export class LiquidationModel {
         this.totalDebt = 0;
         this.totalPay = 0;
         this.totalLiquidation = 0;
-      }
-
-      onReset() {
+        this.osId = '';
+    }
+    
+    onReset() {
+        this.osId = '';
         this.pkLiquidation = 0;
         this.totalLiquidation = 0;
         this.paidOut = false;

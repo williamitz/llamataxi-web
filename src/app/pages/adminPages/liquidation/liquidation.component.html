@@ -7,9 +7,7 @@
                         <thead class="thead-light">
                             <tr>
                                 <th colspan="4">
-                                    <!-- <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#BrandModal">
-                                        Nuevo
-                                    </button> -->
+
                                 </th>
                                 <th colspan="4" id="alertBrand">
 
@@ -153,7 +151,6 @@
     </div>
 </div>
 
-
 <!-- Modal -->
 <div class="modal fade" data-backdrop="static" id="LiqModal" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
@@ -238,70 +235,108 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-7">
-                                    <div class="form-group">
+                                <div class="col-6">
 
-                                        <textarea class="form-control" name="observation" rows="2" placeholder="Observación" [(ngModel)]="body.observation">
-                                        </textarea>
+                                    <div class="text-center">
+                                        <h3>Voucher</h3>
+                                    </div>
+                                    <br>
+                                    <br>
+                                    <br>
+                                    <div class="card">
+                                        <!-- {{ bodyDriver.img }} -->
+                                        <div class="card-profile-image">
+                                            <img [src]="voucher" class="rounded-circle" style="height: 150px;">
+                                        </div>
 
                                     </div>
+                                    <br>
+                                    <br>
+                                    <div class="text-center">
+                                        <label class="btn btn-sm btn-primary " title="Subir" for="fileProfile">
+                                            <i class="fa fa-upload"></i>
+                                        </label>
+                                        <input type="file" id="fileProfile" style="display: none;" (change)="onChangeFileProfile( $event.target.files )">
+                                        <span *ngIf="loadingImg" class="text-primary">
+                                            <i class="fa fa-spinner fa-pulse "></i>
+                                        </span>
+                                    </div>
+
                                 </div>
-                                <div class="col-5">
-                                    <div class="form-group">
-                                        <div class="input-group input-group-merge input-group-alternative">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">
-                                                <i class="fas fa-receipt"></i>
-                                            </span>
+                                <div class="col-6">
+
+                                    <div class="row">
+                                        <div class="col-12">
+
+                                            <div class="form-group">
+                                                <div class="input-group input-group-merge input-group-alternative">
+                                                    <div class="input-group-prepend">
+                                                        <span class="input-group-text">
+                                                        <i class="fas fa-receipt"></i>
+                                                    </span>
+                                                    </div>
+
+                                                    <input type="text" class="form-control" name="operation" [(ngModel)]="body.operation" #ope="ngModel" [ngClass]="{
+                                                      'is-invalid': ope.errors?.required && ope.touched,
+                                                      'is-valid': !ope.errors?.required && ope.touched}" required placeholder="N° operación">
+
+                                                </div>
                                             </div>
 
-                                            <input type="text" class="form-control" name="operation" [(ngModel)]="body.operation" #ope="ngModel" [ngClass]="{
-                                              'is-invalid': ope.errors?.required && ope.touched,
-                                              'is-valid': !ope.errors?.required && ope.touched}" required placeholder="N° operación">
+                                            <span *ngIf="ope.errors?.required && ope.touched">
+                                                <small class="text-danger">
+                                                    *Requerido
+                                                </small>
+                                            </span>
+
+                                        </div>
+
+                                        <div class="col-12">
+                                            <div class="form-group">
+
+                                                <textarea class="form-control" name="observation" rows="2" placeholder="Observación" [(ngModel)]="body.observation">
+                                                </textarea>
+
+                                            </div>
+                                        </div>
+
+                                        <div class="col-12 text-right">
+
+                                            <table class="table table-sm">
+                                                <tr>
+                                                    <td> Deuda acumulada </td>
+                                                    <td>
+                                                        S/ {{ body.totalDebt | number: '.2-2' }}
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td> {{ body.nameJournal }} </td>
+                                                    <td>
+                                                        S/ {{ body.totalPay | number: '.2-2' }}
+                                                    </td>
+                                                </tr>
+
+                                                <tr>
+                                                    <td>
+                                                        <h4> Total a liquidar </h4>
+                                                    </td>
+                                                    <td class="col-6 text-right" [ngClass]="{
+                                                        'text-danger': body.totalLiquidation < 0,
+                                                        'text-success': body.totalLiquidation > 0
+                                                    }">
+                                                        S/ {{ body.totalLiquidation | number: '.2-2' }}
+                                                    </td>
+                                                </tr>
+                                            </table>
 
                                         </div>
                                     </div>
 
-                                    <span *ngIf="ope.errors?.required && ope.touched">
-                                        <small class="text-danger">
-                                            *Requerido
-                                        </small>
-                                    </span>
                                 </div>
                             </div>
 
 
-                            <div class="row">
-                                <div class="col-6">
-                                    Deuda acumulada
-                                </div>
-
-                                <div class="col-6 text-right">
-                                    S/ {{ body.totalDebt | number: '.2-2' }}
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-6">
-                                    {{ body.nameJournal }}
-                                </div>
-                                <div class="col-6 text-right">
-                                    S/ {{ body.totalPay | number: '.2-2' }}
-                                    <!-- <div class="form-group form-check">
-                                  <input type="checkbox" class="form-check-input" id="chkHaveDebt">
-                                    <label class="form-check-label" for="chkHaveDebt">Saldo pendiente</label>
-                                  </div> -->
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-6">
-                                    Total a liquidar
-                                </div>
-                                <div class="col-6 text-right" [ngClass]="{'text-danger': body.totalLiquidation < 0}">
-                                    S/ {{ body.totalLiquidation | number: '.2-2' }}
-                                </div>
-                            </div>
 
                         </form>
 
