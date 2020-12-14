@@ -147,7 +147,8 @@ export class LiquidationComponent implements OnInit, OnDestroy {
       this.body.paidOut = !finded.paidOut;
       this.body.osId = finded.osId;
 
-      this.body.totalLiquidation = (finded.totalCard + finded.totalCredit + finded.totalDiscount);
+      this.body.totalLiquidation = (finded.totalCard + finded.totalCredit ); // + finded.totalDiscount
+
       if (!finded.paidOut) {
         this.body.amountCompany = ( finded.totalDebt + finded.totalPay );
         this.body.totalLiquidation -= ( finded.totalDebt + finded.totalPay );
